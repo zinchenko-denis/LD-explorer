@@ -13,21 +13,21 @@ interface DessinGraphProps {
 // Black vertices (valency 3 each) - 4 vertices
 // Companion O.1: BV₀(anchor)={c,u,p}, BV₁(index)={b,t,e}, BV₂(star)={s,μ,H}, BV₃(other)={d,W,τ}
 const BLACK_VERTICES = [
-  { id: 'B1', position: [0, 8, 0] as [number, number, number], label: 'BV₀', sublabel: 'anchor' },
-  { id: 'B2', position: [-7, 2, 0] as [number, number, number], label: 'BV₁', sublabel: 'index' },
-  { id: 'B3', position: [7, 2, 0] as [number, number, number], label: 'BV₂', sublabel: 'star' },
-  { id: 'B4', position: [0, -6, 0] as [number, number, number], label: 'BV₃', sublabel: 'other' },
+  { id: 'B1', position: [0, 8, 0] as [number, number, number], label: 'BV0', sublabel: 'anchor' },
+  { id: 'B2', position: [-7, 2, 0] as [number, number, number], label: 'BV1', sublabel: 'index' },
+  { id: 'B3', position: [7, 2, 0] as [number, number, number], label: 'BV2', sublabel: 'star' },
+  { id: 'B4', position: [0, -6, 0] as [number, number, number], label: 'BV3', sublabel: 'other' },
 ];
 
 // White vertices (valency 2 each) - 6 vertices
 // Each WV = one σ₁-pair (companion O.1)
 const WHITE_VERTICES = [
-  { id: 'W1', position: [-4, 6, 3] as [number, number, number], label: 'W₀', sublabel: '{c,p}' },
-  { id: 'W2', position: [4, 6, 3] as [number, number, number], label: 'W₁', sublabel: '{u,t}' },
-  { id: 'W3', position: [-8, -1, -3] as [number, number, number], label: 'W₂', sublabel: '{b,μ}' },
-  { id: 'W4', position: [0, 0, 4] as [number, number, number], label: 'W₃', sublabel: '{s,W}' },
-  { id: 'W5', position: [8, -1, -3] as [number, number, number], label: 'W₄', sublabel: '{d,e}' },
-  { id: 'W6', position: [0, -8, 0] as [number, number, number], label: 'W₅', sublabel: '{τ,H}' },
+  { id: 'W1', position: [-4, 6, 3] as [number, number, number], label: 'W0', sublabel: '{c,p}' },
+  { id: 'W2', position: [4, 6, 3] as [number, number, number], label: 'W1', sublabel: '{u,t}' },
+  { id: 'W3', position: [-8, -1, -3] as [number, number, number], label: 'W2', sublabel: '{b,μ}' },
+  { id: 'W4', position: [0, 0, 4] as [number, number, number], label: 'W3', sublabel: '{s,W}' },
+  { id: 'W5', position: [8, -1, -3] as [number, number, number], label: 'W4', sublabel: '{d,e}' },
+  { id: 'W6', position: [0, -8, 0] as [number, number, number], label: 'W5', sublabel: '{τ,H}' },
 ];
 
 // Faces (different from black vertices!)

@@ -63,7 +63,7 @@ export function CRTGrid({ selectedParticle, onSelectParticle }: CRTGridProps) {
         CRT Decomposition
       </Text>
       <Text position={[0, 10, 0]} fontSize={0.7} color="#E6EDF3" anchorX="center" anchorY="middle">
-        P^1(Z/6Z) ≅ P^1(F_2) × P^1(F_3)
+        P^1(Z/6Z) ~= P^1(F_2) × P^1(F_3)
       </Text>
       <Text position={[0, 8.5, 0]} fontSize={0.6} color="#6E7681" anchorX="center" anchorY="middle">
         12 bijective cells (3×4 grid)
@@ -213,7 +213,7 @@ export function CRTGrid({ selectedParticle, onSelectParticle }: CRTGridProps) {
       {/* Legend */}
       <group position={[10, 7, 0]}>
         <Text position={[0, 4, 0]} fontSize={0.7} color="#E6EDF3" anchorX="left">CRT Isomorphism:</Text>
-        <Text position={[0, 3.2, 0]} fontSize={0.5} color="#E6EDF3" anchorX="left">Z/6Z ≅ Z/2Z × Z/3Z</Text>
+        <Text position={[0, 3.2, 0]} fontSize={0.5} color="#E6EDF3" anchorX="left">Z/6Z ~= Z/2Z × Z/3Z</Text>
         <Text position={[0, 2.5, 0]} fontSize={0.5} color="#6E7681" anchorX="left">(Chinese Remainder Theorem)</Text>
         
         <Text position={[0, 1.5, 0]} fontSize={0.6} color="#E6EDF3" anchorX="left">Grid Size:</Text>
@@ -238,8 +238,8 @@ export function CRTGrid({ selectedParticle, onSelectParticle }: CRTGridProps) {
       <group position={[-12, -10, 0]}>
         <Text position={[0, 3, 0]} fontSize={0.6} color="#E6EDF3" anchorX="left">Column Sums (n):</Text>
         <Text position={[0, 2.2, 0]} fontSize={0.5} color="#58A6FF" anchorX="left">Col 0: 9, Col 1: 10, Col 2: 12, Col 3: 13</Text>
-        <Text position={[0, 1.5, 0]} fontSize={0.6} color="#E6EDF3" anchorX="left">Row Sums (ℓ):</Text>
-        <Text position={[0, 0.7, 0]} fontSize={0.5} color="#3FB950" anchorX="left">All rows = 13 = d₁² + d₂²</Text>
+        <Text position={[0, 1.5, 0]} fontSize={0.6} color="#E6EDF3" anchorX="left">Row Sums (l):</Text>
+        <Text position={[0, 0.7, 0]} fontSize={0.5} color="#3FB950" anchorX="left">All rows = 13 = d1^2 + d2^2</Text>
         <Text position={[0, 0, 0]} fontSize={0.45} color="#6E7681" anchorX="left">Each particle maps to exactly one cell</Text>
       </group>
     </group>

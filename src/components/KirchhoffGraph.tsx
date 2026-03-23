@@ -12,16 +12,16 @@ interface KirchhoffGraphProps {
 // B1=BV₀(anchor), B2=BV₁(index), B3=BV₂(star), B4=BV₃(other)
 // W1-W6 = σ₁-pairs: {c,p},{u,t},{b,μ},{s,W},{d,e},{τ,H}
 const VERTICES = [
-  { id: 0, label: 'BV₀', type: 'black', x: 0, y: 3 },
-  { id: 1, label: 'BV₁', type: 'black', x: -3, y: 0 },
-  { id: 2, label: 'BV₂', type: 'black', x: 3, y: 0 },
-  { id: 3, label: 'BV₃', type: 'black', x: 0, y: -3 },
-  { id: 4, label: 'W₀', type: 'white', x: -2, y: 3 },
-  { id: 5, label: 'W₁', type: 'white', x: 2, y: 2 },
-  { id: 6, label: 'W₂', type: 'white', x: -3, y: 1.5 },
-  { id: 7, label: 'W₃', type: 'white', x: 2.5, y: -1 },
-  { id: 8, label: 'W₄', type: 'white', x: -2.5, y: -2 },
-  { id: 9, label: 'W₅', type: 'white', x: 1, y: -3 },
+  { id: 0, label: 'BV0', type: 'black', x: 0, y: 3 },
+  { id: 1, label: 'BV1', type: 'black', x: -3, y: 0 },
+  { id: 2, label: 'BV2', type: 'black', x: 3, y: 0 },
+  { id: 3, label: 'BV3', type: 'black', x: 0, y: -3 },
+  { id: 4, label: 'W0', type: 'white', x: -2, y: 3 },
+  { id: 5, label: 'W1', type: 'white', x: 2, y: 2 },
+  { id: 6, label: 'W2', type: 'white', x: -3, y: 1.5 },
+  { id: 7, label: 'W3', type: 'white', x: 2.5, y: -1 },
+  { id: 8, label: 'W4', type: 'white', x: -2.5, y: -2 },
+  { id: 9, label: 'W5', type: 'white', x: 1, y: -3 },
 ];
 
 const ALL_EDGES = [
@@ -54,8 +54,8 @@ const SPANNING_TREES = [
   { id: 1, edges: [0, 2, 3, 4, 5, 6, 8, 9, 10], name: 'Ground (c,s,H)' },
   { id: 2, edges: [1, 2, 3, 4, 5, 6, 8, 9, 10], name: 'Ground (p,s,H)' },
   { id: 3, edges: [0, 2, 3, 4, 5, 7, 8, 9, 10], name: 'Excitation (c,W,H)' },
-  { id: 4, edges: [1, 2, 3, 4, 5, 7, 9, 10, 11], name: 'Alt (p,W,τ)' },
-  { id: 5, edges: [0, 2, 3, 5, 6, 7, 8, 9, 11], name: 'Mixed (c,s+W,τ)' },
+  { id: 4, edges: [1, 2, 3, 4, 5, 7, 9, 10, 11], name: 'Alt (p,W,tau)' },
+  { id: 5, edges: [0, 2, 3, 5, 6, 7, 8, 9, 11], name: 'Mixed (c,s+W,tau)' },
 ];
 
 export function KirchhoffGraph({ selectedParticle }: KirchhoffGraphProps) {
@@ -92,7 +92,7 @@ export function KirchhoffGraph({ selectedParticle }: KirchhoffGraphProps) {
         Kirchhoff = 40
       </Text>
       <Text position={[0, 12, 0]} fontSize={0.7} color="#E6EDF3" anchorX="center" anchorY="middle">
-        Spanning Trees: FORCED &#123;u,t&#125; + BOUNDARY 2³ + RESIDUAL d₂²
+        Spanning Trees: FORCED &#123;u,t&#125; + BOUNDARY 2³ + RESIDUAL d2^2
       </Text>
 
       <group position={[0, 0, 0]}>
