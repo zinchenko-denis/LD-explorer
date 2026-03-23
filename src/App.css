@@ -1,0 +1,190 @@
+/* LD Model 3D Explorer Styles */
+
+:root {
+  --bg-primary: #0D1117;
+  --bg-secondary: #161B22;
+  --bg-tertiary: #0D1117;
+  --border-color: #30363D;
+  --text-primary: #E6EDF3;
+  --text-secondary: #E6EDF3/60;
+  --accent-blue: #58A6FF;
+  --accent-green: #3FB950;
+  --accent-orange: #F0883E;
+  --accent-purple: #A371F7;
+  --accent-gold: #D29922;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #484F58;
+}
+
+/* Canvas container */
+canvas {
+  outline: none;
+}
+
+/* Custom slider styling */
+[data-slot="slider-track"] {
+  background: #30363D !important;
+}
+
+[data-slot="slider-range"] {
+  background: #58A6FF !important;
+}
+
+[data-slot="slider-thumb"] {
+  background: #58A6FF !important;
+  border-color: #58A6FF !important;
+}
+
+/* Custom switch styling */
+[data-slot="switch"] {
+  background: #30363D;
+}
+
+[data-slot="switch"][data-state="checked"] {
+  background: #58A6FF;
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.2s ease;
+}
+
+.card-hover:hover {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 1px var(--accent-blue);
+}
+
+/* Particle type badges */
+.badge-quark-up {
+  background: rgba(88, 166, 255, 0.2);
+  color: #58A6FF;
+  border-color: rgba(88, 166, 255, 0.4);
+}
+
+.badge-quark-down {
+  background: rgba(63, 185, 80, 0.2);
+  color: #3FB950;
+  border-color: rgba(63, 185, 80, 0.4);
+}
+
+.badge-lepton {
+  background: rgba(210, 153, 34, 0.2);
+  color: #D29922;
+  border-color: rgba(210, 153, 34, 0.4);
+}
+
+.badge-boson {
+  background: rgba(240, 136, 62, 0.2);
+  color: #F0883E;
+  border-color: rgba(240, 136, 62, 0.4);
+}
+
+.badge-anchor {
+  background: rgba(163, 113, 247, 0.2);
+  color: #A371F7;
+  border-color: rgba(163, 113, 247, 0.4);
+}
+
+/* Animation for selected elements */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.pulse-animation {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Grid background pattern */
+.grid-pattern {
+  background-image: 
+    linear-gradient(rgba(48, 54, 61, 0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(48, 54, 61, 0.5) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Tooltip styling */
+.tooltip {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--text-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  aside {
+    width: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  aside {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 40vh;
+    z-index: 50;
+  }
+}
+
+/* Three.js canvas interactions */
+.canvas-container {
+  cursor: grab;
+}
+
+.canvas-container:active {
+  cursor: grabbing;
+}
+
+/* Loading state */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--accent-blue);
+}
+
+.loading::after {
+  content: '';
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--accent-blue);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-left: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
