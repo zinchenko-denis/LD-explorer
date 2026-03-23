@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { startLDAudio, stopLDAudio, isLDAudioPlaying } from '@/hooks/use-ld-audio';
+import { startLDAudio, stopLDAudio, isLDAudioPlaying, onNotePlay, PARTICLE_NOTE_MAP } from '@/hooks/use-ld-audio';
 import { LDMatrix3D } from '@/components/LDMatrix3D';
 import { ParticleNetwork } from '@/components/ParticleNetwork';
 import { KCipherVisualizer } from '@/components/KCipherVisualizer';
@@ -69,12 +69,18 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [fadeKey, setFadeKey] = useState(0);
   const [audioOn, setAudioOn] = useState(false);
+  const [activeNote, setActiveNote] = useState<string | null>(null);
 
   const toggleAudio = async () => {
     if (isLDAudioPlaying()) {
       stopLDAudio();
       setAudioOn(false);
+      setActiveNote(null);
     } else {
+      onNotePlay((p) => {
+        setActiveNote(p);
+        setTimeout(() => setActiveNote(null), 500);
+      });
       await startLDAudio();
       setAudioOn(true);
     }
@@ -459,7 +465,10 @@ function App() {
               DOI: 10.5281/zenodo.19150365
             </p>
             <button
-              onClick={async () => { await startLDAudio(); setAudioOn(true); setShowLanding(false); }}
+              onClick={async () => { 
+                onNotePlay((p) => { setActiveNote(p); setTimeout(() => setActiveNote(null), 500); });
+                await startLDAudio(); setAudioOn(true); setShowLanding(false); 
+              }}
               className="mt-8 px-8 py-3 bg-[#58A6FF] hover:bg-[#79C0FF] rounded-xl text-white font-bold text-lg transition-all pointer-events-auto shadow-lg shadow-[#58A6FF]/20 hover:shadow-[#58A6FF]/40"
             >
               {isRu ? 'Исследовать →' : 'Explore →'}
@@ -537,6 +546,49 @@ function App() {
           </div>
         </div>
       </header>
+
+      {/* Particle Note Strip — lights up with Moonlight Sonata */}
+      {audioOn && (
+        <div className={`flex items-center justify-center gap-0.5 py-1 px-2 ${isDarkMode ? 'bg-[#0D1117] border-b border-[#30363D]' : 'bg-gray-100 border-b border-gray-200'}`}>
+          <span className={`text-[10px] mr-2 ${isDarkMode ? 'text-[#6E7681]' : 'text-gray-400'} hidden sm:inline`}>♪</span>
+          {PARTICLE_NOTE_MAP.map(m => {
+            const isActive = activeNote === m.particle;
+            const typeColor = m.type === 'qup' ? '#58A6FF' : m.type === 'qdn' ? '#3FB950' : m.type === 'lep' ? '#D29922' : m.type === 'bos' ? '#F0883E' : '#A371F7';
+            return (
+              <div
+                key={m.particle}
+                className="flex flex-col items-center transition-all duration-200"
+                style={{
+                  width: 28,
+                  opacity: isActive ? 1 : 0.35,
+                  transform: isActive ? 'scale(1.15)' : 'scale(1)',
+                }}
+              >
+                <div
+                  style={{
+                    width: 20, height: 20, borderRadius: 4,
+                    background: isActive ? typeColor : (isDarkMode ? '#161B22' : '#e5e7eb'),
+                    border: `1px solid ${isActive ? typeColor : (isDarkMode ? '#30363D' : '#d1d5db')}`,
+                    boxShadow: isActive ? `0 0 8px ${typeColor}60` : 'none',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 9, fontWeight: 700,
+                    color: isActive ? '#fff' : (isDarkMode ? '#6E7681' : '#9ca3af'),
+                    transition: 'all 0.15s ease',
+                  }}
+                >
+                  {m.particle}
+                </div>
+                <span style={{ fontSize: 8, color: isActive ? typeColor : (isDarkMode ? '#484F58' : '#9ca3af'), marginTop: 1 }}>
+                  {m.note}
+                </span>
+              </div>
+            );
+          })}
+          <span className={`text-[10px] ml-2 ${isDarkMode ? 'text-[#6E7681]' : 'text-gray-400'} hidden sm:inline font-mono`}>
+            Moonlight Sonata
+          </span>
+        </div>
+      )}
 
       {/* Main Content */}
       <div className="flex-1 flex overflow-hidden">
