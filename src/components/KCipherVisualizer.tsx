@@ -387,7 +387,7 @@ export function KCipherVisualizer({ highlightedK, selectedParticle }: KCipherVis
         <Text position={[0, 2.2, 0]} fontSize={0.5} color="#E6EDF3" anchorX="left">|B_1| = 10 elements</Text>
         <Text position={[0, 1.6, 0]} fontSize={0.5} color="#E6EDF3" anchorX="left">Rational: 9 (Hecke orbit)</Text>
         <Text position={[0, 1, 0]} fontSize={0.5} color="#E6EDF3" anchorX="left">Irrational: 1 (sqrt2)</Text>
-        <Text position={[0, 0.2, 0]} fontSize={0.5} color="#3FB950" anchorX="left">TC = 21 (mean 2.1)</Text>
+        <Text position={[0, 0.2, 0]} fontSize={0.5} color="#3FB950" anchorX="left">MDL = Hecke: one lattice, two names</Text>
       </group>
     </group>
   );

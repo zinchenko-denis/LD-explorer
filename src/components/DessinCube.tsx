@@ -220,12 +220,12 @@ export function DessinCube({ particles, selectedParticle, onSelectParticle }: De
 
       {/* Explanation */}
       <group position={[12, -12, 0]}>
-        <Text position={[0, 3, 0]} fontSize={0.7} color="#E6EDF3" anchorX="left">Geometric Constraint:</Text>
-        <Text position={[0, 2.2, 0]} fontSize={0.45} color="#6E7681" anchorX="left">Only cells where the</Text>
-        <Text position={[0, 1.7, 0]} fontSize={0.45} color="#6E7681" anchorX="left">combination BxWxF equals</Text>
-        <Text position={[0, 1.2, 0]} fontSize={0.45} color="#6E7681" anchorX="left">the index (6) are valid.</Text>
-        <Text position={[0, 0.5, 0]} fontSize={0.45} color="#6E7681" anchorX="left">Others are like illegal</Text>
-        <Text position={[0, 0, 0]} fontSize={0.45} color="#6E7681" anchorX="left">chess moves.</Text>
+        <Text position={[0, 3, 0]} fontSize={0.7} color="#E6EDF3" anchorX="left">Constraint:</Text>
+        <Text position={[0, 2.2, 0]} fontSize={0.45} color="#6E7681" anchorX="left">12 of 64 cells occupied.</Text>
+        <Text position={[0, 1.7, 0]} fontSize={0.45} color="#6E7681" anchorX="left">Each BV has 3 edges (val d2),</Text>
+        <Text position={[0, 1.2, 0]} fontSize={0.45} color="#6E7681" anchorX="left">each WV has 2 (val d1).</Text>
+        <Text position={[0, 0.5, 0]} fontSize={0.45} color="#6E7681" anchorX="left">12 = index of Gamma_0(6).</Text>
+        <Text position={[0, 0, 0]} fontSize={0.45} color="#6E7681" anchorX="left">Ratio: 12/64 = 18.75%</Text>
       </group>
 
       {/* Bottom info */}
