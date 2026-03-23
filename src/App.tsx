@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { startLDAudio, stopLDAudio, isLDAudioPlaying } from '@/hooks/use-ld-audio';
 import { LDMatrix3D } from '@/components/LDMatrix3D';
 import { ParticleNetwork } from '@/components/ParticleNetwork';
 import { KCipherVisualizer } from '@/components/KCipherVisualizer';
@@ -67,6 +68,17 @@ function App() {
   const [showLanding, setShowLanding] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [fadeKey, setFadeKey] = useState(0);
+  const [audioOn, setAudioOn] = useState(false);
+
+  const toggleAudio = async () => {
+    if (isLDAudioPlaying()) {
+      stopLDAudio();
+      setAudioOn(false);
+    } else {
+      await startLDAudio();
+      setAudioOn(true);
+    }
+  };
 
   // Detect mobile/tablet
   const [isMobile, setIsMobile] = useState(false);
@@ -447,16 +459,21 @@ function App() {
               DOI: 10.5281/zenodo.19150365
             </p>
             <button
-              onClick={() => setShowLanding(false)}
+              onClick={async () => { await startLDAudio(); setAudioOn(true); setShowLanding(false); }}
               className="mt-8 px-8 py-3 bg-[#58A6FF] hover:bg-[#79C0FF] rounded-xl text-white font-bold text-lg transition-all pointer-events-auto shadow-lg shadow-[#58A6FF]/20 hover:shadow-[#58A6FF]/40"
             >
               {isRu ? 'Исследовать →' : 'Explore →'}
             </button>
-            <div className="flex items-center gap-4 mt-4 pointer-events-auto">
+            <div className="flex items-center gap-3 mt-4 pointer-events-auto">
               <button onClick={() => setIsRu(!isRu)}
                 className="px-3 py-1.5 rounded-lg text-sm font-medium bg-white/10 text-white/70 hover:bg-white/20 transition-all">
                 {isRu ? 'RU' : 'EN'}
               </button>
+              <a href="https://open.spotify.com/track/1nMTRTI1SfyGnUaHOYCqLM"
+                target="_blank" rel="noopener noreferrer"
+                className="px-3 py-1.5 rounded-lg text-sm font-medium bg-white/10 text-white/70 hover:bg-white/20 transition-all">
+                🎵 S.T.A.Y.
+              </a>
             </div>
           </div>
         </div>
@@ -494,6 +511,14 @@ function App() {
             </div>
           </div>
           <div className="flex items-center gap-2 md:gap-3">
+            <button onClick={toggleAudio}
+              className={`px-2 md:px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                audioOn 
+                  ? 'bg-[#58A6FF]/20 text-[#58A6FF] border border-[#58A6FF]/40'
+                  : isDarkMode ? 'bg-[#30363D] text-[#8B949E] hover:bg-[#3D444D]' : 'bg-gray-200 text-gray-500 hover:bg-gray-300'
+              }`}>
+              {audioOn ? '🔊' : '🔇'}
+            </button>
             <button onClick={() => setIsRu(!isRu)}
               className={`px-2 md:px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${isDarkMode ? 'bg-[#30363D] text-[#E6EDF3] hover:bg-[#3D444D]' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>
               {isRu ? 'RU' : 'EN'}
