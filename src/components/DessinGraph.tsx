@@ -8,6 +8,7 @@ interface DessinGraphProps {
   showConnections: boolean;
   selectedParticle: Particle | null;
   onSelectParticle?: (p: Particle) => void;
+  hideOverlays?: boolean;
 }
 
 // Black vertices (valency 3 each) - 4 vertices
@@ -95,7 +96,7 @@ function PulseDot({ from, to, color, speed, phase, size }: {
   );
 }
 
-export function DessinGraph({ showConnections, selectedParticle, onSelectParticle }: DessinGraphProps) {
+export function DessinGraph({ showConnections, selectedParticle, onSelectParticle, hideOverlays }: DessinGraphProps) {
   const groupRef = useRef<THREE.Group>(null);
   const [hoveredVertex, setHoveredVertex] = useState<string | null>(null);
   const [hoveredEdge, setHoveredEdge] = useState<string | null>(null);
@@ -226,7 +227,7 @@ export function DessinGraph({ showConnections, selectedParticle, onSelectParticl
             </Text>
 
             {/* Hover tooltip */}
-            {isHovered && (
+            {isHovered && !hideOverlays && (
               <Html position={[2, 2, 0]}>
                 <div className="bg-[#161B22] border border-[#30363D] rounded px-2 py-1 text-xs whitespace-nowrap">
                   <span className="text-[#E6EDF3]">Connected: </span>
@@ -287,7 +288,7 @@ export function DessinGraph({ showConnections, selectedParticle, onSelectParticl
             </Text>
 
             {/* Hover tooltip */}
-            {isHovered && (
+            {isHovered && !hideOverlays && (
               <Html position={[1.5, 1.5, 0]}>
                 <div className="bg-[#161B22] border border-[#30363D] rounded px-2 py-1 text-xs whitespace-nowrap">
                   <span className="text-[#E6EDF3]">Connected: </span>
@@ -393,6 +394,7 @@ export function DessinGraph({ showConnections, selectedParticle, onSelectParticl
       })}
 
       {/* Legend — HTML overlay */}
+      {!hideOverlays && (
       <Html position={[15, 6, 0]} distanceFactor={24}>
         <div style={{ background:'rgba(13,17,23,0.92)', border:'1px solid #30363D', borderRadius:8, padding:'12px 16px', width:200, fontFamily:'system-ui, sans-serif', fontSize:12, color:'#E6EDF3', pointerEvents:'none' }}>
           <div style={{ fontWeight:700, marginBottom:6 }}>Vertices</div>
@@ -411,6 +413,7 @@ export function DessinGraph({ showConnections, selectedParticle, onSelectParticl
           </div>
         </div>
       </Html>
+      )}
     </group>
   );
 }

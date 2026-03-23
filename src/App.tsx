@@ -424,7 +424,7 @@ function App() {
             <pointLight position={[10, 10, 10]} intensity={0.6} color="#58A6FF" />
             <pointLight position={[-10, -10, -10]} intensity={0.3} color="#3FB950" />
             <Stars radius={100} depth={50} count={2000} factor={4} saturation={0} fade speed={1} />
-            <DessinGraph showConnections={true} selectedParticle={null} />
+            <DessinGraph showConnections={true} selectedParticle={null} hideOverlays={true} />
           </Canvas>
         </Suspense>
         {/* Strong left-to-right gradient to separate text from 3D */}

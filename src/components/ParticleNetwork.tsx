@@ -1,6 +1,6 @@
 import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Text } from '@react-three/drei';
+import { Text, Billboard } from '@react-three/drei';
 import * as THREE from 'three';
 import type { Particle } from '@/types/ld-model';
 
@@ -126,15 +126,17 @@ export function ParticleNetwork({ particles, showConnections, selectedParticle, 
               </mesh>
             )}
 
-            <Text position={[0, size + 1, 0]} fontSize={0.8} color="#FFFFFF" anchorX="center" anchorY="bottom">
-              {particle.name}
-            </Text>
+            <Billboard follow lockX={false} lockY={false} lockZ={false}>
+              <Text position={[0, size + 1, 0]} fontSize={0.8} color="#FFFFFF" anchorX="center" anchorY="bottom">
+                {particle.name}
+              </Text>
 
-            <Text position={[0, -size - 0.8, 0]} fontSize={0.5} color="#E6EDF3" anchorX="center" anchorY="top">
-              {particle.mass < 1000 
-                ? `${particle.mass.toFixed(1)} MeV` 
-                : `${(particle.mass / 1000).toFixed(2)} GeV`}
-            </Text>
+              <Text position={[0, -size - 0.8, 0]} fontSize={0.5} color="#E6EDF3" anchorX="center" anchorY="top">
+                {particle.mass < 1000 
+                  ? `${particle.mass.toFixed(1)} MeV` 
+                  : `${(particle.mass / 1000).toFixed(2)} GeV`}
+              </Text>
+            </Billboard>
           </group>
         );
       })}

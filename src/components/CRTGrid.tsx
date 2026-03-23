@@ -237,9 +237,9 @@ export function CRTGrid({ selectedParticle, onSelectParticle }: CRTGridProps) {
       {/* Mathematical note */}
       <group position={[-12, -10, 0]}>
         <Text position={[0, 3, 0]} fontSize={0.6} color="#E6EDF3" anchorX="left">Column Sums (n):</Text>
-        <Text position={[0, 2.2, 0]} fontSize={0.5} color="#58A6FF" anchorX="left">Col 0: 9, Col 1: 10, Col 2: 12, Col 3: 13</Text>
-        <Text position={[0, 1.5, 0]} fontSize={0.6} color="#E6EDF3" anchorX="left">Row Sums (l):</Text>
-        <Text position={[0, 0.7, 0]} fontSize={0.5} color="#3FB950" anchorX="left">All rows = 13 = d1^2 + d2^2</Text>
+        <Text position={[0, 2.2, 0]} fontSize={0.5} color="#58A6FF" anchorX="left">Col 0: 6=N, Col 1: 16=d1^4, Col 2: 12=index, Col 3: 10=|B1|</Text>
+        <Text position={[0, 1.5, 0]} fontSize={0.6} color="#E6EDF3" anchorX="left">Row Sums (n):</Text>
+        <Text position={[0, 0.7, 0]} fontSize={0.5} color="#3FB950" anchorX="left">15=d2(d1+d2), 11=dim M10, 18=d2*N</Text>
         <Text position={[0, 0, 0]} fontSize={0.45} color="#6E7681" anchorX="left">Each particle maps to exactly one cell</Text>
       </group>
     </group>
