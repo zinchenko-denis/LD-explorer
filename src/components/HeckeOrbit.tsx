@@ -68,6 +68,31 @@ const OPERATOR_COLORS: Record<string, string> = {
   'EWSB': '#A371F7',
 };
 
+// Travelling dot along edge
+function HeckePulse({ from, to, color, speed, phase }: {
+  from: [number,number,number]; to: [number,number,number];
+  color: string; speed: number; phase: number;
+}) {
+  const ref = useRef<THREE.Mesh>(null);
+  useFrame((state) => {
+    const raw = ((state.clock.elapsedTime * speed + phase) % 2) / 2;
+    const p = raw < 0.5 ? raw * 2 : 2 - raw * 2;
+    if (ref.current) {
+      ref.current.position.set(
+        from[0] + (to[0]-from[0])*p,
+        from[1] + (to[1]-from[1])*p,
+        from[2] + (to[2]-from[2])*p,
+      );
+    }
+  });
+  return (
+    <mesh ref={ref}>
+      <sphereGeometry args={[0.18]} />
+      <meshBasicMaterial color={color} transparent opacity={0.9} />
+    </mesh>
+  );
+}
+
 export function HeckeOrbit({ highlightedK, selectedParticle }: HeckeOrbitProps) {
   const groupRef = useRef<THREE.Group>(null);
   const [hoveredNode, setHoveredNode] = useState<number | null>(null);
@@ -180,6 +205,15 @@ export function HeckeOrbit({ highlightedK, selectedParticle }: HeckeOrbitProps) 
             >
               {action.label}
             </Text>
+
+            {/* Travelling pulse */}
+            <HeckePulse 
+              from={fromPos} 
+              to={toPos} 
+              color={color || '#fff'} 
+              speed={action.operator === 'T_2' ? 0.7 : action.operator === 'T_3' ? 1.0 : 0.5} 
+              phase={idx * 0.6} 
+            />
           </group>
         );
       })}

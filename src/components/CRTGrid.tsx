@@ -39,16 +39,22 @@ const CRT_CELLS = [
 export function CRTGrid({ selectedParticle, onSelectParticle }: CRTGridProps) {
   const groupRef = useRef<THREE.Group>(null);
   const [hoveredCell, setHoveredCell] = useState<string | null>(null);
+  const [waveCell, setWaveCell] = useState(-1);
 
   useFrame((state) => {
     if (groupRef.current) {
       groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.05) * 0.08;
     }
+    // Sequential cell highlight wave
+    const idx = Math.floor(state.clock.elapsedTime / 0.5) % (CRT_CELLS.length + 4);
+    if (idx !== waveCell) setWaveCell(idx);
   });
 
   const isCellHighlighted = (cellParticle: string) => {
     return selectedParticle?.name === cellParticle;
   };
+
+  const isCellWave = (idx: number) => idx === waveCell || idx === waveCell - 1;
 
   return (
     <group ref={groupRef}>
@@ -99,6 +105,7 @@ export function CRTGrid({ selectedParticle, onSelectParticle }: CRTGridProps) {
           const y = (2 - cell.f2) * 3 + 1.5;
           const isHighlighted = isCellHighlighted(cell.particle);
           const isHovered = hoveredCell === `${cell.f2}-${cell.f3}`;
+          const isWave = isCellWave(idx);
 
           return (
             <group key={idx} position={[x, y, 0]}>
@@ -126,8 +133,8 @@ export function CRTGrid({ selectedParticle, onSelectParticle }: CRTGridProps) {
                 <boxGeometry args={[2.5, 2.5, 0.3]} />
                 <meshStandardMaterial
                   color={cell.color}
-                  emissive={isHighlighted || isHovered ? cell.color : '#000000'}
-                  emissiveIntensity={isHighlighted ? 0.6 : isHovered ? 0.4 : 0.2}
+                  emissive={isHighlighted || isHovered || isWave ? cell.color : '#000000'}
+                  emissiveIntensity={isHighlighted ? 0.6 : isWave ? 0.5 : isHovered ? 0.4 : 0.2}
                   transparent
                   opacity={0.95}
                 />
