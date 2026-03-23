@@ -1,4 +1,4 @@
-import { useState, Suspense } from 'react';
+import { useState, Suspense, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Grid, Stars } from '@react-three/drei';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -7,6 +7,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { LDMatrix3D } from '@/components/LDMatrix3D';
 import { ParticleNetwork } from '@/components/ParticleNetwork';
 import { KCipherVisualizer } from '@/components/KCipherVisualizer';
@@ -63,6 +64,18 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isRu, setIsRu] = useState(false);
   const [showDescription, setShowDescription] = useState(true);
+  const [showLanding, setShowLanding] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [fadeKey, setFadeKey] = useState(0);
+
+  // Detect mobile/tablet
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 1024);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   // Look up real particle by name (fixes dummy data from 3D clicks)
   const handleSelectParticle = (p: Particle) => {
@@ -78,6 +91,8 @@ function App() {
     setViewMode(mode);
     setShowDescription(true);
     setSelectedParticle(null);
+    setFadeKey(k => k + 1);
+    setSidebarOpen(false);
   };
 
   const VIEW_DESC: Record<ViewMode, { en: string; ru: string; title_en: string; title_ru: string }> = {
@@ -120,66 +135,14 @@ function App() {
     gridColor: '#e5e7eb',
   };
 
-  return (
-    <div className={`min-h-screen ${theme.bg} ${theme.text} flex flex-col`}>
-      {/* Header */}
-      <header className={`${theme.headerBg} border-b ${theme.border} p-4`}>
-        <div className="flex items-center justify-between max-w-[1920px] mx-auto">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#58A6FF] to-[#3FB950] flex items-center justify-center">
-              <span className="text-white font-bold text-lg">LD</span>
-            </div>
-            <div>
-              <h1 className={`text-xl font-bold ${theme.text}`}>LD Model 3D Explorer</h1>
-              <p className={`text-xs ${theme.textMuted}`}>Discrete Scale Invariance & Particle Mass Spectrum</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setIsRu(!isRu)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                isDarkMode 
-                  ? 'bg-[#30363D] text-[#E6EDF3] hover:bg-[#3D444D]' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              {isRu ? 'RU 🇷🇺' : 'EN 🇬🇧'}
-            </button>
-            <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                isDarkMode 
-                  ? 'bg-[#30363D] text-[#E6EDF3] hover:bg-[#3D444D]' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              {isDarkMode ? '☀️ Light' : '🌙 Dark'}
-            </button>
-            <span className={`text-xs font-mono ${isDarkMode ? 'text-[#8B949E]' : 'text-gray-500'}`}>
-              Γ₀(6) · N=6 · (d₁,d₂)=(2,3)
-            </span>
-            <a 
-              href="https://zenodo.org/records/19150365" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className={`text-xs font-mono transition-all ${isDarkMode ? 'text-[#58A6FF] hover:text-[#79C0FF]' : 'text-blue-600 hover:text-blue-800'}`}
-            >
-              DOI: 10.5281/zenodo.19150365
-            </a>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Left Sidebar - Controls */}
-        <aside className={`w-80 ${theme.sidebarBg} border-r ${theme.border} p-4 overflow-y-auto flex-shrink-0`}>
-          <div className="space-y-4">
-            <Card className={`${theme.cardBg} ${theme.border} border`}>
-              <CardHeader className="pb-2">
-                <CardTitle className={`text-sm ${theme.text}`}>{isRu ? 'Визуализация' : 'Visualization'}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2 max-h-[600px] overflow-y-auto">
+  // ── Sidebar content (reused in desktop sidebar and mobile Sheet) ──
+  const sidebarContent = (
+    <div className="space-y-4">
+      <Card className={`${theme.cardBg} ${theme.border} border`}>
+        <CardHeader className="pb-2">
+          <CardTitle className={`text-sm ${theme.text}`}>{isRu ? 'Визуализация' : 'Visualization'}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2 max-h-[600px] overflow-y-auto">
                   <button
                     onClick={() => handleViewChange('matrix')}
                     className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
@@ -411,7 +374,6 @@ function App() {
                   </div>
                 </CardContent>
               </Card>
-          </div>
 
           <Separator className={`my-4 ${theme.border}`} />
 
@@ -436,17 +398,126 @@ function App() {
                     <span className={theme.textMuted}>n={p.n}</span>
                   </div>
                   <div className={`${theme.textMuted} mt-1`}>
-                    K={p.K === Math.sqrt(2) ? 'sqrt2' : p.K.toFixed(2)}
+                    K={p.K === Math.sqrt(2) ? '\u221A2' : p.K.toFixed(2)}
                   </div>
                 </button>
               ))}
             </CardContent>
           </Card>
-        </aside>
+        </div>
+  );
+
+  // ── LANDING PAGE ──
+  if (showLanding) {
+    return (
+      <div className="h-screen w-screen relative overflow-hidden bg-[#0D1117]">
+        <Suspense fallback={<LoadingFallback />}>
+          <Canvas
+            className="absolute inset-0"
+            gl={{ antialias: true, alpha: true }}
+            dpr={[1, 2]}
+          >
+            <PerspectiveCamera makeDefault position={[20, 12, 20]} fov={50} />
+            <OrbitControls enablePan={false} enableZoom={false} autoRotate autoRotateSpeed={0.3} />
+            <ambientLight intensity={0.5} />
+            <pointLight position={[10, 10, 10]} intensity={0.8} color="#58A6FF" />
+            <pointLight position={[-10, -10, -10]} intensity={0.4} color="#3FB950" />
+            <Stars radius={100} depth={50} count={2000} factor={4} saturation={0} fade speed={1} />
+            <DessinGraph showConnections={true} selectedParticle={null} />
+          </Canvas>
+        </Suspense>
+        {/* Landing overlay */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+             style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(13,17,23,0.7) 100%)' }}>
+          <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight"
+              style={{ textShadow: '0 0 60px rgba(88,166,255,0.3)' }}>
+            LD Model
+          </h1>
+          <p className="text-lg md:text-xl text-[#8B949E] mt-4 text-center px-4">
+            {isRu ? '12 частиц из одной кривой: X₀(6)' : '12 Particles from One Curve: X₀(6)'}
+          </p>
+          <p className="text-xs text-[#6E7681] mt-2 font-mono">
+            DOI: 10.5281/zenodo.19150365
+          </p>
+          <button
+            onClick={() => setShowLanding(false)}
+            className="mt-10 px-8 py-3 bg-[#58A6FF] hover:bg-[#79C0FF] rounded-xl text-white font-bold text-lg transition-all pointer-events-auto shadow-lg shadow-[#58A6FF]/20 hover:shadow-[#58A6FF]/40"
+          >
+            {isRu ? 'Исследовать →' : 'Explore →'}
+          </button>
+          <div className="flex items-center gap-4 mt-6 pointer-events-auto">
+            <button onClick={() => setIsRu(!isRu)}
+              className="px-3 py-1.5 rounded-lg text-sm font-medium bg-white/10 text-white/70 hover:bg-white/20 transition-all">
+              {isRu ? 'RU' : 'EN'}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── MAIN EXPLORER ──
+  return (
+    <div className={`min-h-screen ${theme.bg} ${theme.text} flex flex-col`}>
+      {/* Header */}
+      <header className={`${theme.headerBg} border-b ${theme.border} px-4 py-3`}>
+        <div className="flex items-center justify-between max-w-[1920px] mx-auto">
+          <div className="flex items-center gap-3">
+            {/* Hamburger (mobile/tablet) */}
+            {isMobile && (
+              <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+                <SheetTrigger asChild>
+                  <button className={`p-2 rounded-lg ${isDarkMode ? 'bg-[#30363D] text-[#E6EDF3]' : 'bg-gray-200 text-gray-700'}`}>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+                  </button>
+                </SheetTrigger>
+                <SheetContent side="left" className={`w-80 ${theme.sidebarBg} ${theme.border} border-r p-4 overflow-y-auto`}>
+                  {sidebarContent}
+                </SheetContent>
+              </Sheet>
+            )}
+            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#58A6FF] to-[#3FB950] flex items-center justify-center cursor-pointer"
+                 onClick={() => setShowLanding(true)}>
+              <span className="text-white font-bold">LD</span>
+            </div>
+            <div className="hidden sm:block">
+              <h1 className={`text-lg font-bold ${theme.text}`}>LD Model 3D Explorer</h1>
+              <p className={`text-xs ${theme.textMuted}`}>Discrete Scale Invariance & Particle Mass Spectrum</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 md:gap-3">
+            <button onClick={() => setIsRu(!isRu)}
+              className={`px-2 md:px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${isDarkMode ? 'bg-[#30363D] text-[#E6EDF3] hover:bg-[#3D444D]' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>
+              {isRu ? 'RU' : 'EN'}
+            </button>
+            <button onClick={() => setIsDarkMode(!isDarkMode)}
+              className={`px-2 md:px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${isDarkMode ? 'bg-[#30363D] text-[#E6EDF3] hover:bg-[#3D444D]' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>
+              {isDarkMode ? '☀️' : '🌙'}
+            </button>
+            <span className={`hidden lg:inline text-xs font-mono ${isDarkMode ? 'text-[#8B949E]' : 'text-gray-500'}`}>
+              N=6 · (d1,d2)=(2,3)
+            </span>
+            <a href="https://zenodo.org/records/19150365" target="_blank" rel="noopener noreferrer"
+              className={`hidden md:inline text-xs font-mono transition-all ${isDarkMode ? 'text-[#58A6FF] hover:text-[#79C0FF]' : 'text-blue-600 hover:text-blue-800'}`}>
+              DOI: 10.5281/zenodo.19150365
+            </a>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Desktop Sidebar */}
+        {!isMobile && (
+          <aside className={`w-72 ${theme.sidebarBg} border-r ${theme.border} p-3 overflow-y-auto flex-shrink-0`}>
+            {sidebarContent}
+          </aside>
+        )}
 
         {/* Center - 3D Canvas */}
         <main className="flex-1 relative" style={{ backgroundColor: theme.canvasBg }}>
           <Suspense fallback={<LoadingFallback />}>
+            <div key={fadeKey} className="w-full h-full animate-fade-in">
             <Canvas 
               className="w-full h-full"
               gl={{ antialias: true, alpha: true }}
@@ -580,20 +651,13 @@ function App() {
                 />
               )}
             </Canvas>
+            </div>
           </Suspense>
 
           {/* Overlay Info — dismissable */}
           {selectedParticle && (
-            <div className="absolute top-4 right-4 w-80">
-              <div className="relative">
-                <button 
-                  onClick={handleDismiss}
-                  className={`absolute -top-2 -right-2 z-10 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                    isDarkMode ? 'bg-[#30363D] text-[#E6EDF3] hover:bg-[#3D444D]' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
-                  }`}
-                >×</button>
-                <ParticleInfo particle={selectedParticle} />
-              </div>
+            <div className="absolute top-4 right-4 w-80 z-20">
+              <ParticleInfo particle={selectedParticle} onDismiss={handleDismiss} />
             </div>
           )}
 
