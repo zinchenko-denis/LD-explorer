@@ -64,6 +64,40 @@ function App() {
   const [highlightedN, setHighlightedN] = useState<number | null>(null);
   const [highlightedK, setHighlightedK] = useState<number | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isRu, setIsRu] = useState(false);
+  const [showDescription, setShowDescription] = useState(true);
+
+  // Look up real particle by name (fixes dummy data from 3D clicks)
+  const handleSelectParticle = (p: Particle) => {
+    const real = particles.find(r => r.name === p.name || r.name === p.name.replace('mu', 'μ').replace('tau', 'τ'));
+    setSelectedParticle(real || p);
+  };
+
+  // Dismiss particle card
+  const handleDismiss = () => setSelectedParticle(null);
+
+  // Show description briefly on view change
+  const handleViewChange = (mode: ViewMode) => {
+    setViewMode(mode);
+    setShowDescription(true);
+    setSelectedParticle(null);
+  };
+
+  const VIEW_DESC: Record<ViewMode, { en: string; ru: string; title_en: string; title_ru: string }> = {
+    matrix:      { title_en: 'Biadjacency Matrix', title_ru: 'Бисмежная матрица', en: 'The 4×6 matrix connecting 4 black vertices (particle types) to 6 white vertices (generation channels). Sum = 12 = index of Γ₀(6).', ru: 'Матрица 4×6 связывает 4 чёрные вершины (типы частиц) с 6 белыми (каналы поколений). Сумма = 12 = индекс Γ₀(6).' },
+    network:     { title_en: 'Particle Network', title_ru: 'Сеть частиц', en: '12 particles arranged by mass (vertical) with connections showing the LD lattice structure n × K.', ru: '12 частиц по массе (вертикаль) со связями, показывающими решёточную структуру n × K.' },
+    kcipher:     { title_en: 'K-Cipher', title_ru: 'K-шифр', en: 'Each particle mass multiplier K = 2^a₂ · 3^a₃ is fully determined by the dessin geometry. 11/11 rational + 1 EWSB (√2).', ru: 'Множитель массы K = 2^a₂ · 3^a₃ полностью определён геометрией дезина. 11/11 рациональных + 1 EWSB (√2).' },
+    dessin:      { title_en: "Dessin d'Enfant", title_ru: 'Дезин-данфан', en: 'The bipartite graph of X₀(6): 4 black vertices (val 3), 6 white (val 2), 12 edges = 12 particles. Pulsing dots show information flow along edges.', ru: 'Двудольный граф X₀(6): 4 чёрные вершины (вал 3), 6 белых (вал 2), 12 рёбер = 12 частиц. Пульсирующие точки показывают поток информации.' },
+    cube:        { title_en: 'Lattice-K Cube', title_ru: 'Решётка n-K', en: 'Parameter space: lattice node n vs multiplier K vs mass. Each particle sits at a unique (n, K) address.', ru: 'Пространство параметров: узел решётки n × множитель K × масса. Каждая частица на уникальном адресе (n, K).' },
+    crt:         { title_en: 'CRT Grid', title_ru: 'CRT-сетка', en: 'Chinese Remainder Theorem: P¹(ℤ/6ℤ) ≅ P¹(𝔽₂) × P¹(𝔽₃). Each of 12 cells = one particle. Columns encode face type.', ru: 'Китайская теорема об остатках: P¹(ℤ/6ℤ) ≅ P¹(𝔽₂) × P¹(𝔽₃). 12 ячеек = 12 частиц. Столбцы кодируют тип грани.' },
+    hecke:       { title_en: 'Hecke Orbit', title_ru: 'Орбита Гекке', en: 'B₁ = orbit of K=1 under Hecke operators T₂, T₃ within distance 3. MDL ≡ Hecke: one lattice, two names.', ru: 'B₁ = орбита K=1 под операторами Гекке T₂, T₃ на расстоянии ≤ 3. MDL ≡ Hecke: одна решётка, два имени.' },
+    kirchhoff:   { title_en: 'Kirchhoff Graph', title_ru: 'Граф Кирхгофа', en: 'Bipartite graph with K=40 spanning trees. Anchor splits degeneracy → Cabibbo angle λ = 9/40.', ru: 'Двудольный граф, 40 остовных деревьев. Якорь расщепляет вырождение → угол Кабиббо λ = 9/40.' },
+    dessincube:  { title_en: 'Dessin in 3D', title_ru: 'Дезин в 3D', en: '12 particles mapped into a 3D cube by face×BV×WV coordinates. 12 of 64 cells occupied.', ru: '12 частиц в 3D кубе по координатам грань×BV×WV. Заняты 12 из 64 ячеек.' },
+    sphere:      { title_en: 'Riemann Sphere', title_ru: 'Сфера Римана', en: 'X₀(6) as punctured sphere with 4 cusps (widths 1,2,3,6). Particles placed by j-map preimages.', ru: 'X₀(6) как проколотая сфера с 4 каспами (ширины 1,2,3,6). Частицы на прообразах j-отображения.' },
+    cayley:      { title_en: 'Cayley Spectrum', title_ru: 'Спектр Кэли', en: '12-vertex Cayley graph on P¹(ℤ/6ℤ). Laplacian spectrum has discriminants 21 = d₂L and 5 = N−1.', ru: '12-вершинный граф Кэли на P¹(ℤ/6ℤ). Дискриминанты спектра: 21 = d₂L и 5 = N−1.' },
+    phi:         { title_en: 'φ-Amplitudes', title_ru: 'φ-Амплитуды', en: 'Golden ratio eigenvector: Z_φ = {p,c,u,t} exactly zero. Three tiers 1:φ:φ² with d-μ maximal.', ru: 'Собственный вектор золотого сечения: Z_φ = {p,c,u,t} точно ноль. Три яруса 1:φ:φ², d-μ максимальны.' },
+    heatkernel:  { title_en: 'Heat Kernel', title_ru: 'Ядро теплопроводности', en: 'At diffusion time t=1/d₁, the heat kernel gives sin²θ₁₂ = 4/13 with 4.6 ppm precision.', ru: 'При t=1/d₁ ядро теплопроводности даёт sin²θ₁₂ = 4/13 с точностью 4.6 ppm.' },
+  };
 
   const theme = isDarkMode ? {
     bg: 'bg-[#0D1117]',
@@ -105,6 +139,16 @@ function App() {
           </div>
           <div className="flex items-center gap-4">
             <button
+              onClick={() => setIsRu(!isRu)}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                isDarkMode 
+                  ? 'bg-[#30363D] text-[#E6EDF3] hover:bg-[#3D444D]' 
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              {isRu ? '🇬🇧 EN' : '🇷🇺 RU'}
+            </button>
+            <button
               onClick={() => setIsDarkMode(!isDarkMode)}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                 isDarkMode 
@@ -136,8 +180,8 @@ function App() {
         <aside className={`w-80 ${theme.sidebarBg} border-r ${theme.border} p-4 overflow-y-auto flex-shrink-0`}>
           <Tabs defaultValue="view" className="w-full">
             <TabsList className={`w-full grid grid-cols-2 ${isDarkMode ? 'bg-[#0D1117]' : 'bg-gray-100'}`}>
-              <TabsTrigger value="view" className="data-[state=active]:bg-[#58A6FF]/20">View</TabsTrigger>
-              <TabsTrigger value="params" className="data-[state=active]:bg-[#58A6FF]/20">Params</TabsTrigger>
+              <TabsTrigger value="view" className={`data-[state=active]:bg-[#58A6FF]/20 ${isDarkMode ? 'text-[#E6EDF3] data-[state=inactive]:text-[#8B949E]' : 'text-gray-900 data-[state=inactive]:text-gray-500'}`}>View</TabsTrigger>
+              <TabsTrigger value="params" className={`data-[state=active]:bg-[#58A6FF]/20 ${isDarkMode ? 'text-[#E6EDF3] data-[state=inactive]:text-[#8B949E]' : 'text-gray-900 data-[state=inactive]:text-gray-500'}`}>Params</TabsTrigger>
             </TabsList>
             
             <TabsContent value="view" className="space-y-4 mt-4">
@@ -147,7 +191,7 @@ function App() {
                 </CardHeader>
                 <CardContent className="space-y-2 max-h-[500px] overflow-y-auto">
                   <button
-                    onClick={() => setViewMode('matrix')}
+                    onClick={() => handleViewChange('matrix')}
                     className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
                       viewMode === 'matrix' 
                         ? 'bg-[#58A6FF]/20 border border-[#58A6FF]/40' 
@@ -162,7 +206,7 @@ function App() {
                   </button>
                   
                   <button
-                    onClick={() => setViewMode('network')}
+                    onClick={() => handleViewChange('network')}
                     className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
                       viewMode === 'network' 
                         ? 'bg-[#3FB950]/20 border border-[#3FB950]/40' 
@@ -177,7 +221,7 @@ function App() {
                   </button>
                   
                   <button
-                    onClick={() => setViewMode('kcipher')}
+                    onClick={() => handleViewChange('kcipher')}
                     className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
                       viewMode === 'kcipher' 
                         ? 'bg-[#F0883E]/20 border border-[#F0883E]/40' 
@@ -192,7 +236,7 @@ function App() {
                   </button>
                   
                   <button
-                    onClick={() => setViewMode('dessin')}
+                    onClick={() => handleViewChange('dessin')}
                     className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
                       viewMode === 'dessin' 
                         ? 'bg-[#A371F7]/20 border border-[#A371F7]/40' 
@@ -207,7 +251,7 @@ function App() {
                   </button>
                   
                   <button
-                    onClick={() => setViewMode('cube')}
+                    onClick={() => handleViewChange('cube')}
                     className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
                       viewMode === 'cube' 
                         ? 'bg-[#D29922]/20 border border-[#D29922]/40' 
@@ -222,7 +266,7 @@ function App() {
                   </button>
 
                   <button
-                    onClick={() => setViewMode('crt')}
+                    onClick={() => handleViewChange('crt')}
                     className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
                       viewMode === 'crt' 
                         ? 'bg-[#58A6FF]/20 border border-[#58A6FF]/40' 
@@ -237,7 +281,7 @@ function App() {
                   </button>
 
                   <button
-                    onClick={() => setViewMode('hecke')}
+                    onClick={() => handleViewChange('hecke')}
                     className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
                       viewMode === 'hecke' 
                         ? 'bg-[#F0883E]/20 border border-[#F0883E]/40' 
@@ -252,7 +296,7 @@ function App() {
                   </button>
 
                   <button
-                    onClick={() => setViewMode('kirchhoff')}
+                    onClick={() => handleViewChange('kirchhoff')}
                     className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
                       viewMode === 'kirchhoff' 
                         ? 'bg-[#3FB950]/20 border border-[#3FB950]/40' 
@@ -267,7 +311,7 @@ function App() {
                   </button>
 
                   <button
-                    onClick={() => setViewMode('dessincube')}
+                    onClick={() => handleViewChange('dessincube')}
                     className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
                       viewMode === 'dessincube' 
                         ? 'bg-[#A371F7]/20 border border-[#A371F7]/40' 
@@ -282,7 +326,7 @@ function App() {
                   </button>
 
                   <button
-                    onClick={() => setViewMode('sphere')}
+                    onClick={() => handleViewChange('sphere')}
                     className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
                       viewMode === 'sphere' 
                         ? 'bg-[#D29922]/20 border border-[#D29922]/40' 
@@ -297,7 +341,7 @@ function App() {
                   </button>
 
                   <button
-                    onClick={() => setViewMode('cayley')}
+                    onClick={() => handleViewChange('cayley')}
                     className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
                       viewMode === 'cayley' 
                         ? 'bg-[#58A6FF]/20 border border-[#58A6FF]/40' 
@@ -312,7 +356,7 @@ function App() {
                   </button>
 
                   <button
-                    onClick={() => setViewMode('phi')}
+                    onClick={() => handleViewChange('phi')}
                     className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
                       viewMode === 'phi' 
                         ? 'bg-[#BC8CFF]/20 border border-[#BC8CFF]/40' 
@@ -327,7 +371,7 @@ function App() {
                   </button>
 
                   <button
-                    onClick={() => setViewMode('heatkernel')}
+                    onClick={() => handleViewChange('heatkernel')}
                     className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
                       viewMode === 'heatkernel' 
                         ? 'bg-[#FF6B9D]/20 border border-[#FF6B9D]/40' 
@@ -466,6 +510,7 @@ function App() {
               className="w-full h-full"
               gl={{ antialias: true, alpha: true }}
               dpr={[1, 2]}
+              onPointerMissed={handleDismiss}
             >
               <PerspectiveCamera makeDefault position={[15, 15, 15]} fov={50} />
               <OrbitControls 
@@ -508,7 +553,7 @@ function App() {
                   particles={particles}
                   showConnections={showConnections}
                   selectedParticle={selectedParticle}
-                  onSelectParticle={setSelectedParticle}
+                  onSelectParticle={handleSelectParticle}
                 />
               )}
               
@@ -523,7 +568,7 @@ function App() {
                 <DessinGraph 
                   showConnections={showConnections}
                   selectedParticle={selectedParticle}
-                  onSelectParticle={setSelectedParticle}
+                  onSelectParticle={handleSelectParticle}
                 />
               )}
               
@@ -533,14 +578,14 @@ function App() {
                   highlightedN={highlightedN}
                   highlightedK={highlightedK}
                   selectedParticle={selectedParticle}
-                  onSelectParticle={setSelectedParticle}
+                  onSelectParticle={handleSelectParticle}
                 />
               )}
 
               {viewMode === 'crt' && (
                 <CRTGrid 
                   selectedParticle={selectedParticle}
-                  onSelectParticle={setSelectedParticle}
+                  onSelectParticle={handleSelectParticle}
                 />
               )}
 
@@ -561,7 +606,7 @@ function App() {
                 <DessinCube 
                   particles={particles}
                   selectedParticle={selectedParticle}
-                  onSelectParticle={setSelectedParticle}
+                  onSelectParticle={handleSelectParticle}
                 />
               )}
 
@@ -569,45 +614,85 @@ function App() {
                 <RiemannSphere 
                   particles={particles}
                   selectedParticle={selectedParticle}
-                  onSelectParticle={setSelectedParticle}
+                  onSelectParticle={handleSelectParticle}
                 />
               )}
 
               {viewMode === 'cayley' && (
                 <CayleySpectrum 
                   selectedParticle={selectedParticle}
-                  onSelectParticle={setSelectedParticle}
+                  onSelectParticle={handleSelectParticle}
                 />
               )}
 
               {viewMode === 'phi' && (
                 <PhiAmplitudes 
                   selectedParticle={selectedParticle}
-                  onSelectParticle={setSelectedParticle}
+                  onSelectParticle={handleSelectParticle}
                 />
               )}
 
               {viewMode === 'heatkernel' && (
                 <HeatKernel 
                   selectedParticle={selectedParticle}
-                  onSelectParticle={setSelectedParticle}
+                  onSelectParticle={handleSelectParticle}
                 />
               )}
             </Canvas>
           </Suspense>
 
-          {/* Overlay Info */}
-          <div className="absolute top-4 right-4 w-80 pointer-events-none">
-            <div className="pointer-events-auto">
-              <ParticleInfo particle={selectedParticle} />
+          {/* Overlay Info — dismissable */}
+          {selectedParticle && (
+            <div className="absolute top-4 right-4 w-80">
+              <div className="relative">
+                <button 
+                  onClick={handleDismiss}
+                  className={`absolute -top-2 -right-2 z-10 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                    isDarkMode ? 'bg-[#30363D] text-[#E6EDF3] hover:bg-[#3D444D]' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
+                  }`}
+                >×</button>
+                <ParticleInfo particle={selectedParticle} />
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* View Mode Indicator */}
-          <div className="absolute bottom-4 left-4">
+          {/* View Description Panel — floating, auto-hide */}
+          {showDescription && (
+            <div className={`absolute bottom-16 left-4 right-4 max-w-lg mx-auto transition-all ${
+              isDarkMode ? 'bg-[#161B22]/95 border-[#30363D]' : 'bg-white/95 border-gray-200'
+            } border rounded-xl p-4 shadow-xl`}>
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex-1">
+                  <h3 className={`text-sm font-bold mb-1 ${isDarkMode ? 'text-[#58A6FF]' : 'text-blue-600'}`}>
+                    {isRu ? VIEW_DESC[viewMode].title_ru : VIEW_DESC[viewMode].title_en}
+                  </h3>
+                  <p className={`text-xs leading-relaxed ${isDarkMode ? 'text-[#8B949E]' : 'text-gray-600'}`}>
+                    {isRu ? VIEW_DESC[viewMode].ru : VIEW_DESC[viewMode].en}
+                  </p>
+                </div>
+                <button 
+                  onClick={() => setShowDescription(false)}
+                  className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs ${
+                    isDarkMode ? 'text-[#8B949E] hover:text-[#E6EDF3] hover:bg-[#30363D]' : 'text-gray-400 hover:text-gray-700 hover:bg-gray-100'
+                  }`}
+                >×</button>
+              </div>
+            </div>
+          )}
+
+          {/* View Mode Indicator + Info toggle */}
+          <div className="absolute bottom-4 left-4 flex items-center gap-2">
             <Badge className={`${isDarkMode ? 'bg-[#161B22] border-[#30363D]' : 'bg-white border-gray-200'} ${theme.text}`}>
-              Mode: {viewMode.charAt(0).toUpperCase() + viewMode.slice(1)}
+              Mode: {isRu ? VIEW_DESC[viewMode].title_ru : VIEW_DESC[viewMode].title_en}
             </Badge>
+            {!showDescription && (
+              <button
+                onClick={() => setShowDescription(true)}
+                className={`w-7 h-7 rounded-full flex items-center justify-center text-sm transition-all ${
+                  isDarkMode ? 'bg-[#30363D] text-[#58A6FF] hover:bg-[#3D444D]' : 'bg-gray-200 text-blue-600 hover:bg-gray-300'
+                }`}
+              >?</button>
+            )}
           </div>
         </main>
       </div>
