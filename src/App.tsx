@@ -2,7 +2,6 @@ import { useState, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Grid, Stars } from '@react-three/drei';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
@@ -40,8 +39,6 @@ const particles: Particle[] = [
   { name: 't', n: 7, K: 2/3, mass: 172690, type: 'quark-up', generation: 3 },
 ];
 
-const b1Set = [1, 1/3, 1/2, 2/3, 3/4, 4/3, 3/2, 2, 3, Math.sqrt(2)];
-
 type ViewMode = 'matrix' | 'network' | 'kcipher' | 'dessin' | 'cube' | 'crt' | 'hecke' | 'kirchhoff' | 'dessincube' | 'sphere' | 'cayley' | 'phi' | 'heatkernel';
 
 function LoadingFallback() {
@@ -61,8 +58,8 @@ function App() {
   const [showGrid, setShowGrid] = useState(true);
   const [rotationSpeed, setRotationSpeed] = useState(0.5);
   const [viewMode, setViewMode] = useState<ViewMode>('matrix');
-  const [highlightedN, setHighlightedN] = useState<number | null>(null);
-  const [highlightedK, setHighlightedK] = useState<number | null>(null);
+  const [highlightedN] = useState<number | null>(null);
+  const [highlightedK] = useState<number | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isRu, setIsRu] = useState(false);
   const [showDescription, setShowDescription] = useState(true);
@@ -137,7 +134,7 @@ function App() {
               <p className={`text-xs ${theme.textMuted}`}>Discrete Scale Invariance & Particle Mass Spectrum</p>
             </div>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <button
               onClick={() => setIsRu(!isRu)}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
@@ -146,7 +143,7 @@ function App() {
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
-              {isRu ? '🇬🇧 EN' : '🇷🇺 RU'}
+              {isRu ? 'RU 🇷🇺' : 'EN 🇬🇧'}
             </button>
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
@@ -158,18 +155,9 @@ function App() {
             >
               {isDarkMode ? '☀️ Light' : '🌙 Dark'}
             </button>
-            <Badge variant="outline" className="border-[#58A6FF]/40 text-[#58A6FF]">
-              Gamma_0(6)
-            </Badge>
-            <Badge variant="outline" className="border-[#3FB950]/40 text-[#3FB950]">
-              N = 6
-            </Badge>
-            <Badge variant="outline" className="border-[#F0883E]/40 text-[#F0883E]">
-              (d1,d2) = (2,3)
-            </Badge>
-            <Badge variant="outline" className="border-[#A371F7]/40 text-[#A371F7]">
-              v20
-            </Badge>
+            <span className={`text-xs font-mono ${isDarkMode ? 'text-[#8B949E]' : 'text-gray-500'}`}>
+              Γ₀(6) · N=6 · (d₁,d₂)=(2,3)
+            </span>
           </div>
         </div>
       </header>
@@ -178,18 +166,12 @@ function App() {
       <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar - Controls */}
         <aside className={`w-80 ${theme.sidebarBg} border-r ${theme.border} p-4 overflow-y-auto flex-shrink-0`}>
-          <Tabs defaultValue="view" className="w-full">
-            <TabsList className={`w-full grid grid-cols-2 ${isDarkMode ? 'bg-[#0D1117]' : 'bg-gray-100'}`}>
-              <TabsTrigger value="view" className={`data-[state=active]:bg-[#58A6FF]/20 ${isDarkMode ? 'text-[#E6EDF3] data-[state=inactive]:text-[#8B949E]' : 'text-gray-900 data-[state=inactive]:text-gray-500'}`}>View</TabsTrigger>
-              <TabsTrigger value="params" className={`data-[state=active]:bg-[#58A6FF]/20 ${isDarkMode ? 'text-[#E6EDF3] data-[state=inactive]:text-[#8B949E]' : 'text-gray-900 data-[state=inactive]:text-gray-500'}`}>Params</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="view" className="space-y-4 mt-4">
-              <Card className={`${theme.cardBg} ${theme.border} border`}>
-                <CardHeader className="pb-2">
-                  <CardTitle className={`text-sm ${theme.text}`}>Visualization Mode</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2 max-h-[500px] overflow-y-auto">
+          <div className="space-y-4">
+            <Card className={`${theme.cardBg} ${theme.border} border`}>
+              <CardHeader className="pb-2">
+                <CardTitle className={`text-sm ${theme.text}`}>{isRu ? 'Визуализация' : 'Visualization'}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 max-h-[600px] overflow-y-auto">
                   <button
                     onClick={() => handleViewChange('matrix')}
                     className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
@@ -421,56 +403,7 @@ function App() {
                   </div>
                 </CardContent>
               </Card>
-            </TabsContent>
-            
-            <TabsContent value="params" className="space-y-4 mt-4">
-              <Card className={`${theme.cardBg} ${theme.border} border`}>
-                <CardHeader className="pb-2">
-                  <CardTitle className={`text-sm ${theme.text}`}>B1 Set Multipliers</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 gap-2">
-                    {b1Set.map((k, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setHighlightedK(highlightedK === k ? null : k)}
-                        className={`p-2 rounded text-xs font-mono transition-all ${
-                          highlightedK === k
-                            ? 'bg-[#F0883E]/30 border border-[#F0883E]'
-                            : `${theme.buttonBg} border ${theme.border} hover:border-[#F0883E]/40`
-                        }`}
-                      >
-                        <span className={theme.text}>{k === Math.sqrt(2) ? 'sqrt2' : k.toFixed(2)}</span>
-                      </button>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className={`${theme.cardBg} ${theme.border} border`}>
-                <CardHeader className="pb-2">
-                  <CardTitle className={`text-sm ${theme.text}`}>Lattice Nodes (n)</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {[-9, -8, 0, 1, 3, 4, 5, 6, 7].map((n) => (
-                      <button
-                        key={n}
-                        onClick={() => setHighlightedN(highlightedN === n ? null : n)}
-                        className={`w-10 h-10 rounded flex items-center justify-center text-xs font-mono transition-all ${
-                          highlightedN === n
-                            ? 'bg-[#58A6FF]/30 border border-[#58A6FF]'
-                            : `${theme.buttonBg} border ${theme.border} hover:border-[#58A6FF]/40`
-                        }`}
-                      >
-                        <span className={theme.text}>{n}</span>
-                      </button>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+          </div>
 
           <Separator className={`my-4 ${theme.border}`} />
 
@@ -656,11 +589,11 @@ function App() {
             </div>
           )}
 
-          {/* View Description Panel — floating, auto-hide */}
+          {/* View Description Panel — top of canvas */}
           {showDescription && (
-            <div className={`absolute bottom-16 left-4 right-4 max-w-lg mx-auto transition-all ${
+            <div className={`absolute top-4 left-4 right-4 max-w-lg transition-all z-10 ${
               isDarkMode ? 'bg-[#161B22]/95 border-[#30363D]' : 'bg-white/95 border-gray-200'
-            } border rounded-xl p-4 shadow-xl`}>
+            } border rounded-xl p-3 shadow-xl`}>
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1">
                   <h3 className={`text-sm font-bold mb-1 ${isDarkMode ? 'text-[#58A6FF]' : 'text-blue-600'}`}>

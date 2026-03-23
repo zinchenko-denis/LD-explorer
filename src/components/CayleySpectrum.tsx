@@ -58,13 +58,24 @@ const PARTICLE_COLORS: Record<string, string> = {
 export function CayleySpectrum({ selectedParticle, onSelectParticle: _onSelectParticle }: CayleySpectrumProps) {
   const groupRef = useRef<THREE.Group>(null);
   const [hoveredVertex, setHoveredVertex] = useState<string | null>(null);
+  const [waveIdx, setWaveIdx] = useState(-1);
   
+  // σ∞ cycles in order — the wave travels through these
+  const SIGMA_INF = ['c','u','b','s','d','t', 'e','τ','μ', 'W','H', 'p'];
 
   useFrame((state) => {
     if (groupRef.current) {
       groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.05) * 0.15;
     }
+    // Wave: cycle through vertices every 0.4s
+    const idx = Math.floor(state.clock.elapsedTime / 0.4) % (SIGMA_INF.length + 3);
+    if (idx !== waveIdx) setWaveIdx(idx);
   });
+
+  const isWaveActive = (name: string) => {
+    const i = SIGMA_INF.indexOf(name);
+    return i >= 0 && (i === waveIdx || i === waveIdx - 1);
+  };
 
   // Position 12 vertices on a circle in 3D
   const vertexPositions = useMemo(() => {
@@ -158,14 +169,15 @@ export function CayleySpectrum({ selectedParticle, onSelectParticle: _onSelectPa
         if (!pos) return null;
 
         const isHighlighted = hoveredVertex === name || selectedParticle?.name === name;
+        const isWave = isWaveActive(name);
         const color = PARTICLE_COLORS[name];
 
         return (
           <group key={name} position={pos}>
-            {isHighlighted && (
+            {(isHighlighted || isWave) && (
               <mesh>
-                <sphereGeometry args={[0.9]} />
-                <meshBasicMaterial color={color} transparent opacity={0.2} />
+                <sphereGeometry args={[isWave ? 1.1 : 0.9]} />
+                <meshBasicMaterial color={color} transparent opacity={isWave ? 0.35 : 0.2} />
               </mesh>
             )}
             <mesh
@@ -175,8 +187,8 @@ export function CayleySpectrum({ selectedParticle, onSelectParticle: _onSelectPa
               <sphereGeometry args={[0.5]} />
               <meshStandardMaterial
                 color={color}
-                emissive={isHighlighted ? color : '#000000'}
-                emissiveIntensity={isHighlighted ? 0.6 : 0.2}
+                emissive={isHighlighted || isWave ? color : '#000000'}
+                emissiveIntensity={isWave ? 0.8 : isHighlighted ? 0.6 : 0.2}
               />
             </mesh>
             <Text position={[0, 0.9, 0]} fontSize={0.55} color="#FFFFFF" anchorX="center">

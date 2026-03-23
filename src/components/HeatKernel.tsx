@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Text, Html } from '@react-three/drei';
 import * as THREE from 'three';
@@ -42,21 +42,27 @@ const panelStyle: React.CSSProperties = {
 export function HeatKernel({ selectedParticle: _sp, onSelectParticle: _osp }: HeatKernelProps) {
   const groupRef = useRef<THREE.Group>(null);
   const timeRef = useRef(0);
+  const [drawPct, setDrawPct] = useState(0);
 
   useFrame((state, delta) => {
     timeRef.current += delta;
+    if (drawPct < 1) {
+      setDrawPct(Math.min(1, drawPct + delta / 3));
+    }
     if (groupRef.current) {
       groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.03) * 0.06;
     }
   });
 
   const curvePoints = useMemo(() => {
+    const n = Math.max(2, Math.floor(drawPct * T_SAMPLES));
     const points: number[] = [];
-    HK_CURVE.forEach(({ t, h }) => {
+    for (let i = 0; i < n; i++) {
+      const { t, h } = HK_CURVE[i];
       points.push((t / T_MAX) * 20 - 10, h * 25 - 5, 0);
-    });
+    }
     return new Float32Array(points);
-  }, []);
+  }, [drawPct]);
 
   const ref413 = SIN2_PRED * 25 - 5;
   const tHalf_x = (0.5 / T_MAX) * 20 - 10;
