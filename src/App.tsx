@@ -25,7 +25,7 @@ import type { Particle } from '@/types/ld-model';
 import './App.css';
 
 const particles: Particle[] = [
-  { name: 'e', n: 0, K: 1, mass: 0.511, type: 'lepton', anchor: true },
+  { name: 'e', n: 0, K: 1, mass: 0.511, type: 'lepton', generation: 1 },
   { name: 'u', n: 1, K: 2/3, mass: 2.16, type: 'quark-up', generation: 1 },
   { name: 'd', n: 1, K: Math.sqrt(2), mass: 4.67, type: 'quark-down', generation: 1 },
   { name: 'μ', n: 3, K: 3/4, mass: 105.66, type: 'lepton', generation: 2 },

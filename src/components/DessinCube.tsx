@@ -23,20 +23,21 @@ const W_VALUES = [0, 1, 2, 3]; // White vertex indices
 const F_VALUES = [0, 1, 2, 3]; // Face/cusp values
 
 // The 12 valid combinations (B, W, F) that give particles
-// Based on the dessin structure from the paper
+// BV₀={c,u,p}, BV₁={b,t,e}, BV₂={s,μ,H}, BV₃={d,W,τ} (companion O.1)
+// f: 0=quark(6-face), 1=lepton(3-face), 2=boson(2-face), 3=anchor(1-face)
 const VALID_CELLS = [
-  { b: 0, w: 0, f: 0, particle: 'e', color: '#D29922' },
-  { b: 0, w: 1, f: 1, particle: 'u', color: '#58A6FF' },
-  { b: 0, w: 2, f: 2, particle: 'c', color: '#58A6FF' },
-  { b: 1, w: 0, f: 1, particle: 'd', color: '#3FB950' },
-  { b: 1, w: 1, f: 0, particle: 'mu', color: '#D29922' },
-  { b: 1, w: 2, f: 3, particle: 'tau', color: '#D29922' },
-  { b: 2, w: 0, f: 2, particle: 's', color: '#3FB950' },
-  { b: 2, w: 1, f: 3, particle: 'W', color: '#F0883E' },
-  { b: 2, w: 3, f: 1, particle: 't', color: '#58A6FF' },
-  { b: 3, w: 0, f: 3, particle: 'b', color: '#3FB950' },
-  { b: 3, w: 2, f: 0, particle: 'p', color: '#FF6B9D' },
-  { b: 3, w: 3, f: 2, particle: 'H', color: '#A371F7' },
+  { b: 0, w: 0, f: 0, particle: 'c', color: '#58A6FF' },
+  { b: 0, w: 1, f: 0, particle: 'u', color: '#58A6FF' },
+  { b: 0, w: 2, f: 3, particle: 'p', color: '#FF6B9D' },
+  { b: 1, w: 0, f: 0, particle: 'b', color: '#3FB950' },
+  { b: 1, w: 1, f: 0, particle: 't', color: '#58A6FF' },
+  { b: 1, w: 2, f: 1, particle: 'e', color: '#D29922' },
+  { b: 2, w: 0, f: 0, particle: 's', color: '#3FB950' },
+  { b: 2, w: 1, f: 1, particle: 'mu', color: '#D29922' },
+  { b: 2, w: 2, f: 2, particle: 'H', color: '#A371F7' },
+  { b: 3, w: 0, f: 0, particle: 'd', color: '#3FB950' },
+  { b: 3, w: 1, f: 2, particle: 'W', color: '#F0883E' },
+  { b: 3, w: 2, f: 1, particle: 'tau', color: '#D29922' },
 ];
 
 export function DessinCube({ particles, selectedParticle, onSelectParticle }: DessinCubeProps) {

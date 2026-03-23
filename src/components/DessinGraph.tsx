@@ -11,21 +11,23 @@ interface DessinGraphProps {
 }
 
 // Black vertices (valency 3 each) - 4 vertices
+// Companion O.1: BV₀(anchor)={c,u,p}, BV₁(index)={b,t,e}, BV₂(star)={s,μ,H}, BV₃(other)={d,W,τ}
 const BLACK_VERTICES = [
-  { id: 'B1', position: [0, 8, 0] as [number, number, number], label: 'B1' },
-  { id: 'B2', position: [-7, 2, 0] as [number, number, number], label: 'B2' },
-  { id: 'B3', position: [7, 2, 0] as [number, number, number], label: 'B3' },
-  { id: 'B4', position: [0, -6, 0] as [number, number, number], label: 'B4' },
+  { id: 'B1', position: [0, 8, 0] as [number, number, number], label: 'BV₀', sublabel: 'anchor' },
+  { id: 'B2', position: [-7, 2, 0] as [number, number, number], label: 'BV₁', sublabel: 'index' },
+  { id: 'B3', position: [7, 2, 0] as [number, number, number], label: 'BV₂', sublabel: 'star' },
+  { id: 'B4', position: [0, -6, 0] as [number, number, number], label: 'BV₃', sublabel: 'other' },
 ];
 
 // White vertices (valency 2 each) - 6 vertices
+// Each WV = one σ₁-pair (companion O.1)
 const WHITE_VERTICES = [
-  { id: 'W1', position: [-4, 6, 3] as [number, number, number], label: 'W1' },
-  { id: 'W2', position: [4, 6, 3] as [number, number, number], label: 'W2' },
-  { id: 'W3', position: [-8, -1, -3] as [number, number, number], label: 'W3' },
-  { id: 'W4', position: [0, 0, 4] as [number, number, number], label: 'W4' },
-  { id: 'W5', position: [8, -1, -3] as [number, number, number], label: 'W5' },
-  { id: 'W6', position: [0, -8, 0] as [number, number, number], label: 'W6' },
+  { id: 'W1', position: [-4, 6, 3] as [number, number, number], label: 'W₀', sublabel: '{c,p}' },
+  { id: 'W2', position: [4, 6, 3] as [number, number, number], label: 'W₁', sublabel: '{u,t}' },
+  { id: 'W3', position: [-8, -1, -3] as [number, number, number], label: 'W₂', sublabel: '{b,μ}' },
+  { id: 'W4', position: [0, 0, 4] as [number, number, number], label: 'W₃', sublabel: '{s,W}' },
+  { id: 'W5', position: [8, -1, -3] as [number, number, number], label: 'W₄', sublabel: '{d,e}' },
+  { id: 'W6', position: [0, -8, 0] as [number, number, number], label: 'W₅', sublabel: '{τ,H}' },
 ];
 
 // Faces (different from black vertices!)
@@ -38,19 +40,27 @@ const FACES = [
 ];
 
 // Edges connecting black and white vertices (12 edges = 12 particles)
+// Verified against companion O.1 (σ₀-orbits + σ₁-pairs) and C.1 (biadjacency)
+// σ₁-pairs at each WV: {c,p}@W1, {u,t}@W2, {b,μ}@W3, {s,W}@W4, {d,e}@W5, {τ,H}@W6
 const EDGES = [
-  { from: 'B1', to: 'W1', particle: 'u', generation: 1, face: 'F6' },
-  { from: 'B1', to: 'W2', particle: 'c', generation: 2, face: 'F6' },
-  { from: 'B2', to: 'W1', particle: 'mu', generation: 2, face: 'F3' },
-  { from: 'B2', to: 'W3', particle: 'e', generation: 1, face: 'F3' },
-  { from: 'B2', to: 'W4', particle: 'tau', generation: 3, face: 'F3' },
-  { from: 'B3', to: 'W2', particle: 'W', generation: null, face: 'F2' },
-  { from: 'B3', to: 'W4', particle: 'H', generation: null, face: 'F2' },
-  { from: 'B3', to: 'W5', particle: 't', generation: 3, face: 'F6' },
-  { from: 'B4', to: 'W3', particle: 'd', generation: 1, face: 'F6' },
-  { from: 'B4', to: 'W5', particle: 'b', generation: 3, face: 'F6' },
-  { from: 'B4', to: 'W6', particle: 's', generation: 2, face: 'F6' },
-  { from: 'B1', to: 'W6', particle: 'p', generation: null, face: 'F1' },
+  // W1: multi-edge {c, p} — both from BV₀ (anchor)
+  { from: 'B1', to: 'W1', particle: 'c', generation: 2, face: 'F6' },
+  { from: 'B1', to: 'W1', particle: 'p', generation: null, face: 'F1' },
+  // W2: bridge {u, t} — BV₀–BV₁ (FORCED in all 40 spanning trees)
+  { from: 'B1', to: 'W2', particle: 'u', generation: 1, face: 'F6' },
+  { from: 'B2', to: 'W2', particle: 't', generation: 3, face: 'F6' },
+  // W3: interior {b, μ} — BV₁–BV₂
+  { from: 'B2', to: 'W3', particle: 'b', generation: 3, face: 'F6' },
+  { from: 'B3', to: 'W3', particle: 'mu', generation: 2, face: 'F3' },
+  // W4: far-end {s, W} — BV₂–BV₃
+  { from: 'B3', to: 'W4', particle: 's', generation: 2, face: 'F6' },
+  { from: 'B4', to: 'W4', particle: 'W', generation: null, face: 'F2' },
+  // W5: interior {d, e} — BV₁–BV₃
+  { from: 'B2', to: 'W5', particle: 'e', generation: 1, face: 'F3' },
+  { from: 'B4', to: 'W5', particle: 'd', generation: 1, face: 'F6' },
+  // W6: far-end {τ, H} — BV₂–BV₃
+  { from: 'B3', to: 'W6', particle: 'H', generation: null, face: 'F2' },
+  { from: 'B4', to: 'W6', particle: 'tau', generation: 3, face: 'F3' },
 ];
 
 const PARTICLE_COLORS: Record<string, string> = {
@@ -212,7 +222,7 @@ export function DessinGraph({ showConnections, selectedParticle, onSelectParticl
               {v.label}
             </Text>
             <Text position={[0, -2.5, 0]} fontSize={0.5} color="#6E7681" anchorX="center">
-              valency 3
+              {v.sublabel} (val 3)
             </Text>
 
             {/* Hover tooltip */}
@@ -273,7 +283,7 @@ export function DessinGraph({ showConnections, selectedParticle, onSelectParticl
               {v.label}
             </Text>
             <Text position={[0, -1.5, 0]} fontSize={0.4} color="#6E7681" anchorX="center">
-              valency 2
+              {v.sublabel}
             </Text>
 
             {/* Hover tooltip */}

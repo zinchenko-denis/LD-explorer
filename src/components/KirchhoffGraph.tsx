@@ -8,32 +8,36 @@ interface KirchhoffGraphProps {
   selectedParticle: Particle | null;
 }
 
+// Bipartite graph of X₀(6) dessin (companion C.1, O.1)
+// B1=BV₀(anchor), B2=BV₁(index), B3=BV₂(star), B4=BV₃(other)
+// W1-W6 = σ₁-pairs: {c,p},{u,t},{b,μ},{s,W},{d,e},{τ,H}
 const VERTICES = [
-  { id: 0, label: 'B1', type: 'black', x: 0, y: 3 },
-  { id: 1, label: 'B2', type: 'black', x: -3, y: 0 },
-  { id: 2, label: 'B3', type: 'black', x: 3, y: 0 },
-  { id: 3, label: 'B4', type: 'black', x: 0, y: -3 },
-  { id: 4, label: 'W1', type: 'white', x: -2, y: 2 },
-  { id: 5, label: 'W2', type: 'white', x: 2, y: 2 },
-  { id: 6, label: 'W3', type: 'white', x: -3, y: -1 },
-  { id: 7, label: 'W4', type: 'white', x: 0, y: 1 },
-  { id: 8, label: 'W5', type: 'white', x: 3, y: -1 },
-  { id: 9, label: 'W6', type: 'white', x: 0, y: -3 },
+  { id: 0, label: 'BV₀', type: 'black', x: 0, y: 3 },
+  { id: 1, label: 'BV₁', type: 'black', x: -3, y: 0 },
+  { id: 2, label: 'BV₂', type: 'black', x: 3, y: 0 },
+  { id: 3, label: 'BV₃', type: 'black', x: 0, y: -3 },
+  { id: 4, label: 'W₀', type: 'white', x: -2, y: 3 },
+  { id: 5, label: 'W₁', type: 'white', x: 2, y: 2 },
+  { id: 6, label: 'W₂', type: 'white', x: -3, y: 1.5 },
+  { id: 7, label: 'W₃', type: 'white', x: 2.5, y: -1 },
+  { id: 8, label: 'W₄', type: 'white', x: -2.5, y: -2 },
+  { id: 9, label: 'W₅', type: 'white', x: 1, y: -3 },
 ];
 
 const ALL_EDGES = [
-  { id: 0, from: 0, to: 4, particle: 'u' },
-  { id: 1, from: 0, to: 5, particle: 'c' },
-  { id: 2, from: 1, to: 4, particle: 'mu' },
-  { id: 3, from: 1, to: 6, particle: 'e' },
-  { id: 4, from: 1, to: 7, particle: 'tau' },
-  { id: 5, from: 2, to: 5, particle: 'W' },
-  { id: 6, from: 2, to: 7, particle: 'H' },
-  { id: 7, from: 2, to: 8, particle: 't' },
-  { id: 8, from: 3, to: 6, particle: 'd' },
-  { id: 9, from: 3, to: 8, particle: 'b' },
-  { id: 10, from: 3, to: 9, particle: 's' },
-  { id: 11, from: 0, to: 9, particle: 'p' },
+  // Verified: companion O.1 σ₁-pairs × biadjacency C.1
+  { id: 0,  from: 0, to: 4, particle: 'c' },    // BV₀-W₀ multi-edge 1
+  { id: 1,  from: 0, to: 4, particle: 'p' },    // BV₀-W₀ multi-edge 2
+  { id: 2,  from: 0, to: 5, particle: 'u' },    // BV₀-W₁ bridge (FORCED)
+  { id: 3,  from: 1, to: 5, particle: 't' },    // BV₁-W₁ bridge (FORCED)
+  { id: 4,  from: 1, to: 6, particle: 'b' },    // BV₁-W₂ interior
+  { id: 5,  from: 2, to: 6, particle: 'mu' },   // BV₂-W₂ interior
+  { id: 6,  from: 2, to: 7, particle: 's' },    // BV₂-W₃ far-end
+  { id: 7,  from: 3, to: 7, particle: 'W' },    // BV₃-W₃ far-end
+  { id: 8,  from: 1, to: 8, particle: 'e' },    // BV₁-W₄ interior
+  { id: 9,  from: 3, to: 8, particle: 'd' },    // BV₃-W₄ interior
+  { id: 10, from: 2, to: 9, particle: 'H' },   // BV₂-W₅ far-end
+  { id: 11, from: 3, to: 9, particle: 'tau' },  // BV₃-W₅ far-end
 ];
 
 const PARTICLE_COLORS: Record<string, string> = {
@@ -43,12 +47,15 @@ const PARTICLE_COLORS: Record<string, string> = {
   'W': '#F0883E', 'H': '#A371F7', 'p': '#FF6B9D',
 };
 
+// 5 of 40 verified spanning trees (companion E.8)
+// E.8: FORCED={u(2),t(3)}, BOUNDARY={c⊕p}×{s⊕W}×{τ⊕H}, RESIDUAL=d₂²=9
+// Total: K=40 (Matrix Tree Theorem, D.4)
 const SPANNING_TREES = [
-  { id: 1, edges: [0, 1, 3, 5, 8, 10, 2, 6, 9], name: 'B1-Centered' },
-  { id: 2, edges: [3, 0, 1, 6, 7, 9, 10, 4, 2], name: 'Chain' },
-  { id: 3, edges: [0, 2, 4, 5, 7, 8, 10, 1, 9], name: 'Balanced' },
-  { id: 4, edges: [3, 2, 4, 6, 7, 8, 9, 0, 1], name: 'Lepton-Heavy' },
-  { id: 5, edges: [0, 1, 7, 8, 9, 3, 5, 6, 10], name: 'Quark-Heavy' },
+  { id: 1, edges: [0, 2, 3, 4, 5, 6, 8, 9, 10], name: 'Ground (c,s,H)' },
+  { id: 2, edges: [1, 2, 3, 4, 5, 6, 8, 9, 10], name: 'Ground (p,s,H)' },
+  { id: 3, edges: [0, 2, 3, 4, 5, 7, 8, 9, 10], name: 'Excitation (c,W,H)' },
+  { id: 4, edges: [1, 2, 3, 4, 5, 7, 9, 10, 11], name: 'Alt (p,W,τ)' },
+  { id: 5, edges: [0, 2, 3, 5, 6, 7, 8, 9, 11], name: 'Mixed (c,s+W,τ)' },
 ];
 
 export function KirchhoffGraph({ selectedParticle }: KirchhoffGraphProps) {
@@ -82,10 +89,10 @@ export function KirchhoffGraph({ selectedParticle }: KirchhoffGraphProps) {
   return (
     <group ref={groupRef}>
       <Text position={[0, 14, 0]} fontSize={1.5} color="#3FB950" anchorX="center" anchorY="middle">
-        Kirchhoff Graph
+        Kirchhoff = 40
       </Text>
       <Text position={[0, 12, 0]} fontSize={0.7} color="#E6EDF3" anchorX="center" anchorY="middle">
-        Spanning Trees of Dessin d&apos;Enfant
+        Spanning Trees: FORCED &#123;u,t&#125; + BOUNDARY 2³ + RESIDUAL d₂²
       </Text>
 
       <group position={[0, 0, 0]}>

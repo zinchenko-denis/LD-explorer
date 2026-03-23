@@ -14,8 +14,8 @@ const BIADJACENCY_MATRIX = [
   [0, 0, 0, 1, 1, 1],  // BV3 (other): d, W, τ
 ];
 
-const ROW_LABELS = ['Anchor', 'Gen 1', 'Gen 2', 'Gen 3'];
-const COL_LABELS = ['BV1', 'BV2', 'BV3', 'BV4', 'BV5', 'BV6'];
+const ROW_LABELS = ['BV₀ (anc)', 'BV₁ (idx)', 'BV₂ (star)', 'BV₃ (oth)'];
+const COL_LABELS = ['W₀', 'W₁', 'W₂', 'W₃', 'W₄', 'W₅'];
 
 export function LDMatrix3D({ showConnections }: LDMatrix3DProps) {
   const groupRef = useRef<THREE.Group>(null);
