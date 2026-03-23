@@ -57,7 +57,7 @@ function App() {
   const [showConnections, setShowConnections] = useState(true);
   const [showGrid, setShowGrid] = useState(true);
   const [rotationSpeed, setRotationSpeed] = useState(0.5);
-  const [viewMode, setViewMode] = useState<ViewMode>('matrix');
+  const [viewMode, setViewMode] = useState<ViewMode>('dessin');
   const [highlightedN] = useState<number | null>(null);
   const [highlightedK] = useState<number | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(true);

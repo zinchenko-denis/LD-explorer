@@ -55,10 +55,17 @@ export function KirchhoffGraph({ selectedParticle }: KirchhoffGraphProps) {
   const groupRef = useRef<THREE.Group>(null);
   const [selectedTree, setSelectedTree] = useState<number>(1);
   const [hoveredEdge, setHoveredEdge] = useState<number | null>(null);
+  const [autoPlay, setAutoPlay] = useState(true);
 
   useFrame((state) => {
     if (groupRef.current) {
       groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.04) * 0.05;
+    }
+    // Auto-cycle through trees every 1.5s
+    if (autoPlay) {
+      const treeIdx = Math.floor(state.clock.elapsedTime / 1.5) % SPANNING_TREES.length;
+      const newId = SPANNING_TREES[treeIdx].id;
+      if (newId !== selectedTree) setSelectedTree(newId);
     }
   });
 
@@ -174,7 +181,7 @@ export function KirchhoffGraph({ selectedParticle }: KirchhoffGraphProps) {
         <Text position={[0, 4, 0]} fontSize={0.7} color="#E6EDF3" anchorX="left">Spanning Trees:</Text>
         {SPANNING_TREES.map((tree, i) => (
           <group key={tree.id} position={[0, 3 - i * 0.9, 0]}>
-            <mesh onClick={() => setSelectedTree(tree.id)}>
+            <mesh onClick={() => { setAutoPlay(false); setSelectedTree(tree.id); }}>
               <boxGeometry args={[0.4, 0.4, 0.1]} />
               <meshStandardMaterial
                 color={selectedTree === tree.id ? '#3FB950' : '#30363D'}

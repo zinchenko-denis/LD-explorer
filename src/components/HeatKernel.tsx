@@ -1,4 +1,4 @@
-import { useRef, useMemo, useState } from 'react';
+import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Text, Html } from '@react-three/drei';
 import * as THREE from 'three';
@@ -42,27 +42,41 @@ const panelStyle: React.CSSProperties = {
 export function HeatKernel({ selectedParticle: _sp, onSelectParticle: _osp }: HeatKernelProps) {
   const groupRef = useRef<THREE.Group>(null);
   const timeRef = useRef(0);
-  const [drawPct, setDrawPct] = useState(0);
+  const drawRef = useRef(0);
+  const tubeRef = useRef<THREE.Mesh>(null);
 
   useFrame((state, delta) => {
     timeRef.current += delta;
-    if (drawPct < 1) {
-      setDrawPct(Math.min(1, drawPct + delta / 3));
+    // Smooth progressive draw over 4 seconds
+    if (drawRef.current < 1) {
+      drawRef.current = Math.min(1, drawRef.current + delta / 4);
+      // Update tube visibility via scale trick
+      if (tubeRef.current) {
+        tubeRef.current.scale.x = drawRef.current;
+      }
     }
     if (groupRef.current) {
       groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.03) * 0.06;
     }
   });
 
-  const curvePoints = useMemo(() => {
-    const n = Math.max(2, Math.floor(drawPct * T_SAMPLES));
-    const points: number[] = [];
-    for (let i = 0; i < n; i++) {
-      const { t, h } = HK_CURVE[i];
-      points.push((t / T_MAX) * 20 - 10, h * 25 - 5, 0);
-    }
-    return new Float32Array(points);
-  }, [drawPct]);
+  // Build thick curve as TubeGeometry (once, full length)
+  const tubeGeom = useMemo(() => {
+    const pts = HK_CURVE.map(({ t, h }) => 
+      new THREE.Vector3((t / T_MAX) * 20 - 10, h * 25 - 5, 0)
+    );
+    const curve = new THREE.CatmullRomCurve3(pts);
+    return new THREE.TubeGeometry(curve, T_SAMPLES, 0.15, 8, false);
+  }, []);
+
+  // Thin glow tube behind
+  const glowGeom = useMemo(() => {
+    const pts = HK_CURVE.map(({ t, h }) => 
+      new THREE.Vector3((t / T_MAX) * 20 - 10, h * 25 - 5, 0)
+    );
+    const curve = new THREE.CatmullRomCurve3(pts);
+    return new THREE.TubeGeometry(curve, T_SAMPLES, 0.35, 8, false);
+  }, []);
 
   const ref413 = SIN2_PRED * 25 - 5;
   const tHalf_x = (0.5 / T_MAX) * 20 - 10;
@@ -76,13 +90,13 @@ export function HeatKernel({ selectedParticle: _sp, onSelectParticle: _osp }: He
         h(e,e; t=1/d1) via DT mechanism | 4.6 ppm
       </Text>
 
-      {/* Curve */}
-      <line>
-        <bufferGeometry>
-          <bufferAttribute attach="attributes-position" args={[curvePoints, 3]} />
-        </bufferGeometry>
-        <lineBasicMaterial color="#58A6FF" transparent opacity={0.8} />
-      </line>
+      {/* Thick curve tube with glow */}
+      <mesh ref={tubeRef} geometry={glowGeom}>
+        <meshBasicMaterial color="#58A6FF" transparent opacity={0.15} />
+      </mesh>
+      <mesh geometry={tubeGeom}>
+        <meshStandardMaterial color="#58A6FF" emissive="#58A6FF" emissiveIntensity={0.4} />
+      </mesh>
 
       {/* Axes */}
       <line>
