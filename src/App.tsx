@@ -469,10 +469,10 @@ function App() {
                 className="px-3 py-1.5 rounded-lg text-sm font-medium bg-white/10 text-white/70 hover:bg-white/20 transition-all">
                 {isRu ? 'RU' : 'EN'}
               </button>
-              <a href="https://open.spotify.com/track/1nMTRTI1SfyGnUaHOYCqLM"
+              <a href="https://open.spotify.com/search/day%20one%20original%20demo%20hans%20zimmer%20interstellar"
                 target="_blank" rel="noopener noreferrer"
                 className="px-3 py-1.5 rounded-lg text-sm font-medium bg-white/10 text-white/70 hover:bg-white/20 transition-all">
-                🎵 S.T.A.Y.
+                🎵 Day One
               </a>
             </div>
           </div>
