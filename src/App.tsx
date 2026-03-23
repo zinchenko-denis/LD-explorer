@@ -417,39 +417,47 @@ function App() {
             gl={{ antialias: true, alpha: true }}
             dpr={[1, 2]}
           >
-            <PerspectiveCamera makeDefault position={[20, 12, 20]} fov={50} />
+            {/* Camera offset: push dessin to the right half */}
+            <PerspectiveCamera makeDefault position={[28, 10, 15]} fov={45} />
             <OrbitControls enablePan={false} enableZoom={false} autoRotate autoRotateSpeed={0.3} />
-            <ambientLight intensity={0.5} />
-            <pointLight position={[10, 10, 10]} intensity={0.8} color="#58A6FF" />
-            <pointLight position={[-10, -10, -10]} intensity={0.4} color="#3FB950" />
+            <ambientLight intensity={0.4} />
+            <pointLight position={[10, 10, 10]} intensity={0.6} color="#58A6FF" />
+            <pointLight position={[-10, -10, -10]} intensity={0.3} color="#3FB950" />
             <Stars radius={100} depth={50} count={2000} factor={4} saturation={0} fade speed={1} />
             <DessinGraph showConnections={true} selectedParticle={null} />
           </Canvas>
         </Suspense>
-        {/* Landing overlay */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
-             style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(13,17,23,0.7) 100%)' }}>
-          <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight"
-              style={{ textShadow: '0 0 60px rgba(88,166,255,0.3)' }}>
-            LD Model
-          </h1>
-          <p className="text-lg md:text-xl text-[#8B949E] mt-4 text-center px-4">
-            {isRu ? '12 частиц из одной кривой: X₀(6)' : '12 Particles from One Curve: X₀(6)'}
-          </p>
-          <p className="text-xs text-[#6E7681] mt-2 font-mono">
-            DOI: 10.5281/zenodo.19150365
-          </p>
-          <button
-            onClick={() => setShowLanding(false)}
-            className="mt-10 px-8 py-3 bg-[#58A6FF] hover:bg-[#79C0FF] rounded-xl text-white font-bold text-lg transition-all pointer-events-auto shadow-lg shadow-[#58A6FF]/20 hover:shadow-[#58A6FF]/40"
-          >
-            {isRu ? 'Исследовать →' : 'Explore →'}
-          </button>
-          <div className="flex items-center gap-4 mt-6 pointer-events-auto">
-            <button onClick={() => setIsRu(!isRu)}
-              className="px-3 py-1.5 rounded-lg text-sm font-medium bg-white/10 text-white/70 hover:bg-white/20 transition-all">
-              {isRu ? 'RU' : 'EN'}
+        {/* Strong left-to-right gradient to separate text from 3D */}
+        <div className="absolute inset-0 pointer-events-none"
+             style={{ background: 'linear-gradient(to right, rgba(13,17,23,0.92) 0%, rgba(13,17,23,0.7) 40%, rgba(13,17,23,0.15) 70%, transparent 100%)' }} />
+        {/* Landing text — left aligned */}
+        <div className="absolute inset-0 flex flex-col justify-center pointer-events-none px-8 md:px-16 lg:px-24">
+          <div className="max-w-lg">
+            <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight"
+                style={{ textShadow: '0 0 60px rgba(88,166,255,0.3)' }}>
+              LD Model
+            </h1>
+            <p className="text-base md:text-xl text-[#8B949E] mt-4">
+              {isRu ? '12 частиц из одной кривой' : '12 Particles from One Curve'}
+            </p>
+            <p className="text-sm text-[#6E7681] mt-1 font-mono">
+              X₀(6) · N=6 · (d₁,d₂)=(2,3)
+            </p>
+            <p className="text-xs text-[#6E7681] mt-4 font-mono">
+              DOI: 10.5281/zenodo.19150365
+            </p>
+            <button
+              onClick={() => setShowLanding(false)}
+              className="mt-8 px-8 py-3 bg-[#58A6FF] hover:bg-[#79C0FF] rounded-xl text-white font-bold text-lg transition-all pointer-events-auto shadow-lg shadow-[#58A6FF]/20 hover:shadow-[#58A6FF]/40"
+            >
+              {isRu ? 'Исследовать →' : 'Explore →'}
             </button>
+            <div className="flex items-center gap-4 mt-4 pointer-events-auto">
+              <button onClick={() => setIsRu(!isRu)}
+                className="px-3 py-1.5 rounded-lg text-sm font-medium bg-white/10 text-white/70 hover:bg-white/20 transition-all">
+                {isRu ? 'RU' : 'EN'}
+              </button>
+            </div>
           </div>
         </div>
       </div>

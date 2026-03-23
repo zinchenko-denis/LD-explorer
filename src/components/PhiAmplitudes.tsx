@@ -35,10 +35,16 @@ const PHI_DATA = [
 // Sort by amplitude for display
 const PHI_SORTED = [...PHI_DATA].sort((a, b) => a.amp - b.amp);
 
-export function PhiAmplitudes({ selectedParticle, onSelectParticle: _onSelectParticle }: PhiAmplitudesProps) {
+export function PhiAmplitudes({ selectedParticle, onSelectParticle }: PhiAmplitudesProps) {
   const groupRef = useRef<THREE.Group>(null);
   const [hoveredBar, setHoveredBar] = useState<string | null>(null);
   const timeRef = useRef(0);
+
+  const handleClick = (name: string) => {
+    if (onSelectParticle) {
+      onSelectParticle({ name, n: 0, K: 1, mass: 0, type: 'quark-up' });
+    }
+  };
 
   useFrame((state, delta) => {
     timeRef.current += delta;
@@ -70,6 +76,7 @@ export function PhiAmplitudes({ selectedParticle, onSelectParticle: _onSelectPar
             {!isZero ? (
               <mesh
                 position={[0, barHeight / 2 - 3, 0]}
+                onClick={() => handleClick(p.name)}
                 onPointerOver={() => setHoveredBar(p.name)}
                 onPointerOut={() => setHoveredBar(null)}
               >
@@ -86,6 +93,7 @@ export function PhiAmplitudes({ selectedParticle, onSelectParticle: _onSelectPar
               /* Zero marker */
               <group position={[0, -3, 0]}>
                 <mesh
+                  onClick={() => handleClick(p.name)}
                   onPointerOver={() => setHoveredBar(p.name)}
                   onPointerOut={() => setHoveredBar(null)}
                 >
