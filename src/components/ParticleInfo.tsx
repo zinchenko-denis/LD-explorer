@@ -25,15 +25,7 @@ const TYPE_NAMES: Record<string, string> = {
 
 export function ParticleInfo({ particle }: ParticleInfoProps) {
   if (!particle) {
-    return (
-      <Card className="bg-[#0D1117] border-[#30363D]">
-        <CardContent className="p-4">
-          <p className="text-sm text-[#E6EDF3]/60 text-center">
-            Click on a particle to view details
-          </p>
-        </CardContent>
-      </Card>
-    );
+    return null;
   }
 
   const colorClass = PARTICLE_COLORS[particle.type] || 'bg-[#30363D] text-[#E6EDF3] border-[#30363D]';

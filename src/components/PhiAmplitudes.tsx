@@ -54,7 +54,7 @@ export function PhiAmplitudes({ selectedParticle, onSelectParticle: _onSelectPar
         φ-Eigenvector Amplitudes
       </Text>
       <Text position={[0, 9.5, 0]} fontSize={0.6} color="#8B949E" anchorX="center">
-        Golden ratio hierarchy: 0 : 1/φ : 1 : φ | Norm = √|B₁| = √10
+        Golden ratio hierarchy: 0 : 1/phi : 1 : phi | Norm = sqrt(|B1|) = sqrt(10)
       </Text>
 
       {/* Amplitude bars */}
@@ -122,8 +122,8 @@ export function PhiAmplitudes({ selectedParticle, onSelectParticle: _onSelectPar
                   <div className="text-[#8B949E]">|v| = {isZero ? '0 (Z_φ)' : p.amp.toFixed(4)}</div>
                   <div className="text-[#58A6FF]">Tier {p.tier}: {
                     p.tier === 0 ? '0' :
-                    p.tier === 1 ? '1/(φ√10)' :
-                    p.tier === 2 ? '1/√10' : 'φ/√10'
+                    p.tier === 1 ? '1/(phi*sqrt10)' :
+                    p.tier === 2 ? '1/sqrt10' : 'phi/sqrt10'
                   }</div>
                   <div className="text-[#6E7681]">Face: {p.face}</div>
                 </div>
@@ -135,9 +135,9 @@ export function PhiAmplitudes({ selectedParticle, onSelectParticle: _onSelectPar
 
       {/* Tier lines (horizontal reference) */}
       {[
-        { tier: 1, y: (1 / (PHI * SQRT10)) * 18 - 3, label: '1/(φ√10)', color: '#3FB950' },
-        { tier: 2, y: (1 / SQRT10) * 18 - 3, label: '1/√10', color: '#D29922' },
-        { tier: 3, y: (PHI / SQRT10) * 18 - 3, label: 'φ/√10', color: '#FF6B9D' },
+        { tier: 1, y: (1 / (PHI * SQRT10)) * 18 - 3, label: '1/(phi*sqrt10)', color: '#3FB950' },
+        { tier: 2, y: (1 / SQRT10) * 18 - 3, label: '1/sqrt10', color: '#D29922' },
+        { tier: 3, y: (PHI / SQRT10) * 18 - 3, label: 'phi/sqrt10', color: '#FF6B9D' },
       ].map((tier) => (
         <group key={tier.tier}>
           <line>
@@ -166,26 +166,27 @@ export function PhiAmplitudes({ selectedParticle, onSelectParticle: _onSelectPar
         <lineBasicMaterial color="#6E7681" transparent opacity={0.5} />
       </line>
 
-      {/* Info panel: left */}
-      <group position={[-14, 5, 0]}>
-        <Text position={[0, 2.5, 0]} fontSize={0.6} color="#E6EDF3" anchorX="left">φ-Zero Theorem (D.6):</Text>
-        <Text position={[0, 1.7, 0]} fontSize={0.45} color="#6E7681" anchorX="left">Z_φ = BV₀ ∪ σ₁(BV₀)</Text>
-        <Text position={[0, 1.1, 0]} fontSize={0.45} color="#6E7681" anchorX="left">= {'{p, c, u, t}'} exactly</Text>
-        <Text position={[0, 0.3, 0]} fontSize={0.45} color="#6E7681" anchorX="left">Proof: all neighbors of</Text>
-        <Text position={[0, -0.3, 0]} fontSize={0.45} color="#6E7681" anchorX="left">{'{p,c,u}'} ∈ Z_φ; for t:</Text>
-        <Text position={[0, -0.9, 0]} fontSize={0.45} color="#6E7681" anchorX="left">v(b)+v(e) = 0 forced.</Text>
-      </group>
+      {/* Info panel: left — HTML */}
+      <Html position={[-14, 5, 0]} distanceFactor={22}>
+        <div style={{ background:'rgba(13,17,23,0.92)', border:'1px solid #30363D', borderRadius:8, padding:'12px 16px', width:220, fontFamily:'system-ui, sans-serif', fontSize:12, color:'#E6EDF3', pointerEvents:'none' }}>
+          <div style={{ fontWeight:700, marginBottom:6 }}>&phi;-Zero Theorem (D.6)</div>
+          <div style={{ color:'#8B949E' }}>Z<sub>&phi;</sub> = BV<sub>0</sub> &cup; &sigma;<sub>1</sub>(BV<sub>0</sub>)</div>
+          <div style={{ color:'#8B949E' }}>= &#123;p, c, u, t&#125; exactly</div>
+          <div style={{ color:'#6E7681', marginTop:6, fontSize:11 }}>All neighbors of &#123;p,c,u&#125; &isin; Z<sub>&phi;</sub>; for t: v(b)+v(e)=0 forced.</div>
+        </div>
+      </Html>
 
-      {/* Info panel: right */}
-      <group position={[14, 5, 0]}>
-        <Text position={[0, 2.5, 0]} fontSize={0.6} color="#E6EDF3" anchorX="left">Golden Hierarchy:</Text>
-        <Text position={[0, 1.7, 0]} fontSize={0.45} color="#6E7681" anchorX="left">Ratios: 1 : φ : φ²</Text>
-        <Text position={[0, 1.1, 0]} fontSize={0.45} color="#3FB950" anchorX="left">{'{b,e}'} : {'{s,τ,W,H}'} : {'{d,μ}'}</Text>
-        <Text position={[0, 0.3, 0]} fontSize={0.45} color="#FF6B9D" anchorX="left">d-μ = max amplitude</Text>
-        <Text position={[0, -0.3, 0]} fontSize={0.45} color="#FF6B9D" anchorX="left">→ EWSB + c-μ mirror</Text>
-        <Text position={[0, -1.1, 0]} fontSize={0.45} color="#A371F7" anchorX="left">4/13 = full interference</Text>
-        <Text position={[0, -1.7, 0]} fontSize={0.45} color="#A371F7" anchorX="left">(no partial sum works)</Text>
-      </group>
+      {/* Info panel: right — HTML */}
+      <Html position={[14, 5, 0]} distanceFactor={22}>
+        <div style={{ background:'rgba(13,17,23,0.92)', border:'1px solid #30363D', borderRadius:8, padding:'12px 16px', width:220, fontFamily:'system-ui, sans-serif', fontSize:12, color:'#E6EDF3', pointerEvents:'none' }}>
+          <div style={{ fontWeight:700, marginBottom:6 }}>Golden Hierarchy</div>
+          <div style={{ color:'#8B949E' }}>Ratios: 1 : &phi; : &phi;&sup2;</div>
+          <div style={{ color:'#3FB950' }}>&#123;b,e&#125; : &#123;s,&tau;,W,H&#125; : &#123;d,&mu;&#125;</div>
+          <div style={{ color:'#FF6B9D', marginTop:4 }}>d-&mu; = max amplitude</div>
+          <div style={{ color:'#FF6B9D' }}>&rarr; EWSB + c-&mu; mirror</div>
+          <div style={{ color:'#A371F7', marginTop:4 }}>4/13 = full interference</div>
+        </div>
+      </Html>
     </group>
   );
 }

@@ -60,11 +60,36 @@ const PARTICLE_COLORS: Record<string, string> = {
   'W': '#F0883E', 'H': '#A371F7', 'p': '#FF6B9D',
 };
 
+// Animated dot travelling along an edge (pulsation)
+function PulseDot({ from, to, color, speed, phase, size }: {
+  from: [number,number,number]; to: [number,number,number];
+  color: string; speed: number; phase: number; size: number;
+}) {
+  const ref = useRef<THREE.Mesh>(null);
+  useFrame((state) => {
+    const raw = ((state.clock.elapsedTime * speed + phase) % 2) / 2;
+    const p = raw < 0.5 ? raw * 2 : 2 - raw * 2; // ping-pong 0→1→0
+    if (ref.current) {
+      ref.current.position.set(
+        from[0] + (to[0] - from[0]) * p,
+        from[1] + (to[1] - from[1]) * p,
+        from[2] + (to[2] - from[2]) * p,
+      );
+    }
+  });
+  return (
+    <mesh ref={ref}>
+      <sphereGeometry args={[size]} />
+      <meshBasicMaterial color={color} transparent opacity={0.8} />
+    </mesh>
+  );
+}
+
 export function DessinGraph({ showConnections, selectedParticle, onSelectParticle }: DessinGraphProps) {
   const groupRef = useRef<THREE.Group>(null);
   const [hoveredVertex, setHoveredVertex] = useState<string | null>(null);
   const [hoveredEdge, setHoveredEdge] = useState<string | null>(null);
-  const [showFaces, setShowFaces] = useState(true);
+  const showFaces = true;
 
   const vertexMap = useMemo(() => {
     const map = new Map<string, [number, number, number]>();
@@ -264,7 +289,7 @@ export function DessinGraph({ showConnections, selectedParticle, onSelectParticl
         );
       })}
 
-      {/* Edges with animation */}
+      {/* Edges with pulsation animation */}
       {showConnections && EDGES.map((edge, idx) => {
         const fromPos = vertexMap.get(edge.from);
         const toPos = vertexMap.get(edge.to);
@@ -273,6 +298,11 @@ export function DessinGraph({ showConnections, selectedParticle, onSelectParticl
         const color = PARTICLE_COLORS[edge.particle] || '#E6EDF3';
         const isHighlighted = isEdgeHighlighted(edge.particle);
         const isSelected = selectedParticle?.name === edge.particle;
+
+        // Pulsation: travelling dot along edge
+        // Phase offset by face type for sequential animation
+        const faceSpeed = edge.face === 'F6' ? 0.8 : edge.face === 'F3' ? 1.2 : edge.face === 'F2' ? 1.5 : 0.5;
+        const phaseOffset = idx * 0.5;
 
         return (
           <group key={idx}>
@@ -307,6 +337,16 @@ export function DessinGraph({ showConnections, selectedParticle, onSelectParticl
               </line>
             )}
             
+            {/* Travelling pulse dot */}
+            <PulseDot
+              from={fromPos}
+              to={toPos}
+              color={color}
+              speed={faceSpeed}
+              phase={phaseOffset}
+              size={isHighlighted ? 0.35 : 0.2}
+            />
+
             {/* Particle label */}
             <Text
               position={[
@@ -342,59 +382,25 @@ export function DessinGraph({ showConnections, selectedParticle, onSelectParticl
         );
       })}
 
-      {/* Legend */}
-      <group position={[14, 8, 0]}>
-        <Text position={[0, 5, 0]} fontSize={0.7} color="#E6EDF3" anchorX="left">Vertices:</Text>
-        <group position={[0, 4, 0]}>
-          <mesh>
-            <sphereGeometry args={[0.5]} />
-            <meshStandardMaterial color="#1F2328" />
-          </mesh>
-          <mesh rotation={[Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[0.55, 0.6, 16]} />
-            <meshBasicMaterial color="#FFFFFF" side={THREE.DoubleSide} />
-          </mesh>
-          <Text position={[1.2, 0, 0]} fontSize={0.5} color="#E6EDF3" anchorX="left">Black (valency 3)</Text>
-        </group>
-        <group position={[0, 3, 0]}>
-          <mesh>
-            <sphereGeometry args={[0.4]} />
-            <meshStandardMaterial color="#FFFFFF" />
-          </mesh>
-          <Text position={[1.2, 0, 0]} fontSize={0.5} color="#E6EDF3" anchorX="left">White (valency 2)</Text>
-        </group>
-      </group>
-
-      {/* Faces Legend */}
-      <group position={[14, 4, 0]}>
-        <Text position={[0, 4, 0]} fontSize={0.7} color="#E6EDF3" anchorX="left">Faces (≠ Vertices):</Text>
-        <Text position={[0, 3.2, 0]} fontSize={0.55} color="#58A6FF" anchorX="left">6-face = Quarks</Text>
-        <Text position={[0, 2.5, 0]} fontSize={0.55} color="#D29922" anchorX="left">3-face = Leptons</Text>
-        <Text position={[0, 1.8, 0]} fontSize={0.55} color="#F0883E" anchorX="left">2-face = Bosons</Text>
-        <Text position={[0, 1.1, 0]} fontSize={0.55} color="#FF6B9D" anchorX="left">1-face = Anchor</Text>
-      </group>
-
-      {/* Statistics */}
-      <group position={[-15, -10, 0]}>
-        <Text position={[0, 4, 0]} fontSize={0.6} color="#E6EDF3" anchorX="left">Dessin Stats:</Text>
-        <Text position={[0, 3.2, 0]} fontSize={0.5} color="#E6EDF3" anchorX="left">|V| = 4 + 6 = 10</Text>
-        <Text position={[0, 2.6, 0]} fontSize={0.5} color="#E6EDF3" anchorX="left">|E| = 12 (index)</Text>
-        <Text position={[0, 2, 0]} fontSize={0.5} color="#E6EDF3" anchorX="left">|F| = 4 (cusps)</Text>
-        <Text position={[0, 1.2, 0]} fontSize={0.5} color="#3FB950" anchorX="left">χ = 10 - 12 + 4 = 2 ✓</Text>
-        <Text position={[0, 0.6, 0]} fontSize={0.5} color="#3FB950" anchorX="left">g = 0 (genus)</Text>
-      </group>
-
-      {/* Control for faces */}
-      <group position={[14, -6, 0]}>
-        <Text position={[0, 3, 0]} fontSize={0.6} color="#E6EDF3" anchorX="left">Display:</Text>
-        <mesh position={[0, 2.2, 0]} onClick={() => setShowFaces(!showFaces)}>
-          <boxGeometry args={[0.4, 0.4, 0.1]} />
-          <meshStandardMaterial color={showFaces ? '#A371F7' : '#30363D'} />
-        </mesh>
-        <Text position={[0.6, 2.2, 0]} fontSize={0.5} color="#E6EDF3" anchorX="left">
-          Toggle Faces
-        </Text>
-      </group>
+      {/* Legend — HTML overlay */}
+      <Html position={[15, 6, 0]} distanceFactor={24}>
+        <div style={{ background:'rgba(13,17,23,0.92)', border:'1px solid #30363D', borderRadius:8, padding:'12px 16px', width:200, fontFamily:'system-ui, sans-serif', fontSize:12, color:'#E6EDF3', pointerEvents:'none' }}>
+          <div style={{ fontWeight:700, marginBottom:6 }}>Vertices</div>
+          <div><span style={{ display:'inline-block', width:10, height:10, borderRadius:'50%', background:'#1F2328', border:'1px solid #fff', verticalAlign:'middle', marginRight:6 }}/> Black (val 3)</div>
+          <div><span style={{ display:'inline-block', width:10, height:10, borderRadius:'50%', background:'#fff', verticalAlign:'middle', marginRight:6 }}/> White (val 2)</div>
+          
+          <div style={{ fontWeight:700, marginTop:10, marginBottom:6 }}>Faces</div>
+          <div style={{ color:'#58A6FF' }}>6-face = Quarks</div>
+          <div style={{ color:'#D29922' }}>3-face = Leptons</div>
+          <div style={{ color:'#F0883E' }}>2-face = Bosons</div>
+          <div style={{ color:'#FF6B9D' }}>1-face = Anchor</div>
+          
+          <div style={{ borderTop:'1px solid #30363D', paddingTop:8, marginTop:8, fontSize:11, color:'#8B949E' }}>
+            |V|=10 |E|=12 |F|=4<br/>
+            &chi;=10-12+4=2 (g=0)
+          </div>
+        </div>
+      </Html>
     </group>
   );
 }

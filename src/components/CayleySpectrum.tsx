@@ -1,6 +1,6 @@
 import { useRef, useMemo, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Text } from '@react-three/drei';
+import { Text, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import type { Particle } from '@/types/ld-model';
 
@@ -223,24 +223,26 @@ export function CayleySpectrum({ selectedParticle, onSelectParticle: _onSelectPa
 
         {/* Discriminants */}
         <Text position={[0, -4.5, 0]} fontSize={0.5} color="#A371F7" anchorX="left">
-          Discriminants: 21 = d₂·L, 5 = N−1
+          Discriminants: 21 = d2*L, 5 = N-1
         </Text>
         <Text position={[0, -5.3, 0]} fontSize={0.5} color="#BC8CFF" anchorX="left">
           Both: x² − 5x + p, p ∈ {'{1, 5}'}
         </Text>
       </group>
 
-      {/* Edge legend */}
-      <group position={[-12, -4, 0]}>
-        <Text position={[0, 3, 0]} fontSize={0.6} color="#E6EDF3" anchorX="left">Generators:</Text>
-        <Text position={[0, 2.2, 0]} fontSize={0.45} color="#3FB950" anchorX="left">σ₀: 3-cycles (12 edges)</Text>
-        <Text position={[0, 1.5, 0]} fontSize={0.45} color="#F0883E" anchorX="left">σ₁: transpositions (6 edges)</Text>
-        <Text position={[0, 0.5, 0]} fontSize={0.5} color="#E6EDF3" anchorX="left">Face structure (σ∞):</Text>
-        <Text position={[0, -0.2, 0]} fontSize={0.45} color="#58A6FF" anchorX="left">Q: (c u b s d t) — 6-cycle</Text>
-        <Text position={[0, -0.9, 0]} fontSize={0.45} color="#D29922" anchorX="left">L: (e τ μ) — 3-cycle</Text>
-        <Text position={[0, -1.6, 0]} fontSize={0.45} color="#F0883E" anchorX="left">B: (W H) — 2-cycle</Text>
-        <Text position={[0, -2.3, 0]} fontSize={0.45} color="#FF6B9D" anchorX="left">A: (p) — fixed point</Text>
-      </group>
+      {/* Edge legend — HTML overlay */}
+      <Html position={[-12, -4, 0]} distanceFactor={22}>
+        <div style={{ background:'rgba(13,17,23,0.92)', border:'1px solid #30363D', borderRadius:8, padding:'12px 16px', width:220, fontFamily:'system-ui, sans-serif', fontSize:12, color:'#E6EDF3', pointerEvents:'none' }}>
+          <div style={{ fontWeight:700, marginBottom:6 }}>Generators</div>
+          <div style={{ color:'#3FB950' }}>&sigma;<sub>0</sub>: 3-cycles (12 edges)</div>
+          <div style={{ color:'#F0883E' }}>&sigma;<sub>1</sub>: transpositions (6 edges)</div>
+          <div style={{ fontWeight:600, marginTop:8, marginBottom:4 }}>Face structure (&sigma;<sub>&infin;</sub>)</div>
+          <div style={{ color:'#58A6FF' }}>Q: (c u b s d t) — 6-cycle</div>
+          <div style={{ color:'#D29922' }}>L: (e &tau; &mu;) — 3-cycle</div>
+          <div style={{ color:'#F0883E' }}>B: (W H) — 2-cycle</div>
+          <div style={{ color:'#FF6B9D' }}>A: (p) — fixed point</div>
+        </div>
+      </Html>
     </group>
   );
 }
