@@ -523,7 +523,7 @@ function App() {
               X₀(6) · N=6 · (d₁,d₂)=(2,3)
             </p>
             <p className="text-xs text-[#6E7681] mt-4 font-mono">
-              DOI: 10.5281/zenodo.19150365
+              DOI: 10.5281/zenodo.19393365
             </p>
             <button
               onClick={async () => { 
@@ -600,9 +600,9 @@ function App() {
             <span className={`hidden lg:inline text-xs font-mono ${isDarkMode ? 'text-[#8B949E]' : 'text-gray-500'}`}>
               N=6 · (d1,d2)=(2,3)
             </span>
-            <a href="https://zenodo.org/records/19150365" target="_blank" rel="noopener noreferrer"
+            <a href="https://zenodo.org/records/19393365" target="_blank" rel="noopener noreferrer"
               className={`hidden md:inline text-xs font-mono transition-all ${isDarkMode ? 'text-[#58A6FF] hover:text-[#79C0FF]' : 'text-blue-600 hover:text-blue-800'}`}>
-              DOI: 10.5281/zenodo.19150365
+              DOI: 10.5281/zenodo.19393365
             </a>
           </div>
         </div>
