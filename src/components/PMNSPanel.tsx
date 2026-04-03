@@ -30,7 +30,6 @@ interface Props { isDarkMode: boolean; lang: 'en'|'ru'|'zh' }
 
 export default function PMNSPanel({ isDarkMode, lang }: Props) {
   const t = (en: string, ru: string, zh: string) => lang === 'ru' ? ru : lang === 'zh' ? zh : en;
-  const isRu = lang === 'ru';
   const bg = isDarkMode ? '#0D1117' : '#ffffff';
   const card = isDarkMode ? '#161B22' : '#f9fafb';
   const border = isDarkMode ? '#30363D' : '#e5e7eb';
@@ -58,9 +57,11 @@ export default function PMNSPanel({ isDarkMode, lang }: Props) {
             PMNS Mixing Angles
           </h2>
           <p className="text-sm mt-1" style={{ color: muted }}>
-            {isRu 
-              ? 'Три угла нейтринного смешивания из проективных инвариантов X₀(6). 0 свободных параметров.'
-              : 'Three neutrino mixing angles from projective invariants of X₀(6). 0 free parameters.'}
+            {t(
+              'Three neutrino mixing angles from projective invariants of X₀(6). 0 free parameters.',
+              'Три угла нейтринного смешивания из проективных инвариантов X₀(6). 0 свободных параметров.',
+              '三个中微子混合角源自X₀(6)的射影不变量。零自由参数。'
+            )}
           </p>
         </div>
 
@@ -69,8 +70,8 @@ export default function PMNSPanel({ isDarkMode, lang }: Props) {
           {[
             { label: 'Σ|pull| LD', value: sumPullLD.toFixed(2) + 'σ', color: accent },
             { label: 'Σ|pull| TBM', value: sumPullTBM.toFixed(1) + 'σ', color: '#da3633' },
-            { label: isRu ? 'Параметры' : 'Free params', value: '0', color: '#3FB950' },
-            { label: isRu ? 'Улучшение' : 'LD vs TBM', value: '×' + (sumPullTBM / sumPullLD).toFixed(0), color: gold },
+            { label: t('Free params', 'Параметры', '自由参数'), value: '0', color: '#3FB950' },
+            { label: t('LD vs TBM', 'Улучшение', 'LD对比TBM'), value: '×' + (sumPullTBM / sumPullLD).toFixed(0), color: gold },
           ].map(s => (
             <div key={s.label} className="rounded-lg p-3 text-center" style={{ background: card, border: `1px solid ${border}` }}>
               <div className="text-xs font-medium" style={{ color: muted }}>{s.label}</div>
@@ -81,7 +82,7 @@ export default function PMNSPanel({ isDarkMode, lang }: Props) {
 
         {/* Pull Chart */}
         <div className="rounded-xl p-4" style={{ background: card, border: `1px solid ${border}` }}>
-          <h3 className="text-sm font-semibold mb-3">{isRu ? 'Пуллы: LD vs TBM' : 'Pulls: LD (blue) vs TBM (gold)'}</h3>
+          <h3 className="text-sm font-semibold mb-3">{t('Pulls: LD (blue) vs TBM (gold)', 'Пуллы: LD vs TBM', '拉力值：LD（蓝）vs TBM（金）')}</h3>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={pullData} layout="vertical" margin={{ left: 60, right: 20, top: 5, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke={border} />
@@ -103,18 +104,25 @@ export default function PMNSPanel({ isDarkMode, lang }: Props) {
             </BarChart>
           </ResponsiveContainer>
           <p className="text-xs mt-2" style={{ color: muted }}>
-            ±1σ bands shown. TBM bars truncated (θ₁₂: −2.8σ, θ₂₃: +4.1σ). {isRu ? 'Данные: NuFIT 6.0 IC19 NO.' : 'Data: NuFIT 6.0 IC19 NO.'}
+            ±1σ bands shown. TBM bars truncated (θ₁₂: −2.8σ, θ₂₃: +4.1σ). {t('Data: NuFIT 6.0 IC19 NO.', 'Данные: NuFIT 6.0 IC19 NO.', '数据：NuFIT 6.0 IC19 NO。')}
           </p>
         </div>
 
         {/* Predictions Table */}
         <div className="rounded-xl p-4" style={{ background: card, border: `1px solid ${border}` }}>
-          <h3 className="text-sm font-semibold mb-3">{isRu ? 'Предсказания' : 'Predictions'}</h3>
+          <h3 className="text-sm font-semibold mb-3">{t('Predictions', 'Предсказания', '预测值')}</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr style={{ borderBottom: `2px solid ${border}` }}>
-                  {['Angle', 'LD value', 'Decimal', 'Experiment', 'Pull', 'Channel'].map(h => (
+                  {[
+                    t('Angle', 'Угол', '角度'),
+                    t('LD value', 'LD значение', 'LD值'),
+                    t('Decimal', 'Десятичное', '十进制'),
+                    t('Experiment', 'Эксперимент', '实验值'),
+                    t('Pull', 'Пулл', '拉力'),
+                    t('Channel', 'Канал', '通道')
+                  ].map(h => (
                     <th key={h} className="text-left py-2 px-2 font-medium" style={{ color: muted }}>{h}</th>
                   ))}
                 </tr>
@@ -148,7 +156,7 @@ export default function PMNSPanel({ isDarkMode, lang }: Props) {
         <div className="grid md:grid-cols-2 gap-4">
           <div className="rounded-xl p-4" style={{ background: card, border: `1px solid ${border}` }}>
             <h3 className="text-sm font-semibold mb-2" style={{ color: accent }}>
-              {isRu ? 'CR-канал (кросс-отношение)' : 'CR Channel (cross-ratio)'}
+              {t('CR Channel (cross-ratio)', 'CR-канал (кросс-отношение)', 'CR通道（交比）')}
             </h3>
             <div className="space-y-2 text-xs font-mono" style={{ color: muted }}>
               <p><span style={{ color: text }}>θ₁₂:</span> CR(−12, 0; −9, −8) = d₁/d₂ = <span style={{ color: accent }}>2/3</span></p>
@@ -156,21 +164,21 @@ export default function PMNSPanel({ isDarkMode, lang }: Props) {
               <p className="mt-2"><span style={{ color: text }}>θ₂₃:</span> CR(∞, 0; −8, −9) = d₂²/d₁³ = <span style={{ color: accent }}>9/8</span></p>
               <p className="pl-4">→ tan θ₂₃ = 9/8 → sin²θ₂₃ = 81/145</p>
               <p className="mt-2 pt-2" style={{ borderTop: `1px solid ${border}`, color: text }}>
-                {isRu ? '4 каспа X₀(6), без выбора.' : '4 cusps of X₀(6), no selection.'}
+                {t('4 cusps of X₀(6), no selection.', '4 каспа X₀(6), без выбора.', 'X₀(6)的4个尖点，无需选择。')}
               </p>
             </div>
           </div>
           <div className="rounded-xl p-4" style={{ background: card, border: `1px solid ${border}` }}>
             <h3 className="text-sm font-semibold mb-2" style={{ color: '#3FB950' }}>
-              {isRu ? 'Индекс-канал (формула)' : 'Index Channel (formula)'}
+              {t('Index Channel (formula)', 'Индекс-канал (формула)', '指标通道（公式）')}
             </h3>
             <div className="space-y-2 text-xs font-mono" style={{ color: muted }}>
               <p><span style={{ color: text }}>θ₁₃:</span> sin²θ₁₃ = index / (N · ∏Φ₃(p))</p>
               <p className="pl-4">= 12 / (6 · 7 · 13) = <span style={{ color: '#3FB950' }}>2/91</span></p>
-              <p className="mt-2"><span style={{ color: text }}>{isRu ? 'Эйлеров продукт:' : 'Euler product:'}</span></p>
+              <p className="mt-2"><span style={{ color: text }}>{t('Euler product:', 'Эйлеров продукт:', 'Euler乘积：')}</span></p>
               <p className="pl-4">∏ Φ₂(p)/(p·Φ₃(p)) = (3/14)(4/39) = 2/91</p>
               <p className="mt-2 pt-2" style={{ borderTop: `1px solid ${border}`, color: text }}>
-                {isRu ? 'Каналы уникальны (X.130): θ₁₃ недоступен CR.' : 'Channels unique (X.130): θ₁₃ inaccessible to CR.'}
+                {t('Channels unique (X.130): θ₁₃ inaccessible to CR.', 'Каналы уникальны (X.130): θ₁₃ недоступен CR.', '通道唯一（X.130）：θ₁₃无法通过CR获得。')}
               </p>
             </div>
           </div>
@@ -178,7 +186,7 @@ export default function PMNSPanel({ isDarkMode, lang }: Props) {
 
         {/* Cyclotomic Table */}
         <div className="rounded-xl p-4" style={{ background: card, border: `1px solid ${border}` }}>
-          <h3 className="text-sm font-semibold mb-3">{isRu ? 'Циклотомическая таблица (X.129c)' : 'Cyclotomic Unification (X.129c)'}</h3>
+          <h3 className="text-sm font-semibold mb-3">{t('Cyclotomic Unification (X.129c)', 'Циклотомическая таблица (X.129c)', '分圆统一表 (X.129c)')}</h3>
           <table className="w-full text-sm font-mono">
             <thead>
               <tr style={{ borderBottom: `2px solid ${border}` }}>
@@ -205,7 +213,7 @@ export default function PMNSPanel({ isDarkMode, lang }: Props) {
             </tbody>
           </table>
           <p className="text-xs mt-3" style={{ color: muted }}>
-            Catalan bridge: d₁² + d₂² = Φ₃(d₂) = 13. {isRu ? 'Единственно для (2,3).' : 'Unique for (2,3).'}
+            Catalan bridge: d₁² + d₂² = Φ₃(d₂) = 13. {t('Unique for (2,3).', 'Единственно для (2,3).', '对(2,3)唯一。')}
           </p>
         </div>
 
@@ -215,12 +223,12 @@ export default function PMNSPanel({ isDarkMode, lang }: Props) {
             A²(CKM) + sin²θ₁₂(PMNS) = 9/13 + 4/13 = <strong>1</strong>
           </p>
           <p className="text-xs mt-1" style={{ color: muted }}>
-            {isRu ? 'Единый источник: UST-вероятности P_triple и ΔP (§V.6)' : 'Common origin: UST probabilities P_triple and ΔP (§V.6)'}
+            {t('Common origin: UST probabilities P_triple and ΔP (§V.6)', 'Единый источник: UST-вероятности P_triple и ΔP (§V.6)', '共同起源：UST概率 P_triple 与 ΔP（§V.6）')}
           </p>
         </div>
 
         <p className="text-xs text-center pb-4" style={{ color: muted }}>
-          Paper DOI: 10.5281/zenodo.19393365 · {isRu ? 'Данные' : 'Data'}: NuFIT 6.0 IC19 NO
+          Paper DOI: 10.5281/zenodo.19393365 · {t('Data', 'Данные', '数据')}: NuFIT 6.0 IC19 NO
         </p>
       </div>
     </div>

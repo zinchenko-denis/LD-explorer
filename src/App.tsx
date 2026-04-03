@@ -70,7 +70,6 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [lang, setLang] = useState<'en'|'ru'|'zh'>('en');
   const t = (en: string, ru: string, zh: string) => lang === 'ru' ? ru : lang === 'zh' ? zh : en;
-  const isRu = lang === 'ru';
   const [showDescription, setShowDescription] = useState(true);
   const [showLanding, setShowLanding] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);

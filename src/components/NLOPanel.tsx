@@ -24,7 +24,6 @@ interface Props { isDarkMode: boolean; lang: 'en'|'ru'|'zh' }
 
 export default function NLOPanel({ isDarkMode, lang }: Props) {
   const t = (en: string, ru: string, zh: string) => lang === 'ru' ? ru : lang === 'zh' ? zh : en;
-  const isRu = lang === 'ru';
   const card = isDarkMode ? '#161B22' : '#f9fafb';
   const border = isDarkMode ? '#30363D' : '#e5e7eb';
   const text = isDarkMode ? '#E6EDF3' : '#1f2937';
@@ -50,9 +49,11 @@ export default function NLOPanel({ isDarkMode, lang }: Props) {
             NLO Mass Rule: δK
           </h2>
           <p className="text-sm mt-1" style={{ color: muted }}>
-            {isRu 
-              ? 'δK/K = h(F_σ₁) · (α/2π) · [Φ(n) − Lℓ]. Множитель h из ньюформы 6.10.a.a веса 10.'
-              : 'δK/K = h(F_σ₁) · (α/2π) · [Φ(n) − Lℓ]. Multiplier h from weight-10 newform 6.10.a.a.'}
+            {t(
+              'δK/K = h(F_σ₁) · (α/2π) · [Φ(n) − Lℓ]. Multiplier h from weight-10 newform 6.10.a.a.',
+              'δK/K = h(F_σ₁) · (α/2π) · [Φ(n) − Lℓ]. Множитель h из ньюформы 6.10.a.a веса 10.',
+              'δK/K = h(F_σ₁) · (α/2π) · [Φ(n) − Lℓ]。乘子h来自权重10新形式6.10.a.a。'
+            )}
           </p>
         </div>
 
@@ -61,8 +62,8 @@ export default function NLOPanel({ isDarkMode, lang }: Props) {
           {[
             { label: 'R² (NLO)', value: r2.toFixed(2), color: accent },
             { label: 'R² (LO)', value: '0.68', color: muted },
-            { label: isRu ? 'Знаки' : 'Signs', value: `${signs}/10`, color: '#3FB950' },
-            { label: isRu ? 'Параметры' : 'Free params', value: '0', color: '#3FB950' },
+            { label: t('Signs', 'Знаки', '符号匹配'), value: `${signs}/10`, color: '#3FB950' },
+            { label: t('Free params', 'Параметры', '自由参数'), value: '0', color: '#3FB950' },
           ].map(s => (
             <div key={s.label} className="rounded-lg p-3 text-center" style={{ background: card, border: `1px solid ${border}` }}>
               <div className="text-xs" style={{ color: muted }}>{s.label}</div>
@@ -73,7 +74,7 @@ export default function NLOPanel({ isDarkMode, lang }: Props) {
 
         {/* Scatter Plot */}
         <div className="rounded-xl p-4" style={{ background: card, border: `1px solid ${border}` }}>
-          <h3 className="text-sm font-semibold mb-3">{isRu ? 'δK_NLO vs δK_obs (%)' : 'δK_NLO vs δK_obs (%)'}</h3>
+          <h3 className="text-sm font-semibold mb-3">{t('δK_NLO vs δK_obs (%)', 'δK_NLO vs δK_obs (%)', 'δK_NLO 对比 δK_obs (%)')}</h3>
           <ResponsiveContainer width="100%" height={320}>
             <ScatterChart margin={{ left: 10, right: 20, top: 10, bottom: 10 }}>
               <CartesianGrid strokeDasharray="3 3" stroke={border} />
@@ -106,21 +107,21 @@ export default function NLOPanel({ isDarkMode, lang }: Props) {
           </ResponsiveContainer>
           <div className="flex gap-4 mt-2 justify-center text-xs" style={{ color: muted }}>
             {Object.entries(TYPE_COLORS).map(([k, c]) => (
-              <span key={k}><span style={{ color: c }}>●</span> {k}s</span>
+              <span key={k}><span style={{ color: c }}>●</span> {k === 'quark' ? t('quarks', 'кварки', '夸克') : k === 'lepton' ? t('leptons', 'лептоны', '轻子') : t('bosons', 'бозоны', '玻色子')}</span>
             ))}
-            <span>— diagonal = perfect</span>
+            <span>— {t('diagonal = perfect', 'диагональ = идеал', '对角线 = 完美')}</span>
           </div>
         </div>
 
         {/* h-factor Table */}
         <div className="rounded-xl p-4" style={{ background: card, border: `1px solid ${border}` }}>
           <h3 className="text-sm font-semibold mb-3">
-            {isRu ? 'Множитель h(F_σ₁) из trace formula chain' : 'Multiplier h(F_σ₁) from trace formula chain'}
+            {t('Multiplier h(F_σ₁) from trace formula chain', 'Множитель h(F_σ₁) из trace formula chain', '乘子 h(F_σ₁) 源自迹公式链')}
           </h3>
           <table className="w-full text-sm">
             <thead>
               <tr style={{ borderBottom: `2px solid ${border}` }}>
-                {['F_σ₁', 'h', 'Monomial', 'Particles'].map(h => (
+                {['F_σ₁', 'h', t('Monomial', 'Моном', '单项式'), t('Particles', 'Частицы', '粒子')].map(h => (
                   <th key={h} className="text-left py-2 px-2" style={{ color: muted }}>{h}</th>
                 ))}
               </tr>
@@ -143,7 +144,7 @@ export default function NLOPanel({ isDarkMode, lang }: Props) {
 
         {/* Per-particle table */}
         <div className="rounded-xl p-4" style={{ background: card, border: `1px solid ${border}` }}>
-          <h3 className="text-sm font-semibold mb-3">{isRu ? 'Все 10 частиц' : 'Full prediction table'}</h3>
+          <h3 className="text-sm font-semibold mb-3">{t('Full prediction table', 'Все 10 частиц', '全部10个粒子')}</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-xs font-mono">
               <thead>

@@ -28,7 +28,6 @@ interface Props { isDarkMode: boolean; lang: 'en'|'ru'|'zh' }
 
 export default function SummaryPanel({ isDarkMode, lang }: Props) {
   const t = (en: string, ru: string, zh: string) => lang === 'ru' ? ru : lang === 'zh' ? zh : en;
-  const isRu = lang === 'ru';
   const card = isDarkMode ? '#161B22' : '#f9fafb';
   const border = isDarkMode ? '#30363D' : '#e5e7eb';
   const text = isDarkMode ? '#E6EDF3' : '#1f2937';
@@ -42,21 +41,23 @@ export default function SummaryPanel({ isDarkMode, lang }: Props) {
         
         <div>
           <h2 className="text-2xl font-bold tracking-tight" style={{ color: '#E6EDF3' }}>
-            {isRu ? 'Все предсказания LD' : 'All LD Predictions'}
+            {t('All LD Predictions', 'Все предсказания LD', 'LD全部预测')}
           </h2>
           <p className="text-sm mt-1" style={{ color: muted }}>
-            {isRu 
-              ? '9 предсказаний, 0 непрерывных свободных параметров. Все в пределах 1.25σ.'
-              : '9 predictions, 0 continuous free parameters. All within 1.25σ.'}
+            {t(
+              '9 predictions, 0 continuous free parameters. All within 1.25σ.',
+              '9 предсказаний, 0 непрерывных свободных параметров. Все в пределах 1.25σ.',
+              '9个预测，零连续自由参数。全部在1.25σ以内。'
+            )}
           </p>
         </div>
 
         {/* Grand scorecard */}
         <div className="grid grid-cols-3 gap-3">
           {[
-            { label: isRu ? 'Макс. пулл' : 'Max |pull|', value: maxAbsPull.toFixed(2) + 'σ', color: '#D29922' },
-            { label: isRu ? 'Параметры' : 'Free params', value: '0', color: '#3FB950' },
-            { label: isRu ? 'Предсказания' : 'Predictions', value: '9', color: '#58A6FF' },
+            { label: t('Max |pull|', 'Макс. пулл', '最大|拉力|'), value: maxAbsPull.toFixed(2) + 'σ', color: '#D29922' },
+            { label: t('Free params', 'Параметры', '自由参数'), value: '0', color: '#3FB950' },
+            { label: t('Predictions', 'Предсказания', '预测数'), value: '9', color: '#58A6FF' },
           ].map(s => (
             <div key={s.label} className="rounded-lg p-3 text-center" style={{ background: card, border: `1px solid ${border}` }}>
               <div className="text-xs" style={{ color: muted }}>{s.label}</div>
@@ -67,7 +68,7 @@ export default function SummaryPanel({ isDarkMode, lang }: Props) {
 
         {/* Forest Plot */}
         <div className="rounded-xl p-4" style={{ background: card, border: `1px solid ${border}` }}>
-          <h3 className="text-sm font-semibold mb-3">{isRu ? 'Все пуллы (exp−theory)/σ' : 'All pulls (exp−theory)/σ'}</h3>
+          <h3 className="text-sm font-semibold mb-3">{t('All pulls (exp−theory)/σ', 'Все пуллы (exp−theory)/σ', '全部拉力值 (exp−theory)/σ')}</h3>
           <ResponsiveContainer width="100%" height={340}>
             <BarChart data={ALL_PULLS} layout="vertical" margin={{ left: 80, right: 20, top: 5, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke={border} />
@@ -95,7 +96,7 @@ export default function SummaryPanel({ isDarkMode, lang }: Props) {
 
         {/* Hierarchy */}
         <div className="rounded-xl p-4" style={{ background: card, border: `1px solid ${border}` }}>
-          <h3 className="text-sm font-semibold mb-3">{isRu ? 'Иерархия предсказаний' : 'Prediction Hierarchy'}</h3>
+          <h3 className="text-sm font-semibold mb-3">{t('Prediction Hierarchy', 'Иерархия предсказаний', '预测层级')}</h3>
           <div className="space-y-2">
             {HIERARCHY.map(h => {
               const statusColor = h.status === 'CLOSED' || h.status === 'DER' ? '#3FB950' 
@@ -116,13 +117,13 @@ export default function SummaryPanel({ isDarkMode, lang }: Props) {
 
         {/* Key numbers */}
         <div className="rounded-xl p-4" style={{ background: card, border: `1px solid ${border}` }}>
-          <h3 className="text-sm font-semibold mb-3">{isRu ? 'Ключевые числа' : 'Key Numbers'}</h3>
+          <h3 className="text-sm font-semibold mb-3">{t('Key Numbers', 'Ключевые числа', '关键数值')}</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs font-mono">
             {[
               { k: 'N', v: '6' }, { k: 'd₁, d₂', v: '2, 3' }, { k: 'index', v: '12' }, { k: 'L', v: '7' },
               { k: '|B₁|', v: '10' }, { k: 'K', v: '40' }, { k: '|Mon|', v: '72' }, { k: 'j(i)', v: '1728' },
-              { k: isRu ? 'Пути' : 'Paths', v: '≥44' }, { k: isRu ? 'Кластеры' : 'Clusters', v: '11' },
-              { k: isRu ? 'Dead' : 'Dead dirs', v: '90+' }, { k: isRu ? 'Барьеры' : 'Barriers', v: '10' },
+              { k: t('Paths', 'Пути', '路径'), v: '≥44' }, { k: t('Clusters', 'Кластеры', '集群'), v: '11' },
+              { k: t('Dead dirs', 'Dead', '废弃方向'), v: '90+' }, { k: t('Barriers', 'Барьеры', '障碍'), v: '10' },
             ].map(item => (
               <div key={item.k} className="flex justify-between py-1" style={{ borderBottom: `1px solid ${border}` }}>
                 <span style={{ color: muted }}>{item.k}</span>
@@ -135,10 +136,10 @@ export default function SummaryPanel({ isDarkMode, lang }: Props) {
         {/* Inputs */}
         <div className="rounded-xl p-4 text-center" style={{ background: `#3FB95010`, border: `1px solid #3FB95030` }}>
           <p className="text-sm font-mono" style={{ color: '#3FB950' }}>
-            {isRu ? 'Входные данные:' : 'Inputs:'} m_e, A_F = ℂ⊕ℍ⊕M₃(ℂ), Γ₀ {isRu ? 'семейство' : 'family'}
+            {t('Inputs:', 'Входные данные:', '输入：')} m_e, A_F = ℂ⊕ℍ⊕M₃(ℂ), Γ₀ {t('family', 'семейство', '族')}
           </p>
           <p className="text-xs mt-1" style={{ color: muted }}>
-            + (m_n, B_d) {isRu ? 'для G' : 'for G'} · {isRu ? '~85% THM/DER' : '~85% THM/DER'}
+            + (m_n, B_d) {t('for G', 'для G', '用于G')} · ~85% THM/DER
           </p>
         </div>
       </div>
