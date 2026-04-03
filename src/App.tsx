@@ -23,6 +23,9 @@ import { RiemannSphere } from '@/components/RiemannSphere';
 import { CayleySpectrum } from '@/components/CayleySpectrum';
 import { PhiAmplitudes } from '@/components/PhiAmplitudes';
 import { HeatKernel } from '@/components/HeatKernel';
+import PMNSPanel from '@/components/PMNSPanel';
+import NLOPanel from '@/components/NLOPanel';
+import SummaryPanel from '@/components/SummaryPanel';
 import type { Particle } from '@/types/ld-model';
 import './App.css';
 
@@ -41,7 +44,9 @@ const particles: Particle[] = [
   { name: 't', n: 7, K: 2/3, mass: 172690, type: 'quark-up', generation: 3 },
 ];
 
-type ViewMode = 'matrix' | 'network' | 'kcipher' | 'dessin' | 'cube' | 'crt' | 'hecke' | 'kirchhoff' | 'dessincube' | 'sphere' | 'cayley' | 'phi' | 'heatkernel';
+type ViewMode = 'matrix' | 'network' | 'kcipher' | 'dessin' | 'cube' | 'crt' | 'hecke' | 'kirchhoff' | 'dessincube' | 'sphere' | 'cayley' | 'phi' | 'heatkernel' | 'pmns' | 'nlo' | 'summary';
+
+const VIEW_2D: ViewMode[] = ['pmns', 'nlo', 'summary'];
 
 function LoadingFallback() {
   return (
@@ -127,6 +132,9 @@ function App() {
     cayley:      { title_en: 'Cayley Spectrum', title_ru: 'Спектр Кэли', en: '12-vertex Cayley graph on P¹(ℤ/6ℤ). Laplacian spectrum has discriminants 21 = d₂L and 5 = N−1.', ru: '12-вершинный граф Кэли на P¹(ℤ/6ℤ). Дискриминанты спектра: 21 = d₂L и 5 = N−1.' },
     phi:         { title_en: 'φ-Amplitudes', title_ru: 'φ-Амплитуды', en: 'Golden ratio eigenvector: Z_φ = {p,c,u,t} exactly zero. Three tiers 1:φ:φ² with d-μ maximal.', ru: 'Собственный вектор золотого сечения: Z_φ = {p,c,u,t} точно ноль. Три яруса 1:φ:φ², d-μ максимальны.' },
     heatkernel:  { title_en: 'Heat Kernel', title_ru: 'Ядро теплопроводности', en: 'At diffusion time t=1/d₁, the heat kernel gives sin²θ₁₂ = 4/13 with 4.6 ppm precision.', ru: 'При t=1/d₁ ядро теплопроводности даёт sin²θ₁₂ = 4/13 с точностью 4.6 ppm.' },
+    pmns:        { title_en: 'PMNS Angles', title_ru: 'Углы PMNS', en: 'Three neutrino mixing angles from cross-ratios and index formula. 0 free parameters, Σ|pull| = 0.27.', ru: 'Три угла нейтринного смешивания из кросс-отношений и индекс-формулы. 0 параметров, Σ|pull| = 0.27.' },
+    nlo:         { title_en: 'NLO δK', title_ru: 'NLO δK', en: 'NLO mass rule with face(σ₁) multiplier h. R² = 0.89 (vs 0.68 LO), 10/10 signs, 0 free parameters.', ru: 'NLO массовое правило с множителем h(F_σ₁). R² = 0.89 (vs 0.68 LO), 10/10 знаков, 0 параметров.' },
+    summary:     { title_en: 'All Predictions', title_ru: 'Все предсказания', en: '9 predictions, 0 continuous free parameters. All within 1.25σ. Full hierarchy L0–L3.', ru: '9 предсказаний, 0 непрерывных параметров. Все в пределах 1.25σ. Полная иерархия L0–L3.' },
   };
 
   const theme = isDarkMode ? {
@@ -354,6 +362,59 @@ function App() {
                       <span className={theme.text}>Heat Kernel</span>
                     </div>
                     <p className={`text-xs ${theme.textMuted} mt-1`}>sin²θ₁₂ = 4/13 at t = 1/d₁, DT mechanism</p>
+                  </button>
+                </CardContent>
+              </Card>
+
+              {/* NEW: Physics Results */}
+              <Card className={`${theme.cardBg} ${theme.border} border`}>
+                <CardHeader className="pb-2">
+                  <CardTitle className={`text-sm ${theme.text}`}>{isRu ? '📊 Результаты v8' : '📊 Results v8'}</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <button
+                    onClick={() => handleViewChange('pmns')}
+                    className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
+                      viewMode === 'pmns' 
+                        ? 'bg-[#D29922]/20 border border-[#D29922]/40' 
+                        : `${theme.buttonBg} border ${theme.border} hover:border-[#D29922]`
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-[#D29922] font-mono font-bold">ν</span>
+                      <span className={theme.text}>PMNS Angles</span>
+                    </div>
+                    <p className={`text-xs ${theme.textMuted} mt-1`}>3 angles, Σ|pull| = 0.27, 0 params</p>
+                  </button>
+
+                  <button
+                    onClick={() => handleViewChange('nlo')}
+                    className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
+                      viewMode === 'nlo' 
+                        ? 'bg-[#F0883E]/20 border border-[#F0883E]/40' 
+                        : `${theme.buttonBg} border ${theme.border} hover:border-[#F0883E]`
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-[#F0883E] font-mono font-bold">δ</span>
+                      <span className={theme.text}>NLO δK</span>
+                    </div>
+                    <p className={`text-xs ${theme.textMuted} mt-1`}>R² = 0.89, h from 6.10.a.a</p>
+                  </button>
+
+                  <button
+                    onClick={() => handleViewChange('summary')}
+                    className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
+                      viewMode === 'summary' 
+                        ? 'bg-[#3FB950]/20 border border-[#3FB950]/40' 
+                        : `${theme.buttonBg} border ${theme.border} hover:border-[#3FB950]`
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-[#3FB950] font-mono font-bold">Σ</span>
+                      <span className={theme.text}>{isRu ? 'Все предсказания' : 'All Predictions'}</span>
+                    </div>
+                    <p className={`text-xs ${theme.textMuted} mt-1`}>9 pulls, max 1.25σ, 0 params</p>
                   </button>
                 </CardContent>
               </Card>
@@ -599,8 +660,18 @@ function App() {
           </aside>
         )}
 
-        {/* Center - 3D Canvas */}
+        {/* Center - 3D Canvas or 2D Panel */}
         <main className="flex-1 relative" style={{ backgroundColor: theme.canvasBg }}>
+          {VIEW_2D.includes(viewMode) ? (
+            /* ── 2D Panels ── */
+            <div key={fadeKey} className="w-full h-full animate-fade-in">
+              {viewMode === 'pmns' && <PMNSPanel isDarkMode={isDarkMode} isRu={isRu} />}
+              {viewMode === 'nlo' && <NLOPanel isDarkMode={isDarkMode} isRu={isRu} />}
+              {viewMode === 'summary' && <SummaryPanel isDarkMode={isDarkMode} isRu={isRu} />}
+            </div>
+          ) : (
+            /* ── 3D Canvas ── */
+            <>
           <Suspense fallback={<LoadingFallback />}>
             <div key={fadeKey} className="w-full h-full animate-fade-in">
             <Canvas 
@@ -784,6 +855,8 @@ function App() {
               >?</button>
             )}
           </div>
+            </>
+          )}
         </main>
       </div>
     </div>
