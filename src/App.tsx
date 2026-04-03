@@ -68,7 +68,9 @@ function App() {
   const [highlightedN] = useState<number | null>(null);
   const [highlightedK] = useState<number | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const [isRu, setIsRu] = useState(false);
+  const [lang, setLang] = useState<'en'|'ru'|'zh'>('en');
+  const t = (en: string, ru: string, zh: string) => lang === 'ru' ? ru : lang === 'zh' ? zh : en;
+  const isRu = lang === 'ru';
   const [showDescription, setShowDescription] = useState(true);
   const [showLanding, setShowLanding] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -118,23 +120,23 @@ function App() {
     setSidebarOpen(false);
   };
 
-  const VIEW_DESC: Record<ViewMode, { en: string; ru: string; title_en: string; title_ru: string }> = {
-    matrix:      { title_en: 'Biadjacency Matrix', title_ru: 'Бисмежная матрица', en: 'The 4×6 matrix connecting 4 black vertices (particle types) to 6 white vertices (generation channels). Sum = 12 = index of Γ₀(6).', ru: 'Матрица 4×6 связывает 4 чёрные вершины (типы частиц) с 6 белыми (каналы поколений). Сумма = 12 = индекс Γ₀(6).' },
-    network:     { title_en: 'Particle Network', title_ru: 'Сеть частиц', en: '12 particles arranged by mass (vertical) with connections showing the LD lattice structure n × K.', ru: '12 частиц по массе (вертикаль) со связями, показывающими решёточную структуру n × K.' },
-    kcipher:     { title_en: 'K-Cipher', title_ru: 'K-шифр', en: 'Each particle mass multiplier K = 2^a₂ · 3^a₃ is fully determined by the dessin geometry. 11/11 rational + 1 EWSB (√2).', ru: 'Множитель массы K = 2^a₂ · 3^a₃ полностью определён геометрией дезина. 11/11 рациональных + 1 EWSB (√2).' },
-    dessin:      { title_en: "Dessin d'Enfant", title_ru: 'Дезин-данфан', en: 'The bipartite graph of X₀(6): 4 black vertices (val 3), 6 white (val 2), 12 edges = 12 particles. Pulsing dots show information flow along edges.', ru: 'Двудольный граф X₀(6): 4 чёрные вершины (вал 3), 6 белых (вал 2), 12 рёбер = 12 частиц. Пульсирующие точки показывают поток информации.' },
-    cube:        { title_en: 'Lattice-K Cube', title_ru: 'Решётка n-K', en: 'Parameter space: lattice node n vs multiplier K vs mass. Each particle sits at a unique (n, K) address.', ru: 'Пространство параметров: узел решётки n × множитель K × масса. Каждая частица на уникальном адресе (n, K).' },
-    crt:         { title_en: 'CRT Grid', title_ru: 'CRT-сетка', en: 'Chinese Remainder Theorem: P¹(ℤ/6ℤ) ≅ P¹(𝔽₂) × P¹(𝔽₃). Each of 12 cells = one particle. Columns encode face type.', ru: 'Китайская теорема об остатках: P¹(ℤ/6ℤ) ≅ P¹(𝔽₂) × P¹(𝔽₃). 12 ячеек = 12 частиц. Столбцы кодируют тип грани.' },
-    hecke:       { title_en: 'Hecke Orbit', title_ru: 'Орбита Гекке', en: 'B₁ = orbit of K=1 under Hecke operators T₂, T₃ within distance 3. MDL ≡ Hecke: one lattice, two names.', ru: 'B₁ = орбита K=1 под операторами Гекке T₂, T₃ на расстоянии ≤ 3. MDL ≡ Hecke: одна решётка, два имени.' },
-    kirchhoff:   { title_en: 'Kirchhoff Graph', title_ru: 'Граф Кирхгофа', en: 'Bipartite graph with K=40 spanning trees. Anchor splits degeneracy → Cabibbo angle λ = 9/40.', ru: 'Двудольный граф, 40 остовных деревьев. Якорь расщепляет вырождение → угол Кабиббо λ = 9/40.' },
-    dessincube:  { title_en: 'Dessin in 3D', title_ru: 'Дезин в 3D', en: '12 particles mapped into a 3D cube by face×BV×WV coordinates. 12 of 64 cells occupied.', ru: '12 частиц в 3D кубе по координатам грань×BV×WV. Заняты 12 из 64 ячеек.' },
-    sphere:      { title_en: 'Riemann Sphere', title_ru: 'Сфера Римана', en: 'X₀(6) as punctured sphere with 4 cusps (widths 1,2,3,6). Particles placed by j-map preimages.', ru: 'X₀(6) как проколотая сфера с 4 каспами (ширины 1,2,3,6). Частицы на прообразах j-отображения.' },
-    cayley:      { title_en: 'Cayley Spectrum', title_ru: 'Спектр Кэли', en: '12-vertex Cayley graph on P¹(ℤ/6ℤ). Laplacian spectrum has discriminants 21 = d₂L and 5 = N−1.', ru: '12-вершинный граф Кэли на P¹(ℤ/6ℤ). Дискриминанты спектра: 21 = d₂L и 5 = N−1.' },
-    phi:         { title_en: 'φ-Amplitudes', title_ru: 'φ-Амплитуды', en: 'Golden ratio eigenvector: Z_φ = {p,c,u,t} exactly zero. Three tiers 1:φ:φ² with d-μ maximal.', ru: 'Собственный вектор золотого сечения: Z_φ = {p,c,u,t} точно ноль. Три яруса 1:φ:φ², d-μ максимальны.' },
-    heatkernel:  { title_en: 'Heat Kernel', title_ru: 'Ядро теплопроводности', en: 'At diffusion time t=1/d₁, the heat kernel gives sin²θ₁₂ = 4/13 with 4.6 ppm precision.', ru: 'При t=1/d₁ ядро теплопроводности даёт sin²θ₁₂ = 4/13 с точностью 4.6 ppm.' },
-    pmns:        { title_en: 'PMNS Angles', title_ru: 'Углы PMNS', en: 'Three neutrino mixing angles from cross-ratios and index formula. 0 free parameters, Σ|pull| = 0.27.', ru: 'Три угла нейтринного смешивания из кросс-отношений и индекс-формулы. 0 параметров, Σ|pull| = 0.27.' },
-    nlo:         { title_en: 'NLO δK', title_ru: 'NLO δK', en: 'NLO mass rule with face(σ₁) multiplier h. R² = 0.89 (vs 0.68 LO), 10/10 signs, 0 free parameters.', ru: 'NLO массовое правило с множителем h(F_σ₁). R² = 0.89 (vs 0.68 LO), 10/10 знаков, 0 параметров.' },
-    summary:     { title_en: 'All Predictions', title_ru: 'Все предсказания', en: '9 predictions, 0 continuous free parameters. All within 1.25σ. Full hierarchy L0–L3.', ru: '9 предсказаний, 0 непрерывных параметров. Все в пределах 1.25σ. Полная иерархия L0–L3.' },
+  const VIEW_DESC: Record<ViewMode, { en: string; ru: string; zh: string; title_en: string; title_ru: string; title_zh: string }> = {
+    matrix:      { title_en: 'Biadjacency Matrix', title_ru: 'Бисмежная матрица', title_zh: '双邻接矩阵', en: 'The 4×6 matrix connecting 4 black vertices (particle types) to 6 white vertices (generation channels). Sum = 12 = index of Γ₀(6).', ru: 'Матрица 4×6 связывает 4 чёрные вершины (типы частиц) с 6 белыми (каналы поколений). Сумма = 12 = индекс Γ₀(6).', zh: '4×6矩阵连接4个黑顶点（粒子类型）和6个白顶点（代际通道）。总和 = 12 = Γ₀(6)的指标。' },
+    network:     { title_en: 'Particle Network', title_ru: 'Сеть частиц', title_zh: '粒子网络', en: '12 particles arranged by mass (vertical) with connections showing the LD lattice structure n × K.', ru: '12 частиц по массе (вертикаль) со связями, показывающими решёточную структуру n × K.', zh: '12个粒子按质量排列（纵向），显示LD格点结构 n × K。' },
+    kcipher:     { title_en: 'K-Cipher', title_ru: 'K-шифр', title_zh: 'K密码', en: 'Each particle mass multiplier K = 2^a₂ · 3^a₃ is fully determined by the dessin geometry. 11/11 rational + 1 EWSB (√2).', ru: 'Множитель массы K = 2^a₂ · 3^a₃ полностью определён геометрией дезина. 11/11 рациональных + 1 EWSB (√2).', zh: '每个粒子的质量乘子 K 完全由dessin几何决定。11/11有理 + 1 EWSB (√2)。' },
+    dessin:      { title_en: "Dessin d'Enfant", title_ru: 'Дезин-данфан', title_zh: "Dessin d'Enfant", en: 'The bipartite graph of X₀(6): 4 black vertices (val 3), 6 white (val 2), 12 edges = 12 particles. Pulsing dots show information flow along edges.', ru: 'Двудольный граф X₀(6): 4 чёрные вершины (вал 3), 6 белых (вал 2), 12 рёбер = 12 частиц. Пульсирующие точки показывают поток информации.', zh: 'X₀(6)的二部图：4个黑顶点（度3），6个白顶点（度2），12条边 = 12个粒子。' },
+    cube:        { title_en: 'Lattice-K Cube', title_ru: 'Решётка n-K', title_zh: '格点-K立方', en: 'Parameter space: lattice node n vs multiplier K vs mass. Each particle sits at a unique (n, K) address.', ru: 'Пространство параметров: узел решётки n × множитель K × масса. Каждая частица на уникальном адресе (n, K).', zh: '参数空间：格点位置 n × 乘子 K × 质量。每个粒子有唯一地址 (n, K)。' },
+    crt:         { title_en: 'CRT Grid', title_ru: 'CRT-сетка', title_zh: 'CRT网格', en: 'Chinese Remainder Theorem: P¹(ℤ/6ℤ) ≅ P¹(𝔽₂) × P¹(𝔽₃). Each of 12 cells = one particle. Columns encode face type.', ru: 'Китайская теорема об остатках: P¹(ℤ/6ℤ) ≅ P¹(𝔽₂) × P¹(𝔽₃). 12 ячеек = 12 частиц. Столбцы кодируют тип грани.', zh: '中国剩余定理：P¹(ℤ/6ℤ) ≅ P¹(𝔽₂) × P¹(𝔽₃)。12个单元 = 12个粒子。' },
+    hecke:       { title_en: 'Hecke Orbit', title_ru: 'Орбита Гекке', title_zh: 'Hecke轨道', en: 'B₁ = orbit of K=1 under Hecke operators T₂, T₃ within distance 3. MDL ≡ Hecke: one lattice, two names.', ru: 'B₁ = орбита K=1 под операторами Гекке T₂, T₃ на расстоянии ≤ 3. MDL ≡ Hecke: одна решётка, два имени.', zh: 'B₁ = K=1在Hecke算子下距离≤3的轨道。MDL ≡ Hecke：一个格点，两个名字。' },
+    kirchhoff:   { title_en: 'Kirchhoff Graph', title_ru: 'Граф Кирхгофа', title_zh: 'Kirchhoff图', en: 'Bipartite graph with K=40 spanning trees. Anchor splits degeneracy → Cabibbo angle λ = 9/40.', ru: 'Двудольный граф, 40 остовных деревьев. Якорь расщепляет вырождение → угол Кабиббо λ = 9/40.', zh: '二部图，40棵生成树。锚点打破简并 → Cabibbo角 λ = 9/40。' },
+    dessincube:  { title_en: 'Dessin in 3D', title_ru: 'Дезин в 3D', title_zh: '三维Dessin', en: '12 particles mapped into a 3D cube by face×BV×WV coordinates. 12 of 64 cells occupied.', ru: '12 частиц в 3D кубе по координатам грань×BV×WV. Заняты 12 из 64 ячеек.', zh: '12个粒子按面×BV×WV坐标映射到三维立方体。64个单元中占据12个。' },
+    sphere:      { title_en: 'Riemann Sphere', title_ru: 'Сфера Римана', title_zh: 'Riemann球面', en: 'X₀(6) as punctured sphere with 4 cusps (widths 1,2,3,6). Particles placed by j-map preimages.', ru: 'X₀(6) как проколотая сфера с 4 каспами (ширины 1,2,3,6). Частицы на прообразах j-отображения.', zh: 'X₀(6)作为4个尖点的穿孔球面（宽度1,2,3,6）。粒子位于j映射的原像处。' },
+    cayley:      { title_en: 'Cayley Spectrum', title_ru: 'Спектр Кэли', title_zh: 'Cayley谱', en: '12-vertex Cayley graph on P¹(ℤ/6ℤ). Laplacian spectrum has discriminants 21 = d₂L and 5 = N−1.', ru: '12-вершинный граф Кэли на P¹(ℤ/6ℤ). Дискриминанты спектра: 21 = d₂L и 5 = N−1.', zh: 'P¹(ℤ/6ℤ)上的12顶点Cayley图。Laplacian谱的判别式为21和5。' },
+    phi:         { title_en: 'φ-Amplitudes', title_ru: 'φ-Амплитуды', title_zh: 'φ振幅', en: 'Golden ratio eigenvector: Z_φ = {p,c,u,t} exactly zero. Three tiers 1:φ:φ² with d-μ maximal.', ru: 'Собственный вектор золотого сечения: Z_φ = {p,c,u,t} точно ноль. Три яруса 1:φ:φ², d-μ максимальны.', zh: '黄金比例特征向量：Z_φ = {p,c,u,t}恰好为零。三级结构1:φ:φ²。' },
+    heatkernel:  { title_en: 'Heat Kernel', title_ru: 'Ядро теплопроводности', title_zh: '热核', en: 'At diffusion time t=1/d₁, the heat kernel gives sin²θ₁₂ = 4/13 with 4.6 ppm precision.', ru: 'При t=1/d₁ ядро теплопроводности даёт sin²θ₁₂ = 4/13 с точностью 4.6 ppm.', zh: '在扩散时间 t=1/d₁ 时，热核给出 sin²θ₁₂ = 4/13，精度4.6 ppm。' },
+    pmns:        { title_en: 'PMNS Angles', title_ru: 'Углы PMNS', title_zh: 'PMNS混合角', en: 'Three neutrino mixing angles from cross-ratios and index formula. 0 free parameters, Σ|pull| = 0.27.', ru: 'Три угла нейтринного смешивания из кросс-отношений и индекс-формулы. 0 параметров, Σ|pull| = 0.27.', zh: '三个中微子混合角源自交比和指标公式。零自由参数，Σ|pull| = 0.27。' },
+    nlo:         { title_en: 'NLO δK', title_ru: 'NLO δK', title_zh: 'NLO δK', en: 'NLO mass rule with face(σ₁) multiplier h. R² = 0.89 (vs 0.68 LO), 10/10 signs, 0 free parameters.', ru: 'NLO массовое правило с множителем h(F_σ₁). R² = 0.89 (vs 0.68 LO), 10/10 знаков, 0 параметров.', zh: 'NLO质量规则，面(σ₁)乘子h。R² = 0.89，10/10符号正确，零自由参数。' },
+    summary:     { title_en: 'All Predictions', title_ru: 'Все предсказания', title_zh: '所有预测', en: '9 predictions, 0 continuous free parameters. All within 1.25σ. Full hierarchy L0–L3.', ru: '9 предсказаний, 0 непрерывных параметров. Все в пределах 1.25σ. Полная иерархия L0–L3.', zh: '9个预测，零连续自由参数。全部在1.25σ以内。完整层级L0–L3。' },
   };
 
   const theme = isDarkMode ? {
@@ -166,7 +168,7 @@ function App() {
     <div className="space-y-4">
       <Card className={`${theme.cardBg} ${theme.border} border`}>
         <CardHeader className="pb-2">
-          <CardTitle className={`text-sm ${theme.text}`}>{isRu ? 'Визуализация' : 'Visualization'}</CardTitle>
+          <CardTitle className={`text-sm ${theme.text}`}>{t('Visualization', 'Визуализация', '可视化')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 max-h-[600px] overflow-y-auto">
                   <button
@@ -369,7 +371,7 @@ function App() {
               {/* NEW: Physics Results */}
               <Card className={`${theme.cardBg} ${theme.border} border`}>
                 <CardHeader className="pb-2">
-                  <CardTitle className={`text-sm ${theme.text}`}>{isRu ? '📊 Результаты v8' : '📊 Results v8'}</CardTitle>
+                  <CardTitle className={`text-sm ${theme.text}`}>{t('📊 Results v8', '📊 Результаты v8', '📊 v8结果')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <button
@@ -412,7 +414,7 @@ function App() {
                   >
                     <div className="flex items-center gap-2">
                       <span className="text-[#3FB950] font-mono font-bold">Σ</span>
-                      <span className={theme.text}>{isRu ? 'Все предсказания' : 'All Predictions'}</span>
+                      <span className={theme.text}>{t('All Predictions', 'Все предсказания', '所有预测')}</span>
                     </div>
                     <p className={`text-xs ${theme.textMuted} mt-1`}>9 pulls, max 1.25σ, 0 params</p>
                   </button>
@@ -517,7 +519,7 @@ function App() {
               LD Model
             </h1>
             <p className="text-base md:text-xl text-[#8B949E] mt-4">
-              {isRu ? '12 частиц из одной кривой' : '12 Particles from One Curve'}
+              {t('12 Particles from One Curve', '12 частиц из одной кривой', '一条曲线，十二个粒子')}
             </p>
             <p className="text-sm text-[#6E7681] mt-1 font-mono">
               X₀(6) · N=6 · (d₁,d₂)=(2,3)
@@ -532,12 +534,12 @@ function App() {
               }}
               className="mt-8 px-8 py-3 bg-[#58A6FF] hover:bg-[#79C0FF] rounded-xl text-white font-bold text-lg transition-all pointer-events-auto shadow-lg shadow-[#58A6FF]/20 hover:shadow-[#58A6FF]/40"
             >
-              {isRu ? 'Исследовать →' : 'Explore →'}
+              {t('Explore →', 'Исследовать →', '探索 →')}
             </button>
             <div className="flex items-center gap-3 mt-4 pointer-events-auto">
-              <button onClick={() => setIsRu(!isRu)}
+              <button onClick={() => setLang(lang === 'en' ? 'ru' : lang === 'ru' ? 'zh' : 'en')}
                 className="px-3 py-1.5 rounded-lg text-sm font-medium bg-white/10 text-white/70 hover:bg-white/20 transition-all">
-                {isRu ? 'RU' : 'EN'}
+                {lang.toUpperCase()}
               </button>
               <a href="https://open.spotify.com/search/day%20one%20original%20demo%20hans%20zimmer%20interstellar"
                 target="_blank" rel="noopener noreferrer"
@@ -589,9 +591,9 @@ function App() {
               }`}>
               {audioOn ? '🔊' : '🔇'}
             </button>
-            <button onClick={() => setIsRu(!isRu)}
+            <button onClick={() => setLang(lang === 'en' ? 'ru' : lang === 'ru' ? 'zh' : 'en')}
               className={`px-2 md:px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${isDarkMode ? 'bg-[#30363D] text-[#E6EDF3] hover:bg-[#3D444D]' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>
-              {isRu ? 'RU' : 'EN'}
+              {lang.toUpperCase()}
             </button>
             <button onClick={() => setIsDarkMode(!isDarkMode)}
               className={`px-2 md:px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${isDarkMode ? 'bg-[#30363D] text-[#E6EDF3] hover:bg-[#3D444D]' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>
@@ -665,9 +667,9 @@ function App() {
           {VIEW_2D.includes(viewMode) ? (
             /* ── 2D Panels ── */
             <div key={fadeKey} className="w-full h-full animate-fade-in">
-              {viewMode === 'pmns' && <PMNSPanel isDarkMode={isDarkMode} isRu={isRu} />}
-              {viewMode === 'nlo' && <NLOPanel isDarkMode={isDarkMode} isRu={isRu} />}
-              {viewMode === 'summary' && <SummaryPanel isDarkMode={isDarkMode} isRu={isRu} />}
+              {viewMode === 'pmns' && <PMNSPanel isDarkMode={isDarkMode} lang={lang} />}
+              {viewMode === 'nlo' && <NLOPanel isDarkMode={isDarkMode} lang={lang} />}
+              {viewMode === 'summary' && <SummaryPanel isDarkMode={isDarkMode} lang={lang} />}
             </div>
           ) : (
             /* ── 3D Canvas ── */
@@ -825,10 +827,10 @@ function App() {
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1">
                   <h3 className={`text-sm font-bold mb-1 ${isDarkMode ? 'text-[#58A6FF]' : 'text-blue-600'}`}>
-                    {isRu ? VIEW_DESC[viewMode].title_ru : VIEW_DESC[viewMode].title_en}
+                    {lang === 'ru' ? VIEW_DESC[viewMode].title_ru : lang === 'zh' ? VIEW_DESC[viewMode].title_zh : VIEW_DESC[viewMode].title_en}
                   </h3>
                   <p className={`text-xs leading-relaxed ${isDarkMode ? 'text-[#8B949E]' : 'text-gray-600'}`}>
-                    {isRu ? VIEW_DESC[viewMode].ru : VIEW_DESC[viewMode].en}
+                    {lang === 'ru' ? VIEW_DESC[viewMode].ru : lang === 'zh' ? VIEW_DESC[viewMode].zh : VIEW_DESC[viewMode].en}
                   </p>
                 </div>
                 <button 
@@ -844,7 +846,7 @@ function App() {
           {/* View Mode Indicator + Info toggle */}
           <div className="absolute bottom-4 left-4 flex items-center gap-2">
             <Badge className={`${isDarkMode ? 'bg-[#161B22] border-[#30363D]' : 'bg-white border-gray-200'} ${theme.text}`}>
-              Mode: {isRu ? VIEW_DESC[viewMode].title_ru : VIEW_DESC[viewMode].title_en}
+              Mode: {lang === 'ru' ? VIEW_DESC[viewMode].title_ru : lang === 'zh' ? VIEW_DESC[viewMode].title_zh : VIEW_DESC[viewMode].title_en}
             </Badge>
             {!showDescription && (
               <button

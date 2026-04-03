@@ -26,9 +26,11 @@ const CYCLOTOMIC = [
   { p: 'd₂=3', phi2: 4, phi3: 13, phi4: '—' },
 ];
 
-interface Props { isDarkMode: boolean; isRu: boolean }
+interface Props { isDarkMode: boolean; lang: 'en'|'ru'|'zh' }
 
-export default function PMNSPanel({ isDarkMode, isRu }: Props) {
+export default function PMNSPanel({ isDarkMode, lang }: Props) {
+  const t = (en: string, ru: string, zh: string) => lang === 'ru' ? ru : lang === 'zh' ? zh : en;
+  const isRu = lang === 'ru';
   const bg = isDarkMode ? '#0D1117' : '#ffffff';
   const card = isDarkMode ? '#161B22' : '#f9fafb';
   const border = isDarkMode ? '#30363D' : '#e5e7eb';

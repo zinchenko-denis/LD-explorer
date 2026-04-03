@@ -24,9 +24,11 @@ const HIERARCHY = [
   { level: 'L3b', desc: 'PMNS', status: 'DER', detail: 'CR + index → 3 angles, Σ|pull| = 0.27' },
 ];
 
-interface Props { isDarkMode: boolean; isRu: boolean }
+interface Props { isDarkMode: boolean; lang: 'en'|'ru'|'zh' }
 
-export default function SummaryPanel({ isDarkMode, isRu }: Props) {
+export default function SummaryPanel({ isDarkMode, lang }: Props) {
+  const t = (en: string, ru: string, zh: string) => lang === 'ru' ? ru : lang === 'zh' ? zh : en;
+  const isRu = lang === 'ru';
   const card = isDarkMode ? '#161B22' : '#f9fafb';
   const border = isDarkMode ? '#30363D' : '#e5e7eb';
   const text = isDarkMode ? '#E6EDF3' : '#1f2937';
