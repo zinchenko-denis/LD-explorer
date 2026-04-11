@@ -1,27 +1,36 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Cell } from 'recharts';
 
 const ALL_PULLS = [
-  // PMNS
-  { name: 'sin²θ₁₂', value: '4/13', pull: -0.06, group: 'PMNS', color: '#D29922' },
-  { name: 'sin²θ₂₃', value: '81/145', pull: 0.16, group: 'PMNS', color: '#D29922' },
-  { name: 'sin²θ₁₃', value: '2/91', pull: -0.06, group: 'PMNS', color: '#D29922' },
+  // PMNS (JUNO 2025 / NuFIT 6.1)
+  { name: 'sin²θ₁₂', value: '4/13', pull: 0.17, group: 'PMNS', color: '#D29922' },
+  { name: 'sin²θ₂₃', value: '81/145', pull: -0.16, group: 'PMNS', color: '#D29922', note: 'octant rigid' },
+  { name: 'sin²θ₁₃', value: '2/91', pull: 0.90, group: 'PMNS', color: '#D29922' },
+  { name: 'sinδ', value: '−1', pull: 0.0, group: 'PMNS', color: '#D29922' },
   // CKM
   { name: 'λ', value: '9/40', pull: -0.04, group: 'CKM', color: '#58A6FF' },
   { name: 'A', value: '3/√13', pull: 0.63, group: 'CKM', color: '#58A6FF' },
   { name: 'γ', value: 'arctan(9/4)', pull: -1.25, group: 'CKM', color: '#58A6FF' },
-  { name: 'R_b', value: '√(3/20)', pull: 0.17, group: 'CKM', color: '#58A6FF' },
-  { name: 'J', value: '3.10×10⁻⁵', pull: -0.15, group: 'CKM', color: '#58A6FF' },
+  { name: 'R_b', value: '√(3/20)', pull: 0.13, group: 'CKM', color: '#58A6FF' },
+  // EW
+  { name: 'sin²θ_W', value: '3/13', pull: 1.9, group: 'EW', color: '#BC8CFF' },
   // L1
-  { name: 'α⁻¹', value: '137.035999202', pull: -1.20, group: 'L1', color: '#3FB950' },
+  { name: 'α⁻¹', value: '137.036...', pull: -1.20, group: 'L1', color: '#3FB950' },
 ];
 
 const HIERARCHY = [
   { level: 'L0', desc: 'Γ₀(6)', status: 'POSTULATE', detail: 'A_F = ℂ⊕ℍ⊕M₃(ℂ) → (2,3) → N=6' },
-  { level: 'L1', desc: 'α, μ', status: 'CLOSED', detail: 'Form A: α⁻¹ = 137.035999202 (−1.2σ)' },
-  { level: 'L1b', desc: 'G', status: 'OPEN', detail: 'G_pred = 6.67407×10⁻¹¹ (−35 ppm, nuclear input)' },
-  { level: 'L2', desc: 'Masses', status: 'DER', detail: 'NLO R²=0.89, h from 6.10.a.a. Gap 3 CLOSED.' },
-  { level: 'L3a', desc: 'CKM', status: 'DER', detail: 'UST → 4 Wolfenstein, χ²/dof = 0.66' },
-  { level: 'L3b', desc: 'PMNS', status: 'DER', detail: 'CR + index → 3 angles, Σ|pull| = 0.27' },
+  { level: 'L1', desc: 'α, μ', status: 'CLOSED', detail: 'α⁻¹ = 137.035999202 (−1.2σ), μ from 6π⁵' },
+  { level: 'L2', desc: 'Masses', status: 'DER', detail: 'NLO R²=0.89, h from 6.10.a.a, 10/10 signs' },
+  { level: 'L3a', desc: 'CKM', status: 'DER', detail: 'UST → 4 Wolfenstein, χ²/dof = 0.65' },
+  { level: 'L3b', desc: 'PMNS', status: 'DER', detail: 'CR + index → 3 angles + sinδ = −1' },
+  { level: 'EW', desc: 'sin²θ_W', status: 'DER', detail: '3/13 tree, NLO 0.23122 (+1.9σ)' },
+];
+
+const HIGHLIGHTS = [
+  { icon: '🌉', label: 'Golden Bridge', detail: 'q₅ = q_φ·q₃ − 3' },
+  { icon: '🔗', label: 'CRT Unification', detail: 'L = 3I − A_dir − σ₀⁻¹' },
+  { icon: '🏗️', label: 'Tower', detail: 'C_n = {1, 10/9, 13/12, 17/15}' },
+  { icon: '💎', label: 'Schur Spectral', detail: 'C eigenvalues: LD monomials' },
 ];
 
 interface Props { isDarkMode: boolean; lang: 'en'|'ru'|'zh' }
@@ -40,24 +49,25 @@ export default function SummaryPanel({ isDarkMode, lang }: Props) {
       <div className="max-w-4xl mx-auto space-y-6">
         
         <div>
-          <h2 className="text-2xl font-bold tracking-tight" style={{ color: '#E6EDF3' }}>
-            {t('All LD Predictions', 'Все предсказания LD', 'LD全部预测')}
+          <h2 className="text-2xl font-bold tracking-tight" style={{ color: text }}>
+            {t('1728: All Predictions', '1728: Все предсказания', '1728：所有预测')}
           </h2>
           <p className="text-sm mt-1" style={{ color: muted }}>
             {t(
-              '9 predictions, 0 continuous free parameters. All within 1.25σ.',
-              '9 предсказаний, 0 непрерывных свободных параметров. Все в пределах 1.25σ.',
-              '9个预测，零连续自由参数。全部在1.25σ以内。'
+              '18 Tier A predictions · 0 free parameters · 58+ observables · Published: Cosmonautics Day 2026',
+              '18 предсказаний Tier A · 0 параметров · 58+ наблюдаемых · Опубликовано: День космонавтики 2026',
+              '18个A级预测 · 零自由参数 · 58+可观测量 · 发表：2026年宇航节'
             )}
           </p>
         </div>
 
         {/* Grand scorecard */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-4 gap-3">
           {[
-            { label: t('Max |pull|', 'Макс. пулл', '最大|拉力|'), value: maxAbsPull.toFixed(2) + 'σ', color: '#D29922' },
+            { label: t('Max |pull|', 'Макс. пулл', '最大|拉力|'), value: maxAbsPull.toFixed(1) + 'σ', color: '#D29922' },
             { label: t('Free params', 'Параметры', '自由参数'), value: '0', color: '#3FB950' },
-            { label: t('Predictions', 'Предсказания', '预测数'), value: '9', color: '#58A6FF' },
+            { label: t('Tier A', 'Tier A', 'A级'), value: '18', color: '#58A6FF' },
+            { label: t('Checks', 'Проверки', '验证'), value: '508', color: '#BC8CFF' },
           ].map(s => (
             <div key={s.label} className="rounded-lg p-3 text-center" style={{ background: card, border: `1px solid ${border}` }}>
               <div className="text-xs" style={{ color: muted }}>{s.label}</div>
@@ -66,13 +76,29 @@ export default function SummaryPanel({ isDarkMode, lang }: Props) {
           ))}
         </div>
 
+        {/* v1728 Highlights */}
+        <div className="rounded-xl p-4" style={{ background: card, border: `1px solid ${border}` }}>
+          <h3 className="text-sm font-semibold mb-3">{t('v1728 Highlights', 'Ключевые результаты v1728', 'v1728亮点')}</h3>
+          <div className="grid grid-cols-2 gap-3">
+            {HIGHLIGHTS.map(h => (
+              <div key={h.label} className="rounded-lg p-3" style={{ background: isDarkMode ? '#0D1117' : '#fff', border: `1px solid ${border}` }}>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-lg">{h.icon}</span>
+                  <span className="text-sm font-semibold" style={{ color: text }}>{h.label}</span>
+                </div>
+                <p className="text-xs font-mono" style={{ color: muted }}>{h.detail}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Forest Plot */}
         <div className="rounded-xl p-4" style={{ background: card, border: `1px solid ${border}` }}>
           <h3 className="text-sm font-semibold mb-3">{t('All pulls (exp−theory)/σ', 'Все пуллы (exp−theory)/σ', '全部拉力值 (exp−theory)/σ')}</h3>
-          <ResponsiveContainer width="100%" height={340}>
+          <ResponsiveContainer width="100%" height={380}>
             <BarChart data={ALL_PULLS} layout="vertical" margin={{ left: 80, right: 20, top: 5, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke={border} />
-              <XAxis type="number" domain={[-2, 1]} tick={{ fill: muted, fontSize: 11 }} />
+              <XAxis type="number" domain={[-2, 2.5]} tick={{ fill: muted, fontSize: 11 }} />
               <YAxis dataKey="name" type="category" tick={{ fill: text, fontSize: 11, fontFamily: 'monospace' }} width={70} />
               <ReferenceLine x={0} stroke={text} strokeWidth={1.5} />
               <ReferenceLine x={-1} stroke={border} strokeDasharray="5 5" />
@@ -86,9 +112,10 @@ export default function SummaryPanel({ isDarkMode, lang }: Props) {
               </Bar>
             </BarChart>
           </ResponsiveContainer>
-          <div className="flex gap-4 mt-2 justify-center text-xs" style={{ color: muted }}>
+          <div className="flex gap-4 mt-2 justify-center text-xs flex-wrap" style={{ color: muted }}>
             <span><span style={{ color: '#D29922' }}>●</span> PMNS</span>
             <span><span style={{ color: '#58A6FF' }}>●</span> CKM</span>
+            <span><span style={{ color: '#BC8CFF' }}>●</span> EW</span>
             <span><span style={{ color: '#3FB950' }}>●</span> L1 (α)</span>
             <span>| ±1σ bands</span>
           </div>
@@ -122,8 +149,8 @@ export default function SummaryPanel({ isDarkMode, lang }: Props) {
             {[
               { k: 'N', v: '6' }, { k: 'd₁, d₂', v: '2, 3' }, { k: 'index', v: '12' }, { k: 'L', v: '7' },
               { k: '|B₁|', v: '10' }, { k: 'K', v: '40' }, { k: '|Mon|', v: '72' }, { k: 'j(i)', v: '1728' },
-              { k: t('Paths', 'Пути', '路径'), v: '≥44' }, { k: t('Clusters', 'Кластеры', '集群'), v: '11' },
-              { k: t('Dead dirs', 'Dead', '废弃方向'), v: '90+' }, { k: t('Barriers', 'Барьеры', '障碍'), v: '10' },
+              { k: t('Checks', 'Проверки', '验证'), v: '508' }, { k: t('Tiers', 'Тиры', '层级'), v: '17' },
+              { k: t('Dead dirs', 'Dead', '废弃方向'), v: '117+' }, { k: t('Barriers', 'Барьеры', '障碍'), v: '10' },
             ].map(item => (
               <div key={item.k} className="flex justify-between py-1" style={{ borderBottom: `1px solid ${border}` }}>
                 <span style={{ color: muted }}>{item.k}</span>
@@ -133,13 +160,13 @@ export default function SummaryPanel({ isDarkMode, lang }: Props) {
           </div>
         </div>
 
-        {/* Inputs */}
+        {/* DOI */}
         <div className="rounded-xl p-4 text-center" style={{ background: `#3FB95010`, border: `1px solid #3FB95030` }}>
           <p className="text-sm font-mono" style={{ color: '#3FB950' }}>
-            {t('Inputs:', 'Входные данные:', '输入：')} m_e, A_F = ℂ⊕ℍ⊕M₃(ℂ), Γ₀ {t('family', 'семейство', '族')}
+            DOI: 10.5281/zenodo.19520240
           </p>
           <p className="text-xs mt-1" style={{ color: muted }}>
-            + (m_n, B_d) {t('for G', 'для G', '用于G')} · ~85% THM/DER
+            {t('Inputs:', 'Входные данные:', '输入：')} m_e, A_F = ℂ⊕ℍ⊕M₃(ℂ), Γ₀ {t('family', 'семейство', '族')}
           </p>
         </div>
       </div>

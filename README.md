@@ -1,73 +1,45 @@
-# React + TypeScript + Vite
+# LD-Explorer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interactive 3D/2D explorer for the Lattice-Dessin model.
 
-Currently, two official plugins are available:
+**1728: The Standard Model from X₀(6)**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+All Standard Model masses and mixing parameters derived from the unique dessin d'enfant of the modular curve X₀(6), with zero continuous free parameters.
 
-## React Compiler
+## Paper
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Title:** 1728: The Standard Model from X₀(6)
+- **Author:** Denis D. Zinchenko
+- **Pages:** 73
+- **DOI:** [10.5281/zenodo.19520240](https://doi.org/10.5281/zenodo.19520240)
+- **Published:** 12 April 2026 (Cosmonautics Day)
 
-## Expanding the ESLint configuration
+## Key Results
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **508/508** Python verification checks (17 tiers) + 91 Sage checks
+- **18 Tier A** predictions, 0 free parameters, 58+ observables
+- **sin²θ₁₂ = 4/13** (+0.17σ, JUNO 2025 compatible)
+- **sinδ = −1** (maximal CP violation, δ = 270°)
+- **sin²θ_W = 3/13** (tree-level Weinberg angle, NLO +1.9σ)
+- **λ_CKM = 9/40** from Kirchhoff tree count K = 40
+- **Golden bridge:** q₅ = q_φ·q₃ − 3
+- **CRT Grand Unification:** L = 3I − A_dir − σ₀⁻¹
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Live Demo
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+[https://zinchenko-denis.github.io/LD-explorer/](https://zinchenko-denis.github.io/LD-explorer/)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Tech Stack
+
+Vite + React + TypeScript + Three.js + recharts + shadcn/ui
+
+## Build
+
+```bash
+npm install
+npx tsc -b && npx vite build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Related
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- [LD-supplementary](https://github.com/zinchenko-denis/LD-supplementary) — 508 verification checks, companion, index

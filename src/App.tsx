@@ -26,6 +26,10 @@ import { HeatKernel } from '@/components/HeatKernel';
 import PMNSPanel from '@/components/PMNSPanel';
 import NLOPanel from '@/components/NLOPanel';
 import SummaryPanel from '@/components/SummaryPanel';
+import WeinbergCPPanel from '@/components/WeinbergCPPanel';
+import TowerPanel from '@/components/TowerPanel';
+import GoldenBridgePanel from '@/components/GoldenBridgePanel';
+import DerivationDAG from '@/components/DerivationDAG';
 import type { Particle } from '@/types/ld-model';
 import './App.css';
 
@@ -44,9 +48,9 @@ const particles: Particle[] = [
   { name: 't', n: 7, K: 2/3, mass: 172690, type: 'quark-up', generation: 3 },
 ];
 
-type ViewMode = 'matrix' | 'network' | 'kcipher' | 'dessin' | 'cube' | 'crt' | 'hecke' | 'kirchhoff' | 'dessincube' | 'sphere' | 'cayley' | 'phi' | 'heatkernel' | 'pmns' | 'nlo' | 'summary';
+type ViewMode = 'matrix' | 'network' | 'kcipher' | 'dessin' | 'cube' | 'crt' | 'hecke' | 'kirchhoff' | 'dessincube' | 'sphere' | 'cayley' | 'phi' | 'heatkernel' | 'pmns' | 'nlo' | 'summary' | 'weinbergcp' | 'tower' | 'goldenbridge' | 'dag';
 
-const VIEW_2D: ViewMode[] = ['pmns', 'nlo', 'summary'];
+const VIEW_2D: ViewMode[] = ['pmns', 'nlo', 'summary', 'weinbergcp', 'tower', 'goldenbridge', 'dag'];
 
 function LoadingFallback() {
   return (
@@ -135,7 +139,11 @@ function App() {
     heatkernel:  { title_en: 'Heat Kernel', title_ru: 'Ядро теплопроводности', title_zh: '热核', en: 'At diffusion time t=1/d₁, the heat kernel gives sin²θ₁₂ = 4/13 with 4.6 ppm precision.', ru: 'При t=1/d₁ ядро теплопроводности даёт sin²θ₁₂ = 4/13 с точностью 4.6 ppm.', zh: '在扩散时间 t=1/d₁ 时，热核给出 sin²θ₁₂ = 4/13，精度4.6 ppm。' },
     pmns:        { title_en: 'PMNS Angles', title_ru: 'Углы PMNS', title_zh: 'PMNS混合角', en: 'Three neutrino mixing angles from cross-ratios and index formula. 0 free parameters, Σ|pull| = 0.27.', ru: 'Три угла нейтринного смешивания из кросс-отношений и индекс-формулы. 0 параметров, Σ|pull| = 0.27.', zh: '三个中微子混合角源自交比和指标公式。零自由参数，Σ|pull| = 0.27。' },
     nlo:         { title_en: 'NLO δK', title_ru: 'NLO δK', title_zh: 'NLO δK', en: 'NLO mass rule with face(σ₁) multiplier h. R² = 0.89 (vs 0.68 LO), 10/10 signs, 0 free parameters.', ru: 'NLO массовое правило с множителем h(F_σ₁). R² = 0.89 (vs 0.68 LO), 10/10 знаков, 0 параметров.', zh: 'NLO质量规则，面(σ₁)乘子h。R² = 0.89，10/10符号正确，零自由参数。' },
-    summary:     { title_en: 'All Predictions', title_ru: 'Все предсказания', title_zh: '所有预测', en: '9 predictions, 0 continuous free parameters. All within 1.25σ. Full hierarchy L0–L3.', ru: '9 предсказаний, 0 непрерывных параметров. Все в пределах 1.25σ. Полная иерархия L0–L3.', zh: '9个预测，零连续自由参数。全部在1.25σ以内。完整层级L0–L3。' },
+    summary:     { title_en: 'All Predictions', title_ru: 'Все предсказания', title_zh: '所有预测', en: '18 Tier A predictions, 0 free parameters. 508/508 checks. Published Cosmonautics Day 2026.', ru: '18 предсказаний Tier A, 0 параметров. 508/508 проверок. День космонавтики 2026.', zh: '18个A级预测，零自由参数。508/508验证。2026宇航节发表。' },
+    weinbergcp:  { title_en: 'EW + CP', title_ru: 'ЭС + CP', title_zh: '电弱+CP', en: 'sin²θ_W = 3/13 (+1.9σ NLO), sinδ = −1 (maximal CP). Full |U|² matrix from LD monomials.', ru: 'sin²θ_W = 3/13 (+1.9σ NLO), sinδ = −1 (макс. CP). Полная |U|² из LD-мономиалов.', zh: 'sin²θ_W = 3/13，sinδ = −1。完整|U|²矩阵来自LD单项式。' },
+    tower:       { title_en: 'Correction Tower', title_ru: 'Башня поправок', title_zh: '修正塔', en: 'Four levels n=0..3: C_n = {1, 10/9, 13/12, 17/15}. Catalan staircase with Fermat filtration.', ru: 'Четыре уровня n=0..3: C_n = {1, 10/9, 13/12, 17/15}. Лестница Каталана.', zh: '四层n=0..3：C_n = {1, 10/9, 13/12, 17/15}。Catalan阶梯。' },
+    goldenbridge:{ title_en: 'Golden Bridge', title_ru: 'Золотой мост', title_zh: '黄金桥', en: 'q₅ = q_φ·q₃ − 3. Lucas dictionary: L_k ↔ LD parameters. Ω₃ eigenvalues {0, −φ, 1/φ}.', ru: 'q₅ = q_φ·q₃ − 3. Словарь Люка: L_k ↔ LD. Собственные значения {0, −φ, 1/φ}.', zh: 'q₅ = q_φ·q₃ − 3。Lucas字典。Ω₃特征值{0, −φ, 1/φ}。' },
+    dag:         { title_en: 'Derivation Graph', title_ru: 'Граф деривации', title_zh: '推导图', en: 'Interactive DAG: A_F → N=6 → dessin → 18 outputs. Click nodes for status and pull.', ru: 'Интерактивный DAG: A_F → N=6 → дезин → 18 выходов. Клик → статус и пулл.', zh: '交互DAG：A_F → N=6 → dessin → 18个输出。点击查看状态。' },
   };
 
   const theme = isDarkMode ? {
@@ -370,7 +378,7 @@ function App() {
               {/* NEW: Physics Results */}
               <Card className={`${theme.cardBg} ${theme.border} border`}>
                 <CardHeader className="pb-2">
-                  <CardTitle className={`text-sm ${theme.text}`}>{t('📊 Results v8', '📊 Результаты v8', '📊 v8结果')}</CardTitle>
+                  <CardTitle className={`text-sm ${theme.text}`}>{t('📊 Results v1728', '📊 Результаты v1728', '📊 v1728结果')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <button
@@ -389,6 +397,21 @@ function App() {
                   </button>
 
                   <button
+                    onClick={() => handleViewChange('weinbergcp')}
+                    className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
+                      viewMode === 'weinbergcp' 
+                        ? 'bg-[#BC8CFF]/20 border border-[#BC8CFF]/40' 
+                        : `${theme.buttonBg} border ${theme.border} hover:border-[#BC8CFF]`
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-[#BC8CFF] font-mono font-bold">θ</span>
+                      <span className={theme.text}>{t('EW + CP', 'ЭС + CP', '电弱+CP')}</span>
+                    </div>
+                    <p className={`text-xs ${theme.textMuted} mt-1`}>sin²θ_W = 3/13, sinδ = −1</p>
+                  </button>
+
+                  <button
                     onClick={() => handleViewChange('nlo')}
                     className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
                       viewMode === 'nlo' 
@@ -404,6 +427,51 @@ function App() {
                   </button>
 
                   <button
+                    onClick={() => handleViewChange('tower')}
+                    className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
+                      viewMode === 'tower' 
+                        ? 'bg-[#F85149]/20 border border-[#F85149]/40' 
+                        : `${theme.buttonBg} border ${theme.border} hover:border-[#F85149]`
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-[#F85149] font-mono font-bold">⬆</span>
+                      <span className={theme.text}>{t('Correction Tower', 'Башня поправок', '修正塔')}</span>
+                    </div>
+                    <p className={`text-xs ${theme.textMuted} mt-1`}>C_n = {'{1, 10/9, 13/12, 17/15}'}</p>
+                  </button>
+
+                  <button
+                    onClick={() => handleViewChange('goldenbridge')}
+                    className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
+                      viewMode === 'goldenbridge' 
+                        ? 'bg-[#D29922]/20 border border-[#D29922]/40' 
+                        : `${theme.buttonBg} border ${theme.border} hover:border-[#D29922]`
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-[#D29922] font-mono font-bold">φ</span>
+                      <span className={theme.text}>{t('Golden Bridge', 'Золотой мост', '黄金桥')}</span>
+                    </div>
+                    <p className={`text-xs ${theme.textMuted} mt-1`}>q₅ = q_φ·q₃ − 3 ★★★★★</p>
+                  </button>
+
+                  <button
+                    onClick={() => handleViewChange('dag')}
+                    className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
+                      viewMode === 'dag' 
+                        ? 'bg-[#58A6FF]/20 border border-[#58A6FF]/40' 
+                        : `${theme.buttonBg} border ${theme.border} hover:border-[#58A6FF]`
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-[#58A6FF] font-mono font-bold">⊳</span>
+                      <span className={theme.text}>{t('Derivation Graph', 'Граф деривации', '推导图')}</span>
+                    </div>
+                    <p className={`text-xs ${theme.textMuted} mt-1`}>A_F → N=6 → 18 outputs</p>
+                  </button>
+
+                  <button
                     onClick={() => handleViewChange('summary')}
                     className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
                       viewMode === 'summary' 
@@ -415,7 +483,7 @@ function App() {
                       <span className="text-[#3FB950] font-mono font-bold">Σ</span>
                       <span className={theme.text}>{t('All Predictions', 'Все предсказания', '所有预测')}</span>
                     </div>
-                    <p className={`text-xs ${theme.textMuted} mt-1`}>9 pulls, max 1.25σ, 0 params</p>
+                    <p className={`text-xs ${theme.textMuted} mt-1`}>18 Tier A, 508 checks, 0 params</p>
                   </button>
                 </CardContent>
               </Card>
@@ -669,6 +737,10 @@ function App() {
               {viewMode === 'pmns' && <PMNSPanel isDarkMode={isDarkMode} lang={lang} />}
               {viewMode === 'nlo' && <NLOPanel isDarkMode={isDarkMode} lang={lang} />}
               {viewMode === 'summary' && <SummaryPanel isDarkMode={isDarkMode} lang={lang} />}
+              {viewMode === 'weinbergcp' && <WeinbergCPPanel isDarkMode={isDarkMode} lang={lang} />}
+              {viewMode === 'tower' && <TowerPanel isDarkMode={isDarkMode} lang={lang} />}
+              {viewMode === 'goldenbridge' && <GoldenBridgePanel isDarkMode={isDarkMode} lang={lang} />}
+              {viewMode === 'dag' && <DerivationDAG isDarkMode={isDarkMode} lang={lang} />}
             </div>
           ) : (
             /* ── 3D Canvas ── */
