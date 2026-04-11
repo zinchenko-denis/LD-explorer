@@ -86,7 +86,7 @@ export default function PMNSPanel({ isDarkMode, lang }: Props) {
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={pullData} layout="vertical" margin={{ left: 60, right: 20, top: 5, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke={border} />
-              <XAxis type="number" domain={[-30, 5]} tick={{ fill: muted, fontSize: 11 }} />
+              <XAxis type="number" domain={[-8, 5]} tick={{ fill: muted, fontSize: 11 }} />
               <YAxis dataKey="label" type="category" tick={{ fill: text, fontSize: 12, fontFamily: 'monospace' }} width={70} />
               <ReferenceLine x={0} stroke={muted} />
               <ReferenceLine x={-1} stroke={border} strokeDasharray="5 5" />
@@ -111,8 +111,8 @@ export default function PMNSPanel({ isDarkMode, lang }: Props) {
         {/* Predictions Table */}
         <div className="rounded-xl p-4" style={{ background: card, border: `1px solid ${border}` }}>
           <h3 className="text-sm font-semibold mb-3">{t('Predictions', 'Предсказания', '预测值')}</h3>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+          <div className="overflow-x-auto -mx-4 px-4">
+            <table className="text-sm" style={{ minWidth: 580 }}>
               <thead>
                 <tr style={{ borderBottom: `2px solid ${border}` }}>
                   {[
