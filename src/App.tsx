@@ -44,7 +44,7 @@ const particles: Particle[] = [
   { name: 'τ', n: 4, K: 2, mass: 1776.86, type: 'lepton', generation: 3 },
   { name: 'b', n: 5, K: 2/3, mass: 4180, type: 'quark-down', generation: 3 },
   { name: 'W', n: 6, K: 2, mass: 80377, type: 'boson' },
-  { name: 'H', n: 6, K: 3, mass: 125100, type: 'boson' },
+  { name: 'H', n: 6, K: 3, mass: 125250, type: 'boson' },
   { name: 't', n: 7, K: 2/3, mass: 172690, type: 'quark-up', generation: 3 },
 ];
 
@@ -592,7 +592,7 @@ function App() {
               X₀(6) · N=6 · (d₁,d₂)=(2,3)
             </p>
             <p className="text-xs text-[#6E7681] mt-4 font-mono">
-              DOI: 10.5281/zenodo.19393365
+              DOI: 10.5281/zenodo.19520240
             </p>
             <button
               onClick={async () => { 
@@ -669,9 +669,9 @@ function App() {
             <span className={`hidden lg:inline text-xs font-mono ${isDarkMode ? 'text-[#8B949E]' : 'text-gray-500'}`}>
               N=6 · (d1,d2)=(2,3)
             </span>
-            <a href="https://zenodo.org/records/19393365" target="_blank" rel="noopener noreferrer"
+            <a href="https://zenodo.org/records/19520240" target="_blank" rel="noopener noreferrer"
               className={`hidden md:inline text-xs font-mono transition-all ${isDarkMode ? 'text-[#58A6FF] hover:text-[#79C0FF]' : 'text-blue-600 hover:text-blue-800'}`}>
-              DOI: 10.5281/zenodo.19393365
+              DOI: 10.5281/zenodo.19520240
             </a>
           </div>
         </div>

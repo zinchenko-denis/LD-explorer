@@ -25,8 +25,8 @@ const HK_CURVE = Array.from({ length: T_SAMPLES }, (_, i) => {
 });
 
 const SIN2_PRED = 4 / 13;
-const SIN2_EXP = 0.307;
-const SIN2_ERR = 0.012;
+const SIN2_EXP = 0.3088;
+const SIN2_ERR = 0.0067;
 
 const panelStyle: React.CSSProperties = {
   background: 'rgba(13,17,23,0.92)',

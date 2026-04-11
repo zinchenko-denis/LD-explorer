@@ -10,7 +10,7 @@ interface PhiAmplitudesProps {
 }
 
 // Golden ratio φ-eigenvector (companion D.6, S90)
-// Eigenvalue: λ = (5+√5)/2 = φ² + 2
+// Eigenvalue: λ = (5+√5)/2 = φ + 2 = φ² + 1
 // Z_φ = {p, c, u, t} — zero set = BV_anc ∪ σ₁(BV_anc)
 // Three amplitude tiers: 0, 1/(φ√10), 1/√10, φ/√10
 const PHI = (1 + Math.sqrt(5)) / 2;

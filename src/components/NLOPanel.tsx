@@ -138,7 +138,7 @@ export default function NLOPanel({ isDarkMode, lang }: Props) {
             </tbody>
           </table>
           <p className="text-xs mt-3" style={{ color: muted }}>
-            ∏h = d₂ = 3. h(2) = tan γ_CKM = 9/4. Source: 6.10.a.a via W₂ = +1, W₃ = −1. Status: [DER] (k=10 selection).
+            ∏h = d₂ = 3. h(2) = tan γ_CKM = 9/4. Source: 6.10.a.a via trace formula chain. Status: [THM] (X.155: k=10 derived).
           </p>
         </div>
 

@@ -3,7 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 const ALL_PULLS = [
   // PMNS (JUNO 2025 / NuFIT 6.1)
   { name: 'sin²θ₁₂', value: '4/13', pull: 0.17, group: 'PMNS', color: '#D29922' },
-  { name: 'sin²θ₂₃', value: '81/145', pull: -0.16, group: 'PMNS', color: '#D29922', note: 'octant rigid' },
+  { name: 'sin²θ₂₃', value: '81/145', pull: -5.2, group: 'PMNS', color: '#D29922', note: 'octant rigid, inside 3σ' },
   { name: 'sin²θ₁₃', value: '2/91', pull: 0.90, group: 'PMNS', color: '#D29922' },
   { name: 'sinδ', value: '−1', pull: 0.0, group: 'PMNS', color: '#D29922' },
   // CKM
@@ -98,7 +98,7 @@ export default function SummaryPanel({ isDarkMode, lang }: Props) {
           <ResponsiveContainer width="100%" height={380}>
             <BarChart data={ALL_PULLS} layout="vertical" margin={{ left: 80, right: 20, top: 5, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke={border} />
-              <XAxis type="number" domain={[-2, 2.5]} tick={{ fill: muted, fontSize: 11 }} />
+              <XAxis type="number" domain={[-6, 2.5]} tick={{ fill: muted, fontSize: 11 }} />
               <YAxis dataKey="name" type="category" tick={{ fill: text, fontSize: 11, fontFamily: 'monospace' }} width={70} />
               <ReferenceLine x={0} stroke={text} strokeWidth={1.5} />
               <ReferenceLine x={-1} stroke={border} strokeDasharray="5 5" />

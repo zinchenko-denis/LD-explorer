@@ -1,15 +1,16 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Cell } from 'recharts';
 
-// |U|² matrix — all LD monomials, no free parameters
+// |U|² matrix — CR PMNS at cosδ=0 (paper eq. U2)
+// Master denominator: 171535 = 5·7·13²·29
 const U_MATRIX = [
-  ['1/3',    '49/78',  '1/26'],
-  ['1/3',    '2/39',   '8/13'],
-  ['1/3',    '25/78',  '9/26'],
+  ['801/1183',    '356/1183',    '2/91'],
+  ['24754/171535','53064/171535', '7209/13195'],
+  ['30636/171535','66851/171535', '5696/13195'],
 ];
 const U_DECIMAL = [
-  [1/3, 49/78, 1/26],
-  [1/3, 2/39,  8/13],
-  [1/3, 25/78, 9/26],
+  [801/1183, 356/1183, 2/91],
+  [24754/171535, 53064/171535, 7209/13195],
+  [30636/171535, 66851/171535, 5696/13195],
 ];
 const ROW_LABELS = ['e', 'μ', 'τ'];
 const COL_LABELS = ['ν₁', 'ν₂', 'ν₃'];
@@ -140,7 +141,7 @@ export default function WeinbergCPPanel({ isDarkMode, lang }: Props) {
         {/* |U|² Matrix */}
         <div className="rounded-xl p-4" style={{ background: card, border: `1px solid ${border}` }}>
           <h3 className="text-sm font-semibold mb-3">
-            |U|² {t('matrix (all LD monomials)', 'матрица (все LD-мономиалы)', '矩阵（全部LD单项式）')}
+            |U|² {t('matrix (CR PMNS, cosδ = 0)', 'матрица (CR PMNS, cosδ = 0)', '矩阵（CR PMNS, cosδ = 0）')}
           </h3>
           <div className="overflow-x-auto">
             <table className="w-full text-sm font-mono" style={{ borderCollapse: 'collapse' }}>
@@ -177,26 +178,26 @@ export default function WeinbergCPPanel({ isDarkMode, lang }: Props) {
             </table>
           </div>
           <p className="text-xs mt-2" style={{ color: muted }}>
-            {t('Every entry is a ratio of LD arithmetic: d₁, d₂, N, L, det_M. Unitarity is exact.',
-               'Каждый элемент — рациональная комбинация d₁, d₂, N, L, det_M. Унитарность точная.',
-               '每个元素都是LD算术的有理组合。幺正性精确。')}
+            {t('CR PMNS at cosδ=0. Master denominator 171535 = 5·7·13²·29. Doubly stochastic.',
+               'CR PMNS при cosδ=0. Мастер-знаменатель 171535 = 5·7·13²·29. Двойная стохастичность.',
+               'CR PMNS在cosδ=0时。主分母171535 = 5·7·13²·29。双随机。')}
           </p>
         </div>
 
         {/* Jarlskog */}
         <div className="rounded-xl p-4" style={{ background: card, border: `1px solid ${border}` }}>
-          <h3 className="text-sm font-semibold mb-3">{t('Jarlskog Invariant', 'Инвариант Ярлског', 'Jarlskog不变量')}</h3>
+          <h3 className="text-sm font-semibold mb-3">{t('Jarlskog Invariant (PMNS)', 'Инвариант Ярлског (PMNS)', 'Jarlskog不变量（PMNS）')}</h3>
           <div className="text-center font-mono">
             <div className="text-lg" style={{ color: text }}>
-              J² = 2² · 5² · 7² / (2 · 3 · 13² · 5 · 7 · 29)
+              J² = 2⁹ · 3⁶ · 89² / (5² · 7³ · 13⁵ · 29²)
             </div>
             <div className="text-sm mt-1" style={{ color: muted }}>
-              |J| = 3.10 × 10⁻⁵
+              |J| = 3.32 × 10⁻²
             </div>
             <div className="text-xs mt-2" style={{ color: muted }}>
-              {t('Denominator alien primes: {5, 7, 29} from |U|² ring',
-                 'Alien простые в знаменателе: {5, 7, 29} из кольца |U|²',
-                 '分母外来素数：{5, 7, 29} 来自|U|²环')}
+              {t('Master denominator 171535 = 5·7·13²·29 (four LD gears)',
+                 'Мастер-знаменатель 171535 = 5·7·13²·29 (четыре LD-шестерни)',
+                 '主分母 171535 = 5·7·13²·29（四个LD齿轮）')}
             </div>
           </div>
         </div>

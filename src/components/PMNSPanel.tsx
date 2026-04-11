@@ -3,19 +3,19 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 const PMNS_DATA = [
   { 
     label: 'sin²θ₁₂', angle: 'Solar', 
-    ld: 4/13, ldStr: '4/13', exp: 0.307, sigma: 0.012, source: 'NuFIT 6.0',
+    ld: 4/13, ldStr: '4/13', exp: 0.3088, sigma: 0.0067, source: 'NuFIT 6.1 IC23',
     tbm: 1/3, tbmStr: '1/3',
     channel: 'CR', formula: 'CR(−12,0;−9,−8) = d₁/d₂ = 2/3'
   },
   { 
     label: 'sin²θ₂₃', angle: 'Atmospheric',
-    ld: 81/145, ldStr: '81/145', exp: 0.561, sigma: 0.015, source: 'NuFIT 6.0',
+    ld: 81/145, ldStr: '81/145', exp: 0.470, sigma: 0.017, source: 'NuFIT 6.1 IC23 NO',
     tbm: 0.5, tbmStr: '1/2',
     channel: 'CR', formula: 'CR(∞,0;−8,−9) = d₂²/d₁³ = 9/8'
   },
   { 
     label: 'sin²θ₁₃', angle: 'Reactor',
-    ld: 2/91, ldStr: '2/91', exp: 0.02195, sigma: 0.00054, source: 'NuFIT 6.0',
+    ld: 2/91, ldStr: '2/91', exp: 0.02249, sigma: 0.00057, source: 'NuFIT 6.1 IC23',
     tbm: 0, tbmStr: '0',
     channel: 'Index', formula: 'index/(N·∏Φ₃(p)) = 12/546'
   },
@@ -104,7 +104,7 @@ export default function PMNSPanel({ isDarkMode, lang }: Props) {
             </BarChart>
           </ResponsiveContainer>
           <p className="text-xs mt-2" style={{ color: muted }}>
-            ±1σ bands shown. TBM bars truncated (θ₁₂: −2.8σ, θ₂₃: +4.1σ). {t('Data: NuFIT 6.0 IC19 NO.', 'Данные: NuFIT 6.0 IC19 NO.', '数据：NuFIT 6.0 IC19 NO。')}
+            ±1σ bands shown. TBM bars truncated (θ₁₃: +39σ). {t('Data: NuFIT 6.1 IC23 NO.', 'Данные: NuFIT 6.1 IC23 NO.', '数据：NuFIT 6.1 IC23 NO。')}
           </p>
         </div>
 
@@ -228,7 +228,7 @@ export default function PMNSPanel({ isDarkMode, lang }: Props) {
         </div>
 
         <p className="text-xs text-center pb-4" style={{ color: muted }}>
-          Paper DOI: 10.5281/zenodo.19393365 · {t('Data', 'Данные', '数据')}: NuFIT 6.0 IC19 NO
+          Paper DOI: 10.5281/zenodo.19520240 · {t('Data', 'Данные', '数据')}: NuFIT 6.1 IC23 NO
         </p>
       </div>
     </div>
