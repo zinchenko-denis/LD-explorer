@@ -44,29 +44,29 @@ const STATUS_LABELS: Record<Status, string> = {
 // Nodes laid out as a 3D tree growing upward from A_F root
 const NODES: Node[] = [
   // Layer 0: Root
-  { id: 'AF', label: 'A_F', pos: [0, -6, 0], status: 'POST', detail: 'Finite algebra ℂ⊕ℍ⊕M₃(ℂ) → coprime pair (2,3)' },
+  { id: 'AF', label: 'A_F', pos: [0, -6, 0], status: 'POST', detail: 'Finite algebra ℂ⊕ℍ⊕M3(ℂ) → coprime pair (2,3)' },
   // Layer 1
-  { id: 'N6', label: 'N = 6', pos: [0, -3, 0], status: 'THM', detail: 'Γ₀(N), N = d₁·d₂ = 6, index = 12' },
+  { id: 'N6', label: 'N = 6', pos: [0, -3, 0], status: 'THM', detail: 'Γ0(N), N = d1·d2 = 6, index = 12' },
   // Layer 2: Dessin structures
   { id: 'dessin', label: 'Dessin', pos: [-4, 0, -1], status: 'THM', detail: '4 BV (val 3) + 6 WV (val 2), 12 edges' },
-  { id: 'modform', label: 'Mod forms', pos: [4, 0, 1], status: 'THM', detail: 'Hauptmodul, Eisenstein, η-quotients for Γ₀(6)' },
+  { id: 'modform', label: 'Mod forms', pos: [4, 0, 1], status: 'THM', detail: 'Hauptmodul, Eisenstein, η-quotients for Γ0(6)' },
   // Layer 3: Core
-  { id: 'sigma', label: 'σ₁σ₀σ∞', pos: [-7, 3, -2], status: 'THM', detail: 'Monodromy, σ₁·σ₀·σ∞ = id' },
+  { id: 'sigma', label: 'σ1σ0σ∞', pos: [-7, 3, -2], status: 'THM', detail: 'Monodromy, σ1·σ0·σ∞ = id' },
   { id: 'graph', label: 'Graph G', pos: [-3, 3, -3], status: 'THM', detail: 'K(G) = 40 spanning trees → λ = 9/40' },
   { id: 'CR', label: 'Cross-ratios', pos: [3, 3, 3], status: 'THM', detail: 'CR orbit on cusps → mixing angles' },
   { id: 'spectrum', label: 'Spectrum', pos: [7, 3, 2], status: 'THM', detail: 'Laplacian eigenvalues, disc 21, 5' },
   // Layer 4: Physics
-  { id: 'masses', label: 'Masses', pos: [-8, 6, -4], status: 'DER', detail: 'm = mₑ·g^n·K, NLO R² = 0.89', pull: '2.7% LO' },
-  { id: 'CKM', label: 'CKM', pos: [-3, 6, -1], status: 'DER', detail: 'UST → λ, A, γ, R_b; χ²/dof = 0.65', pull: 'max 1.25σ' },
-  { id: 'PMNS', label: 'PMNS', pos: [3, 6, 1], status: 'DER', detail: 'CR + index → sin²θ₁₂ = 4/13, sinδ = −1', pull: '0.27' },
-  { id: 'EW', label: 'sin²θ_W', pos: [8, 6, 4], status: 'DER', detail: '3/13 tree, NLO 0.23122', pull: '+1.9σ' },
+  { id: 'masses', label: 'Masses', pos: [-8, 6, -4], status: 'DER', detail: 'm = me·g^n·K, NLO R2 = 0.89', pull: '2.7% LO' },
+  { id: 'CKM', label: 'CKM', pos: [-3, 6, -1], status: 'DER', detail: 'UST → λ, A, γ, R_b; χ2/dof = 0.65', pull: 'max 1.25σ' },
+  { id: 'PMNS', label: 'PMNS', pos: [3, 6, 1], status: 'DER', detail: 'CR + index → sin2θ12 = 4/13, sinδ = −1', pull: '0.27' },
+  { id: 'EW', label: 'sin2θ_W', pos: [8, 6, 4], status: 'DER', detail: '3/13 tree, NLO 0.23122', pull: '+1.9σ' },
   // Layer 5: Advanced
-  { id: 'alpha', label: 'α⁻¹', pos: [-8, 9, 0], status: 'DER', detail: '137.036... from cusp + Hecke', pull: '−1.2σ' },
-  { id: 'mu', label: 'μ = m_p/m_e', pos: [-3, 9, -3], status: 'DER', detail: '6π⁵(1 + 10α²/(9π) + ...)', pull: '<0.001σ' },
-  { id: 'golden', label: 'Golden Bridge', pos: [3, 9, 3], status: 'THM', detail: 'q₅ = q_φ·q₃ − 3, Lucas ↔ LD' },
-  { id: 'CRT', label: 'CRT Unification', pos: [8, 9, 0], status: 'THM', detail: 'L = 3I − A_dir − σ₀⁻¹' },
+  { id: 'alpha', label: 'α^-1', pos: [-8, 9, 0], status: 'DER', detail: '137.036... from cusp + Hecke', pull: '−1.2σ' },
+  { id: 'mu', label: 'μ = m_p/m_e', pos: [-3, 9, -3], status: 'DER', detail: '6π5(1 + 10α2/(9π) + ...)', pull: '<0.001σ' },
+  { id: 'golden', label: 'Golden Bridge', pos: [3, 9, 3], status: 'THM', detail: 'q5 = q_φ·q3 − 3, Lucas ↔ LD' },
+  { id: 'CRT', label: 'CRT Unification', pos: [8, 9, 0], status: 'THM', detail: 'L = 3I − A_dir − σ0^-1' },
   // Layer 6: Predictions
-  { id: 'neutrino', label: 'ν masses', pos: [-2, 12, 2], status: 'CONJ', detail: 'm₁ = 7.7 meV, Σm = 69.8 meV (NO)' },
+  { id: 'neutrino', label: 'ν masses', pos: [-2, 12, 2], status: 'CONJ', detail: 'm1 = 7.7 meV, Σm = 69.8 meV (NO)' },
   { id: 'falsify', label: 'Falsification', pos: [4, 12, -1], status: 'DER', detail: 'JUNO: 4/13, DUNE: sinδ = −1' },
 ];
 
@@ -83,17 +83,6 @@ const EDGES: Edge[] = [
   { from: 'EW', to: 'falsify' }, { from: 'CKM', to: 'falsify' },
   { from: 'CR', to: 'EW' }, { from: 'graph', to: 'masses' },
 ];
-
-// Dead direction stubs (visual placeholders for 117+ dead ends)
-const DEAD_STUBS = Array.from({ length: 24 }, (_, i) => {
-  const angle = (i / 24) * Math.PI * 2;
-  const r = 10 + Math.random() * 3;
-  const y = 2 + Math.random() * 8;
-  return {
-    pos: [Math.cos(angle) * r, y, Math.sin(angle) * r] as [number, number, number],
-    label: `#${i + 1}`,
-  };
-});
 
 // ── Build parent map for chain highlighting ──
 function buildParentMap(edges: Edge[]): Map<string, string[]> {
@@ -239,33 +228,6 @@ function DAGEdge3D({ from, to, highlighted }: {
   return <primitive object={lineObj} />;
 }
 
-// ── Dead direction stub ──
-function DeadStub({ pos }: { pos: [number, number, number] }) {
-  return (
-    <group position={pos}>
-      <mesh>
-        <sphereGeometry args={[0.12, 8, 8]} />
-        <meshStandardMaterial
-          color="#484F58"
-          emissive="#484F58"
-          emissiveIntensity={0.05}
-          transparent
-          opacity={0.4}
-        />
-      </mesh>
-      {/* Cross mark */}
-      <mesh rotation={[0, 0, Math.PI / 4]}>
-        <boxGeometry args={[0.3, 0.04, 0.04]} />
-        <meshBasicMaterial color="#F85149" transparent opacity={0.3} />
-      </mesh>
-      <mesh rotation={[0, 0, -Math.PI / 4]}>
-        <boxGeometry args={[0.3, 0.04, 0.04]} />
-        <meshBasicMaterial color="#F85149" transparent opacity={0.3} />
-      </mesh>
-    </group>
-  );
-}
-
 // ── Main component ──
 export function DAG3D({ selectedParticle: _sp, onSelectParticle: _osp }: DAG3DProps) {
   const groupRef = useRef<THREE.Group>(null);
@@ -326,16 +288,6 @@ export function DAG3D({ selectedParticle: _sp, onSelectParticle: _osp }: DAG3DPr
         />
       ))}
 
-      {/* Dead direction stubs */}
-      {DEAD_STUBS.map((stub, i) => (
-        <DeadStub key={i} pos={stub.pos} />
-      ))}
-
-      {/* Dead directions count */}
-      <Text position={[0, -8.5, 0]} fontSize={0.4} color="#F85149" anchorX="center">
-        117+ dead directions eliminated
-      </Text>
-
       {/* Legend */}
       <Html position={[-13, 5, 0]} distanceFactor={22}>
         <div style={{
@@ -356,10 +308,6 @@ export function DAG3D({ selectedParticle: _sp, onSelectParticle: _osp }: DAG3DPr
               <span style={{ color }}>{STATUS_LABELS[status as Status]}</span>
             </div>
           ))}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
-            <span style={{ color: '#F85149', fontSize: 14 }}>✕</span>
-            <span style={{ color: '#484F58' }}>Dead direction</span>
-          </div>
         </div>
       </Html>
 
@@ -383,7 +331,6 @@ export function DAG3D({ selectedParticle: _sp, onSelectParticle: _osp }: DAG3DPr
             <div>58+ observables predicted</div>
             <div style={{ color: '#3FB950' }}>18 Tier A (≤2σ)</div>
             <div style={{ color: '#FFD700' }}>0 free parameters</div>
-            <div style={{ color: '#F85149' }}>117+ dead directions</div>
             <div>508/508 consistency checks</div>
           </div>
         </div>

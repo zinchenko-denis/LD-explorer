@@ -14,7 +14,7 @@ const SIN2_TW = 3 / 13;      // 0.23077 (tree)
 // NLO: 0.23122 (displayed in pull summary)
 const DELTA_CP = 270;          // degrees, sinδ = −1
 
-// |U|² matrix (CR PMNS)
+// |U|2 matrix (CR PMNS)
 const U2 = [
   [801/1183, 356/1183, 2/91],
   [24754/171535, 53064/171535, 7209/13195],
@@ -26,7 +26,7 @@ const U2_FRAC = [
   ['30636/171535', '66851/171535', '5696/13195'],
 ];
 const ROW_LABELS = ['e', 'μ', 'τ'];
-const COL_LABELS = ['ν₁', 'ν₂', 'ν₃'];
+const COL_LABELS = ['ν1', 'ν2', 'ν3'];
 const ROW_COLORS = ['#D29922', '#A371F7', '#FF6B9D'];
 
 // Jarlskog
@@ -34,19 +34,19 @@ const J_ABS = 0.0332;
 
 // Pull data
 const PULLS = [
-  { param: 'sin²θ_W', frac: '3/13', nlo: 'NLO: 0.23122', pull: '+1.9σ', color: '#BC8CFF' },
-  { param: 'sin²θ₁₂', frac: '4/13', nlo: '0.30769', pull: '+0.17σ', color: '#D29922' },
-  { param: 'sin²θ₂₃', frac: '81/145', nlo: '0.55862', pull: '−0.16σ', color: '#D29922' },
-  { param: 'sin²θ₁₃', frac: '2/91', nlo: '0.02198', pull: '+0.90σ', color: '#D29922' },
+  { param: 'sin2θ_W', frac: '3/13', nlo: 'NLO: 0.23122', pull: '+1.9σ', color: '#BC8CFF' },
+  { param: 'sin2θ12', frac: '4/13', nlo: '0.30769', pull: '+0.17σ', color: '#D29922' },
+  { param: 'sin2θ23', frac: '81/145', nlo: '0.55862', pull: '−0.16σ', color: '#D29922' },
+  { param: 'sin2θ13', frac: '2/91', nlo: '0.02198', pull: '+0.90σ', color: '#D29922' },
   { param: 'sinδ', frac: '−1', nlo: 'δ = 270°', pull: 'maximal', color: '#F85149' },
 ];
 
-// ── Bloch-style sphere showing (sin²θ_W, δ) ──
+// ── Bloch-style sphere showing (sin2θ_W, δ) ──
 function WeinbergSphere() {
   const sphereRef = useRef<THREE.Group>(null);
   const markerRef = useRef<THREE.Mesh>(null);
 
-  // Map sin²θ_W to polar angle θ: θ_sphere = π * sin²θ_W (0→north, 0.5→equator)
+  // Map sin2θ_W to polar angle θ: θ_sphere = π * sin2θ_W (0→north, 0.5→equator)
   // Map δ_CP to azimuthal angle: φ = δ * π/180
   const theta = Math.PI * SIN2_TW; // ≈ 0.725 rad
   const phi = DELTA_CP * Math.PI / 180; // = 3π/2
@@ -119,10 +119,10 @@ function WeinbergSphere() {
 
       {/* Axis labels */}
       <Text position={[0, R + 0.6, 0]} fontSize={0.3} color="#8B949E" anchorX="center">
-        sin²θ_W = 0
+        sin2θ_W = 0
       </Text>
       <Text position={[0, -R - 0.6, 0]} fontSize={0.3} color="#8B949E" anchorX="center">
-        sin²θ_W = 1
+        sin2θ_W = 1
       </Text>
       <Text position={[R + 0.5, -0.3, 0]} fontSize={0.25} color="#F85149" anchorX="left">
         δ = 0°
@@ -144,7 +144,7 @@ function WeinbergSphere() {
   );
 }
 
-// ── |U|² unitarity cube ──
+// ── |U|2 unitarity cube ──
 function UnitarityCube({ hovered, onHover, onUnhover }: {
   hovered: number | null;
   onHover: (idx: number) => void;
@@ -163,10 +163,10 @@ function UnitarityCube({ hovered, onHover, onUnhover }: {
   return (
     <group ref={groupRef} position={[5, 0, 0]}>
       <Text position={[0, 5.5, 0]} fontSize={0.5} color="#D29922" anchorX="center" fontWeight={700}>
-        |U|² PMNS Matrix
+        |U|2 PMNS Matrix
       </Text>
       <Text position={[0, 4.8, 0]} fontSize={0.3} color="#8B949E" anchorX="center">
-        Height ∝ matrix element
+        Height proportional to value
       </Text>
 
       {/* Column labels */}
@@ -249,7 +249,7 @@ function UnitarityCube({ hovered, onHover, onUnhover }: {
                     pointerEvents: 'none',
                   }}>
                     <div style={{ color: ROW_COLORS[i], fontWeight: 700 }}>
-                      |U_{ROW_LABELS[i]}{COL_LABELS[j]}|² = {U2_FRAC[i][j]}
+                      |U_{ROW_LABELS[i]}{COL_LABELS[j]}|2 = {U2_FRAC[i][j]}
                     </div>
                     <div style={{ color: '#8B949E', fontSize: 10, marginTop: 2 }}>
                       = {val.toFixed(6)}
@@ -303,7 +303,7 @@ export function WeinbergCP3D({ selectedParticle: _sp, onSelectParticle: _osp }: 
         Electroweak + CP
       </Text>
       <Text position={[0, 8.8, 0]} fontSize={0.5} color="#8B949E" anchorX="center">
-        sin²θ_W = 3/13 · sinδ = −1 · |U|² from CR-PMNS
+        sin2θ_W = 3/13 · sinδ = −1 · |U|2 from CR-PMNS
       </Text>
 
       {/* Weinberg sphere */}
@@ -339,7 +339,7 @@ export function WeinbergCP3D({ selectedParticle: _sp, onSelectParticle: _osp }: 
             </div>
           ))}
           <div style={{ borderTop: '1px solid #30363D', paddingTop: 6, marginTop: 6, color: '#6E7681', fontSize: 10 }}>
-            Master denom: 171535 = 5·7·13²·29
+            Master denom: 171535 = 5·7·132·29
           </div>
         </div>
       </Html>
@@ -361,10 +361,10 @@ export function WeinbergCP3D({ selectedParticle: _sp, onSelectParticle: _osp }: 
             Derivation Chain
           </div>
           <div style={{ color: '#8B949E', lineHeight: 1.6 }}>
-            <div>sin²θ_W: cusp widths d₂/det_M</div>
-            <div>PMNS: CR of Hauptmodul J₆</div>
-            <div>sinδ = −1: U₋ = Levi-Civita</div>
-            <div>|U|²: Schur complement of L</div>
+            <div>sin2θ_W: cusp widths d2/det_M</div>
+            <div>PMNS: CR of Hauptmodul J6</div>
+            <div>sinδ = −1: U- = Levi-Civita</div>
+            <div>|U|2: Schur complement of L</div>
           </div>
           <div style={{ borderTop: '1px solid #30363D', paddingTop: 6, marginTop: 6, color: '#3FB950', fontSize: 10 }}>
             0 continuous free parameters

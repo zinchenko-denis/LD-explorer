@@ -32,15 +32,15 @@ const LEVELS = [
     cn: 13/12, cnFrac: '13/12', sin2: 4/13, sin2Frac: '4/13',
     alien: 13, alienLabel: '13',
     color: '#D29922', emissive: '#997015',
-    status: 'sin²θ₁₂ = 4/13 — solar angle',
+    status: 'sin2θ12 = 4/13 — solar angle',
     particles: ['e','μ','τ'],
   },
   {
     n: 3, label: 'HALT', labelRu: 'HALT', labelZh: 'HALT',
     cn: 17/15, cnFrac: '17/15', sin2: 5/17, sin2Frac: '5/17',
-    alien: 17, alienLabel: '17 = d₁⁴+1',
+    alien: 17, alienLabel: '17 = d14+1',
     color: '#F85149', emissive: '#C03030',
-    status: 'W₂ = +1 → Fermat wall',
+    status: 'W2 = +1 → Fermat wall',
     particles: [],
   },
 ];
@@ -112,7 +112,7 @@ function FloorPlatform({ level, y, hovered, onHover, onUnhover }: {
         {`C${level.n} = ${level.cnFrac}`}
       </Text>
 
-      {/* sin²θ₁₂ */}
+      {/* sin2θ12 */}
       <Text
         position={[width / 2 + 0.4, FLOOR_DEPTH / 2 + 0.15, 0]}
         fontSize={0.35}
@@ -120,7 +120,7 @@ function FloorPlatform({ level, y, hovered, onHover, onUnhover }: {
         anchorX="left"
         fontWeight={500}
       >
-        {`sin²θ = ${level.sin2Frac}`}
+        {`sin2θ = ${level.sin2Frac}`}
       </Text>
 
       {/* Alien prime (floating, glowing) */}
@@ -170,7 +170,7 @@ function FloorPlatform({ level, y, hovered, onHover, onUnhover }: {
             anchorX="center"
             fontWeight={700}
           >
-            W₂ = +1 → FERMAT WALL
+            W2 = +1 → FERMAT WALL
           </Text>
         </group>
       )}
@@ -215,7 +215,7 @@ function FloorPlatform({ level, y, hovered, onHover, onUnhover }: {
               C_{level.n} = {level.cnFrac} = {level.cn.toFixed(6)}
             </div>
             <div style={{ color: '#8B949E' }}>
-              sin²θ₁₂({level.n}) = {level.sin2Frac} = {level.sin2.toFixed(6)}
+              sin2θ12({level.n}) = {level.sin2Frac} = {level.sin2.toFixed(6)}
             </div>
             {level.alien && (
               <div style={{ color: '#F0883E', marginTop: 4 }}>
@@ -267,7 +267,7 @@ function LevelParticle({ name, position, color }: { name: string; position: [num
   );
 }
 
-// ── Vertical sin²θ scale ──
+// ── Vertical sin2θ scale ──
 function SinScale({ levels }: { levels: typeof LEVELS }) {
   const xPos = -7;
   return (
@@ -285,13 +285,13 @@ function SinScale({ levels }: { levels: typeof LEVELS }) {
 
       {/* Scale label */}
       <Text position={[0, levels.length * FLOOR_HEIGHT + 2, 0]} fontSize={0.35} color="#8B949E" anchorX="center">
-        sin²θ₁₂(n)
+        sin2θ12(n)
       </Text>
 
       {/* Tick marks for each level */}
       {levels.map((lv, i) => {
         const y = i * FLOOR_HEIGHT + FLOOR_DEPTH / 2 + 0.3;
-        // Map sin²θ to horizontal position
+        // Map sin2θ to horizontal position
         const barLen = lv.sin2 * 6;
         return (
           <group key={lv.n} position={[0, y, 0]}>
@@ -384,7 +384,7 @@ export function Tower3D({ selectedParticle: _sp, onSelectParticle: _osp }: Tower
         );
       })}
 
-      {/* sin²θ vertical scale */}
+      {/* sin2θ vertical scale */}
       <SinScale levels={LEVELS} />
 
       {/* Info panels */}
@@ -404,17 +404,17 @@ export function Tower3D({ selectedParticle: _sp, onSelectParticle: _osp }: Tower
             Tower Ratios
           </div>
           <div style={{ color: '#8B949E', marginBottom: 4 }}>
-            θ₁₃: L / d₁² = 7/4
+            θ13: L / d12 = 7/4
           </div>
           <div style={{ color: '#8B949E', marginBottom: 8 }}>
-            θ₁₂: det²_M / (d₁d₂(N−1)²) = 169/150
+            θ12: det2_M / (d1d2(N−1)2) = 169/150
           </div>
           <div style={{ borderTop: '1px solid #30363D', paddingTop: 8, marginTop: 4 }}>
             <div style={{ color: '#F0883E', fontWeight: 600, fontSize: 11 }}>
               Alien primes at Fermat positions
             </div>
             <div style={{ color: '#8B949E', fontSize: 11, marginTop: 4 }}>
-              10 = 2·5, 13 = det_M, 17 = d₁⁴+1
+              10 = 2·5, 13 = det_M, 17 = d14+1
             </div>
             <div style={{ color: '#F85149', fontSize: 11, marginTop: 4 }}>
               17 = last Fermat prime reachable

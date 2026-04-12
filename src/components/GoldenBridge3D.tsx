@@ -30,8 +30,8 @@ const Q5_REAL_ROOT = (() => {
 })();
 
 // Special points on the curves (from X.263a):
-// q₅(φ) = q₅(ψ) = −d₂ — golden ratio points where q_φ vanishes
-// q₅(0) = −1, q₅(1) = −d₁, q₅(−1) = −d₁², q₅(2) = N−1
+// q5(φ) = q5(ψ) = −d2 — golden ratio points where q_φ vanishes
+// q5(0) = −1, q5(1) = −d1, q5(−1) = −d12, q5(2) = N−1
 interface SpecialPoint {
   x: number;
   yq5: number;
@@ -43,24 +43,24 @@ interface SpecialPoint {
 }
 
 const SPECIAL_POINTS: SpecialPoint[] = [
-  { x: Q5_REAL_ROOT, yq5: 0, label: `x₀ ≈ ${Q5_REAL_ROOT.toFixed(3)}`, detail: 'q₅(x₀) = 0 (unique real root)', color: '#C0C0C0', isGolden: false, isRoot: true },
-  { x: PHI, yq5: -3, label: 'φ', detail: 'q₅(φ) = −d₂ = −3 (q_φ vanishes)', color: '#FFD700', isGolden: true, isRoot: false },
-  { x: PSI, yq5: -3, label: 'ψ = −1/φ', detail: 'q₅(ψ) = −d₂ = −3 (q_φ vanishes)', color: '#FFD700', isGolden: true, isRoot: false },
-  { x: 0, yq5: -1, label: '0', detail: 'q₅(0) = −1', color: '#8B949E', isGolden: false, isRoot: false },
-  { x: 2, yq5: 5, label: 'd₁ = 2', detail: 'q₅(d₁) = N−1 = 5 → q₃·q₅(d₁)=K=40', color: '#58A6FF', isGolden: false, isRoot: false },
+  { x: Q5_REAL_ROOT, yq5: 0, label: `x0 ≈ ${Q5_REAL_ROOT.toFixed(3)}`, detail: 'q5(x0) = 0 (unique real root)', color: '#C0C0C0', isGolden: false, isRoot: true },
+  { x: PHI, yq5: -3, label: 'φ', detail: 'q5(φ) = −d2 = −3 (q_φ vanishes)', color: '#FFD700', isGolden: true, isRoot: false },
+  { x: PSI, yq5: -3, label: 'ψ = −1/φ', detail: 'q5(ψ) = −d2 = −3 (q_φ vanishes)', color: '#FFD700', isGolden: true, isRoot: false },
+  { x: 0, yq5: -1, label: '0', detail: 'q5(0) = −1', color: '#8B949E', isGolden: false, isRoot: false },
+  { x: 2, yq5: 5, label: 'd1 = 2', detail: 'q5(d1) = N−1 = 5 → q3·q5(d1)=K=40', color: '#58A6FF', isGolden: false, isRoot: false },
 ];
 
 // Lucas dictionary
 const LUCAS = [
-  { k: 0, Lk: 2, ld: 'd₁', color: '#58A6FF' },
+  { k: 0, Lk: 2, ld: 'd1', color: '#58A6FF' },
   { k: 1, Lk: 1, ld: '1', color: '#8B949E' },
-  { k: 2, Lk: 3, ld: 'd₂', color: '#F0883E' },
-  { k: 3, Lk: 4, ld: 'd₁²', color: '#58A6FF' },
+  { k: 2, Lk: 3, ld: 'd2', color: '#F0883E' },
+  { k: 3, Lk: 4, ld: 'd12', color: '#58A6FF' },
   { k: 4, Lk: 7, ld: 'L', color: '#3FB950' },
-  { k: 5, Lk: 11, ld: 'dim M₁₀', color: '#BC8CFF' },
+  { k: 5, Lk: 11, ld: 'dim M10', color: '#BC8CFF' },
 ];
 
-// Ω₃ eigenvalues
+// Ω3 eigenvalues
 const EIGENVALUES = [
   { label: '0', value: 0, color: '#8B949E' },
   { label: '−φ', value: -PHI, color: '#FFD700' },
@@ -335,16 +335,16 @@ function PointMarker({ point, scale, yScale, hovered, onHover, onUnhover }: {
               {point.detail}
             </div>
             <div style={{ color: '#8B949E' }}>
-              q_φ·q₃({point.label}) = {(point.yq5 + 3).toFixed(0)}
+              q_φ·q3({point.label}) = {(point.yq5 + 3).toFixed(0)}
             </div>
             {point.isGolden && (
               <div style={{ color: '#FFD700', marginTop: 4 }}>
-                At golden ratio: q_φ = 0 → gap = d₂ = 3
+                At golden ratio: q_φ = 0 → gap = d2 = 3
               </div>
             )}
             {point.x === 2 && (
               <div style={{ color: '#58A6FF', marginTop: 4 }}>
-                q₃(2)·q₅(2) = 8·5 = 40 = K
+                q3(2)·q5(2) = 8·5 = 40 = K
               </div>
             )}
           </div>
@@ -388,7 +388,7 @@ function GapLabel({ x, scale, yScale }: { x: number; scale: number; yScale: numb
         anchorY="middle"
         fontWeight={700}
       >
-        = d₂
+        = d2
       </Text>
     </group>
   );
@@ -428,7 +428,7 @@ export function GoldenBridge3D({ selectedParticle: _selectedParticle, onSelectPa
         Golden Bridge
       </Text>
       <Text position={[0, 8.3, 0]} fontSize={0.5} color="#8B949E" anchorX="center">
-        q₅ = q_φ · q₃ − d₂ {'  '}(X.267 ★★★★★)
+        q5 = q_φ · q3 − d2 {'  '}(X.267 ★★★★★)
       </Text>
 
       {/* Coordinate shift: center vertically */}
@@ -445,7 +445,7 @@ export function GoldenBridge3D({ selectedParticle: _selectedParticle, onSelectPa
         {/* Bridge struts */}
         <BridgeStruts xMin={xMin} xMax={xMax} scale={scale} yScale={yScale} count={40} />
 
-        {/* Lower curve: q₅ (silver) */}
+        {/* Lower curve: q5 (silver) */}
         <CurveTube
           fn={q5}
           xMin={xMin} xMax={xMax}
@@ -455,7 +455,7 @@ export function GoldenBridge3D({ selectedParticle: _selectedParticle, onSelectPa
           radius={0.07}
         />
 
-        {/* Upper curve: q_φ · q₃ (gold) */}
+        {/* Upper curve: q_φ · q3 (gold) */}
         <CurveTube
           fn={product}
           xMin={xMin} xMax={xMax}
@@ -467,10 +467,10 @@ export function GoldenBridge3D({ selectedParticle: _selectedParticle, onSelectPa
 
         {/* Curve labels */}
         <Text position={[xMax * scale + 0.5, q5(xMax) * yScale, 0]} fontSize={0.3} color="#A8B8C8" anchorX="left">
-          q₅
+          q5
         </Text>
         <Text position={[xMax * scale + 0.5, product(xMax) * yScale, 0]} fontSize={0.3} color="#FFD700" anchorX="left">
-          q_φ · q₃
+          q_φ · q3
         </Text>
 
         {/* Gap labels at select positions */}
@@ -535,7 +535,7 @@ export function GoldenBridge3D({ selectedParticle: _selectedParticle, onSelectPa
             Lucas Dictionary
           </div>
           <div style={{ color: '#8B949E', marginBottom: 6, fontSize: 11 }}>
-            Tr(Ω₃ᵏ) = (−1)ᵏ L_k
+            Tr(Ω3^k) = (−1)^k L_k
           </div>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11 }}>
             <thead>
@@ -572,7 +572,7 @@ export function GoldenBridge3D({ selectedParticle: _selectedParticle, onSelectPa
           pointerEvents: 'none',
         }}>
           <div style={{ fontWeight: 700, marginBottom: 8, color: '#BC8CFF', fontSize: 13 }}>
-            Ω₃ Eigenvalues
+            Ω3 Eigenvalues
           </div>
           {EIGENVALUES.map(ev => (
             <div key={ev.label} style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
@@ -593,19 +593,19 @@ export function GoldenBridge3D({ selectedParticle: _selectedParticle, onSelectPa
               The Identity
             </div>
             <div style={{ color: '#E6EDF3', fontFamily: 'monospace', fontSize: 11 }}>
-              q₅(x) = q_φ(x)·q₃(x) − 3
+              q5(x) = q_φ(x)·q3(x) − 3
             </div>
             <div style={{ color: '#8B949E', fontSize: 10, marginTop: 4 }}>
-              Gap ≡ d₂ = 3 for all x ∈ ℝ
+              Gap ≡ d2 = 3 for all x ∈ ℝ
             </div>
           </div>
 
           <div style={{ marginTop: 10, paddingTop: 8, borderTop: '1px solid #30363D' }}>
             <div style={{ color: '#8B949E', fontSize: 10 }}>
-              q₅ coefficients:
+              q5 coefficients:
             </div>
             <div style={{ color: '#D29922', fontFamily: 'monospace', fontSize: 11, marginTop: 2 }}>
-              [1, 0, −d₂, −d₁, d₂, −1]
+              [1, 0, −d2, −d1, d2, −1]
             </div>
           </div>
         </div>
