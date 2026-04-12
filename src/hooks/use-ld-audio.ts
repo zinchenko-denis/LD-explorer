@@ -160,19 +160,28 @@ export async function startLDAudio() {
   if (isPlaying) return;
   await Tone.start();
 
+  // Reverb needs time to generate impulse response in Tone.js v15
   reverb = new Tone.Reverb({ decay: 8, wet: 0.55 }).toDestination();
+  try {
+    await reverb.ready;
+  } catch {
+    // Fallback: if reverb fails, synths connect directly to destination
+    console.warn('Reverb init failed, proceeding without');
+  }
+
+  const target = reverb || Tone.getDestination();
   
   rhSynth = new Tone.PolySynth(Tone.Synth, {
     oscillator: { type: 'sine' },
     envelope: { attack: 0.08, decay: 1.5, sustain: 0.15, release: 3 },
     volume: -16,
-  }).connect(reverb);
+  }).connect(target);
 
   lhSynth = new Tone.PolySynth(Tone.Synth, {
     oscillator: { type: 'triangle2' },
     envelope: { attack: 0.3, decay: 2, sustain: 0.4, release: 5 },
     volume: -22,
-  }).connect(reverb);
+  }).connect(target);
 
   isPlaying = true;
   playLoop();

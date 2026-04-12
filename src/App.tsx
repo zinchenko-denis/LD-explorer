@@ -25,11 +25,16 @@ import { PhiAmplitudes } from '@/components/PhiAmplitudes';
 import { HeatKernel } from '@/components/HeatKernel';
 import PMNSPanel from '@/components/PMNSPanel';
 import NLOPanel from '@/components/NLOPanel';
-import SummaryPanel from '@/components/SummaryPanel';
-import WeinbergCPPanel from '@/components/WeinbergCPPanel';
-import TowerPanel from '@/components/TowerPanel';
-import GoldenBridgePanel from '@/components/GoldenBridgePanel';
-import DerivationDAG from '@/components/DerivationDAG';
+// 2D fallback kept: import SummaryPanel from '@/components/SummaryPanel';
+import { Summary3D } from '@/components/Summary3D';
+// 2D fallback kept: import WeinbergCPPanel from '@/components/WeinbergCPPanel';
+import { WeinbergCP3D } from '@/components/WeinbergCP3D';
+// 2D fallback kept: import TowerPanel from '@/components/TowerPanel';
+import { Tower3D } from '@/components/Tower3D';
+// 2D fallback kept: import GoldenBridgePanel from '@/components/GoldenBridgePanel';
+import { GoldenBridge3D } from '@/components/GoldenBridge3D';
+// 2D fallback kept: import DerivationDAG from '@/components/DerivationDAG';
+import { DAG3D } from '@/components/DAG3D';
 import type { Particle } from '@/types/ld-model';
 import './App.css';
 
@@ -50,7 +55,7 @@ const particles: Particle[] = [
 
 type ViewMode = 'matrix' | 'network' | 'kcipher' | 'dessin' | 'cube' | 'crt' | 'hecke' | 'kirchhoff' | 'dessincube' | 'sphere' | 'cayley' | 'phi' | 'heatkernel' | 'pmns' | 'nlo' | 'summary' | 'weinbergcp' | 'tower' | 'goldenbridge' | 'dag';
 
-const VIEW_2D: ViewMode[] = ['pmns', 'nlo', 'summary', 'weinbergcp', 'tower', 'goldenbridge', 'dag'];
+const VIEW_2D: ViewMode[] = ['pmns', 'nlo'];
 
 function LoadingFallback() {
   return (
@@ -87,12 +92,16 @@ function App() {
       setAudioOn(false);
       setActiveNote(null);
     } else {
-      onNotePlay((p) => {
-        setActiveNote(p);
-        setTimeout(() => setActiveNote(null), 500);
-      });
-      await startLDAudio();
-      setAudioOn(true);
+      try {
+        onNotePlay((p) => {
+          setActiveNote(p);
+          setTimeout(() => setActiveNote(null), 500);
+        });
+        await startLDAudio();
+        setAudioOn(true);
+      } catch (e) {
+        console.warn('Audio toggle failed:', e);
+      }
     }
   };
 
@@ -175,9 +184,9 @@ function App() {
     <div className="space-y-4">
       <Card className={`${theme.cardBg} ${theme.border} border`}>
         <CardHeader className="pb-2">
-          <CardTitle className={`text-sm ${theme.text}`}>{t('Visualization', 'Визуализация', '可视化')}</CardTitle>
+          <CardTitle className={`text-sm ${theme.text}`}>{t('Views', 'Виды', '视图')}</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2 max-h-[600px] overflow-y-auto">
+        <CardContent className="space-y-2">
                   <button
                     onClick={() => handleViewChange('matrix')}
                     className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
@@ -372,15 +381,13 @@ function App() {
                     </div>
                     <p className={`text-xs ${theme.textMuted} mt-1`}>sin²θ₁₂ = 4/13 at t = 1/d₁, DT mechanism</p>
                   </button>
-                </CardContent>
-              </Card>
 
-              {/* NEW: Physics Results */}
-              <Card className={`${theme.cardBg} ${theme.border} border`}>
-                <CardHeader className="pb-2">
-                  <CardTitle className={`text-sm ${theme.text}`}>{t('📊 Results v1728', '📊 Результаты v1728', '📊 v1728结果')}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
+                  {/* ── v1728 Physics Results ── */}
+                  <Separator className="my-3" />
+                  <div className={`text-xs font-semibold uppercase tracking-wider mb-2 ${theme.textMuted}`}>
+                    {t('📊 Results v1728', '📊 Результаты v1728', '📊 v1728结果')}
+                  </div>
+
                   <button
                     onClick={() => handleViewChange('pmns')}
                     className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
@@ -596,8 +603,11 @@ function App() {
             </p>
             <button
               onClick={async () => { 
-                onNotePlay((p) => { setActiveNote(p); setTimeout(() => setActiveNote(null), 500); });
-                await startLDAudio(); setAudioOn(true); setShowLanding(false); 
+                try {
+                  onNotePlay((p) => { setActiveNote(p); setTimeout(() => setActiveNote(null), 500); });
+                  await startLDAudio(); setAudioOn(true);
+                } catch (e) { console.warn('Moonlight Sonata audio init failed:', e); }
+                setShowLanding(false); 
               }}
               className="mt-8 px-8 py-3 bg-[#58A6FF] hover:bg-[#79C0FF] rounded-xl text-white font-bold text-lg transition-all pointer-events-auto shadow-lg shadow-[#58A6FF]/20 hover:shadow-[#58A6FF]/40"
             >
@@ -736,11 +746,6 @@ function App() {
             <div key={fadeKey} className="w-full h-full animate-fade-in">
               {viewMode === 'pmns' && <PMNSPanel isDarkMode={isDarkMode} lang={lang} />}
               {viewMode === 'nlo' && <NLOPanel isDarkMode={isDarkMode} lang={lang} />}
-              {viewMode === 'summary' && <SummaryPanel isDarkMode={isDarkMode} lang={lang} />}
-              {viewMode === 'weinbergcp' && <WeinbergCPPanel isDarkMode={isDarkMode} lang={lang} />}
-              {viewMode === 'tower' && <TowerPanel isDarkMode={isDarkMode} lang={lang} />}
-              {viewMode === 'goldenbridge' && <GoldenBridgePanel isDarkMode={isDarkMode} lang={lang} />}
-              {viewMode === 'dag' && <DerivationDAG isDarkMode={isDarkMode} lang={lang} />}
             </div>
           ) : (
             /* ── 3D Canvas ── */
@@ -875,6 +880,41 @@ function App() {
 
               {viewMode === 'heatkernel' && (
                 <HeatKernel 
+                  selectedParticle={selectedParticle}
+                  onSelectParticle={handleSelectParticle}
+                />
+              )}
+
+              {viewMode === 'goldenbridge' && (
+                <GoldenBridge3D 
+                  selectedParticle={selectedParticle}
+                  onSelectParticle={handleSelectParticle}
+                />
+              )}
+
+              {viewMode === 'tower' && (
+                <Tower3D 
+                  selectedParticle={selectedParticle}
+                  onSelectParticle={handleSelectParticle}
+                />
+              )}
+
+              {viewMode === 'weinbergcp' && (
+                <WeinbergCP3D 
+                  selectedParticle={selectedParticle}
+                  onSelectParticle={handleSelectParticle}
+                />
+              )}
+
+              {viewMode === 'dag' && (
+                <DAG3D 
+                  selectedParticle={selectedParticle}
+                  onSelectParticle={handleSelectParticle}
+                />
+              )}
+
+              {viewMode === 'summary' && (
+                <Summary3D 
                   selectedParticle={selectedParticle}
                   onSelectParticle={handleSelectParticle}
                 />

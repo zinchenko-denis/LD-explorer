@@ -21,10 +21,10 @@ const PMNS_DATA = [
   },
 ];
 
-const CYCLOTOMIC = [
-  { p: 'd₁=2', phi2: 3, phi3: 7, phi4: 5 },
-  { p: 'd₂=3', phi2: 4, phi3: 13, phi4: '—' },
-];
+// const CYCLOTOMIC = [
+//   { p: 'd₁=2', phi2: 3, phi3: 7, phi4: 5 },
+//   { p: 'd₂=3', phi2: 4, phi3: 13, phi4: '—' },
+// ];
 
 interface Props { isDarkMode: boolean; lang: 'en'|'ru'|'zh' }
 
