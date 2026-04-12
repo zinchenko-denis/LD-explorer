@@ -150,7 +150,7 @@ export default function SummaryPanel({ isDarkMode, lang }: Props) {
               { k: 'N', v: '6' }, { k: 'd₁, d₂', v: '2, 3' }, { k: 'index', v: '12' }, { k: 'L', v: '7' },
               { k: '|B₁|', v: '10' }, { k: 'K', v: '40' }, { k: '|Mon|', v: '72' }, { k: 'j(i)', v: '1728' },
               { k: t('Checks', 'Проверки', '验证'), v: '508' }, { k: t('Tiers', 'Тиры', '层级'), v: '17' },
-              { k: t('Dead dirs', 'Dead', '废弃方向'), v: '117+' }, { k: t('Barriers', 'Барьеры', '障碍'), v: '10' },
+              { k: t('Barriers', 'Барьеры', '障碍'), v: '10' },
             ].map(item => (
               <div key={item.k} className="flex justify-between py-1" style={{ borderBottom: `1px solid ${border}` }}>
                 <span style={{ color: muted }}>{item.k}</span>
