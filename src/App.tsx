@@ -795,8 +795,8 @@ function App() {
                 enableRotate={true}
                 autoRotate={rotationSpeed > 0}
                 autoRotateSpeed={rotationSpeed * 2}
-                minDistance={5}
-                maxDistance={50}
+                minDistance={3}
+                maxDistance={200}
               />
               
               {showGrid && (
