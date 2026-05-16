@@ -478,6 +478,12 @@ function App() {
                     <p className={`text-xs ${theme.textMuted} mt-1`}>A_F → N=6 → 18 outputs</p>
                   </button>
 
+                  {/* ── Post-v1728 (v9 pending) ── */}
+                  <Separator className="my-3" />
+                  <div className={`text-xs font-semibold uppercase tracking-wider mb-2 ${theme.textMuted}`}>
+                    {t('🔬 Post-v1728 (v9 pending)', '🔬 После v1728 (v9 в подготовке)', '🔬 v1728后续（v9筹备中）')}
+                  </div>
+
                   <button
                     onClick={() => handleViewChange('formatriply')}
                     className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
@@ -565,7 +571,14 @@ function App() {
           {/* Particle List */}
           <Card className={`${theme.cardBg} ${theme.border} border`}>
             <CardHeader className="pb-2">
-              <CardTitle className={`text-sm ${theme.text}`}>Particles</CardTitle>
+              <CardTitle className={`text-sm ${theme.text}`}>{t('Particles', 'Частицы', '粒子')}</CardTitle>
+              <p className={`text-xs ${theme.textMuted} mt-1 leading-tight`}>
+                {t(
+                  'Click to highlight a particle across all 3D views. n = generation index, K = LD coefficient.',
+                  'Кликни, чтобы подсветить частицу во всех 3D-видах. n — индекс поколения, K — LD-коэффициент.',
+                  '点击以在所有3D视图中高亮粒子。n = 代际索引，K = LD系数。'
+                )}
+              </p>
             </CardHeader>
             <CardContent className="space-y-1 max-h-[300px] overflow-y-auto">
               {particles.map((p) => (
@@ -976,9 +989,9 @@ function App() {
 
           {/* View Description Panel — top of canvas */}
           {showDescription && (
-            <div className={`absolute top-4 left-4 right-4 max-w-lg transition-all z-10 ${
-              isDarkMode ? 'bg-[#161B22]/95 border-[#30363D]' : 'bg-white/95 border-gray-200'
-            } border rounded-xl p-3 shadow-xl`}>
+            <div className={`absolute top-4 left-4 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg transition-all z-10 ${
+              isDarkMode ? 'bg-[#161B22]/90 border-[#30363D]' : 'bg-white/90 border-gray-200'
+            } border rounded-xl p-3 shadow-xl backdrop-blur-sm`}>
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1">
                   <h3 className={`text-sm font-bold mb-1 ${isDarkMode ? 'text-[#58A6FF]' : 'text-blue-600'}`}>
