@@ -171,7 +171,7 @@ function RouteBeam({ route, hovered, onHover, onUnhover }: {
   );
 }
 
-// ── Central sink: Sigma = -L = -7 ──
+// ── Central sink: Σ = −L = −7 ──
 function SinkCore({ hoveredRoute }: { hoveredRoute: string | null }) {
   const coreRef = useRef<THREE.Mesh>(null);
   const ringRef = useRef<THREE.Mesh>(null);
@@ -220,7 +220,7 @@ function SinkCore({ hoveredRoute }: { hoveredRoute: string | null }) {
         outlineWidth={0.02}
         outlineColor="#000000"
       >
-        Sigma = -L = -7
+        Σ = −L = −7
       </Text>
       <Text
         position={[0, -1.5, 0]}
