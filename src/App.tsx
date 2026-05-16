@@ -25,14 +25,12 @@ import { PhiAmplitudes } from '@/components/PhiAmplitudes';
 import { HeatKernel } from '@/components/HeatKernel';
 import PMNSPanel from '@/components/PMNSPanel';
 import NLOPanel from '@/components/NLOPanel';
-// 2D fallback kept: import SummaryPanel from '@/components/SummaryPanel';
 import { Summary3D } from '@/components/Summary3D';
-// 2D fallback kept: import WeinbergCPPanel from '@/components/WeinbergCPPanel';
 import { WeinbergCP3D } from '@/components/WeinbergCP3D';
-// 2D fallback kept: import TowerPanel from '@/components/TowerPanel';
 import { Tower3D } from '@/components/Tower3D';
-// 2D fallback kept: import GoldenBridgePanel from '@/components/GoldenBridgePanel';
 import { GoldenBridge3D } from '@/components/GoldenBridge3D';
+import { FormATriply3D } from '@/components/FormATriply3D';
+import { FourRoutes3D } from '@/components/FourRoutes3D';
 // 2D fallback kept: import DerivationDAG from '@/components/DerivationDAG';
 import { DAG3D } from '@/components/DAG3D';
 import type { Particle } from '@/types/ld-model';
@@ -53,7 +51,7 @@ const particles: Particle[] = [
   { name: 't', n: 7, K: 2/3, mass: 172690, type: 'quark-up', generation: 3 },
 ];
 
-type ViewMode = 'matrix' | 'network' | 'kcipher' | 'dessin' | 'cube' | 'crt' | 'hecke' | 'kirchhoff' | 'dessincube' | 'sphere' | 'cayley' | 'phi' | 'heatkernel' | 'pmns' | 'nlo' | 'summary' | 'weinbergcp' | 'tower' | 'goldenbridge' | 'dag';
+type ViewMode = 'matrix' | 'network' | 'kcipher' | 'dessin' | 'cube' | 'crt' | 'hecke' | 'kirchhoff' | 'dessincube' | 'sphere' | 'cayley' | 'phi' | 'heatkernel' | 'pmns' | 'nlo' | 'summary' | 'weinbergcp' | 'tower' | 'goldenbridge' | 'dag' | 'formatriply' | 'fourroutes';
 
 const VIEW_2D: ViewMode[] = ['pmns', 'nlo'];
 
@@ -153,6 +151,8 @@ function App() {
     tower:       { title_en: 'Correction Tower', title_ru: 'Башня поправок', title_zh: '修正塔', en: 'Four levels n=0..3: C_n = {1, 10/9, 13/12, 17/15}. Catalan staircase with Fermat filtration.', ru: 'Четыре уровня n=0..3: C_n = {1, 10/9, 13/12, 17/15}. Лестница Каталана.', zh: '四层n=0..3：C_n = {1, 10/9, 13/12, 17/15}。Catalan阶梯。' },
     goldenbridge:{ title_en: 'Golden Bridge', title_ru: 'Золотой мост', title_zh: '黄金桥', en: 'q₅ = q_φ·q₃ − 3. Lucas dictionary: L_k ↔ LD parameters. Ω₃ eigenvalues {0, −φ, 1/φ}.', ru: 'q₅ = q_φ·q₃ − 3. Словарь Люка: L_k ↔ LD. Собственные значения {0, −φ, 1/φ}.', zh: 'q₅ = q_φ·q₃ − 3。Lucas字典。Ω₃特征值{0, −φ, 1/φ}。' },
     dag:         { title_en: 'Derivation Graph', title_ru: 'Граф деривации', title_zh: '推导图', en: 'Interactive DAG: A_F → N=6 → dessin → 18 outputs. Click nodes for status and pull.', ru: 'Интерактивный DAG: A_F → N=6 → дезин → 18 выходов. Клик → статус и пулл.', zh: '交互DAG：A_F → N=6 → dessin → 18个输出。点击查看状态。' },
+    formatriply: { title_en: 'Form A Triply', title_ru: 'Form A: 3 пути', title_zh: 'Form A三重', en: 'Self-energy Σ = -L = -7 fixed by three independent routes: anchor Fricke-pair (X.423), Grothendieck whole-eigensummand (X.247c.cond), Fricke-pair log-residue (G.10C). X.247c [CONJ HEADLINE] preserved.', ru: 'Собственная энергия Σ = -L = -7 фиксируется тремя независимыми маршрутами: anchor Fricke-pair (X.423), Grothendieck whole-eigensummand (X.247c.cond), Fricke-pair log-residue (G.10C). X.247c [CONJ HEADLINE] сохранён.', zh: '自能Σ = -L = -7由三个独立路径确定。X.247c [CONJ HEADLINE]保留。' },
+    fourroutes:  { title_en: 'Four Routes to (2,3)', title_ru: 'Четыре пути к (2,3)', title_zh: '四条路径到(2,3)', en: 'The pair (d1, d2) = (2, 3) is the unique solution of four independent equations: Catalan (d2-d1=1), NCG (Connes A_F), Ihara (d1^3=N+2), Mihailescu (d2^2-d1^3=1). Not a fit.', ru: 'Пара (d1, d2) = (2, 3) — единственное решение четырёх независимых уравнений: Catalan, NCG (Connes A_F), Ihara, Mihailescu. Это не подгонка.', zh: '配对(d1, d2) = (2, 3)是四个独立方程的唯一解：Catalan、NCG、Ihara、Mihailescu。' },
   };
 
   const theme = isDarkMode ? {
@@ -476,6 +476,36 @@ function App() {
                       <span className={theme.text}>{t('Derivation Graph', 'Граф деривации', '推导图')}</span>
                     </div>
                     <p className={`text-xs ${theme.textMuted} mt-1`}>A_F → N=6 → 18 outputs</p>
+                  </button>
+
+                  <button
+                    onClick={() => handleViewChange('formatriply')}
+                    className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
+                      viewMode === 'formatriply' 
+                        ? 'bg-[#FFD700]/20 border border-[#FFD700]/40' 
+                        : `${theme.buttonBg} border ${theme.border} hover:border-[#FFD700]`
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-[#FFD700] font-mono font-bold">Σ⁻ᴸ</span>
+                      <span className={theme.text}>{t('Form A Triply', 'Form A: 3 пути', 'Form A三重')}</span>
+                    </div>
+                    <p className={`text-xs ${theme.textMuted} mt-1`}>3 routes → Σ = -L = -7</p>
+                  </button>
+
+                  <button
+                    onClick={() => handleViewChange('fourroutes')}
+                    className={`w-full p-3 rounded-lg text-left text-sm transition-all ${
+                      viewMode === 'fourroutes' 
+                        ? 'bg-[#7EE787]/20 border border-[#7EE787]/40' 
+                        : `${theme.buttonBg} border ${theme.border} hover:border-[#7EE787]`
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-[#7EE787] font-mono font-bold">d₁d₂</span>
+                      <span className={theme.text}>{t('Four Routes to (2,3)', 'Четыре пути к (2,3)', '四条路径到(2,3)')}</span>
+                    </div>
+                    <p className={`text-xs ${theme.textMuted} mt-1`}>Catalan / NCG / Ihara / Mihailescu</p>
                   </button>
 
                   <button
@@ -908,6 +938,20 @@ function App() {
 
               {viewMode === 'dag' && (
                 <DAG3D 
+                  selectedParticle={selectedParticle}
+                  onSelectParticle={handleSelectParticle}
+                />
+              )}
+
+              {viewMode === 'formatriply' && (
+                <FormATriply3D 
+                  selectedParticle={selectedParticle}
+                  onSelectParticle={handleSelectParticle}
+                />
+              )}
+
+              {viewMode === 'fourroutes' && (
+                <FourRoutes3D 
                   selectedParticle={selectedParticle}
                   onSelectParticle={handleSelectParticle}
                 />
