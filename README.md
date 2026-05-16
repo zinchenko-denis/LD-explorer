@@ -33,9 +33,10 @@ All Standard Model masses and mixing parameters derived from the unique dessin d
   Fricke-pair log-residue). X.247c [CONJ HEADLINE] preserved.
 - **Four routes to (d₁, d₂) = (2, 3):** Catalan, NCG/Connes, Ihara,
   Mihailescu — the unique pair satisfying four independent equations.
-- **θ₂₃ orbit pair {81/145, 64/145}** with structural / NuFIT-active
-  branches separated; status promoted [DER]→[THM-arith] via Catalan
-  octant (X.340b, S354).
+- **θ₂₃ orbit pair {81/145, 64/145}** with structural representative
+  (upper, [DER, X.130 + Schur]) and NuFIT-active branch (lower NO,
+  [EMP/STAT, cond. I.1]) separated. Orbit existence is X.340b Catalan
+  Octant Theorem [THM-arith].
 - **Aut(dessin, O.1) = {e}** rigidity (X.355b, S375).
 - **Cuspal Arithmetic Identity** (j+N)/(j+L) = 1 − 1/(j+L) (X.354).
 

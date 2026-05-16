@@ -167,9 +167,9 @@ export default function PMNSPanel({ isDarkMode, lang }: Props) {
               <p><span style={{ color: text }}>θ₁₂:</span> CR(−12, 0; −9, −8) = d₁/d₂ = <span style={{ color: accent }}>2/3</span></p>
               <p className="pl-4">→ tan θ₁₂ = 2/3 → sin²θ₁₂ = 4/13</p>
               <p className="mt-2"><span style={{ color: text }}>θ₂₃:</span> orbit pair <span style={{ color: accent }}>{'{81/145, 64/145}'}</span></p>
-              <p className="pl-4">structural: 81/145 (upper, X.130 + Schur)</p>
-              <p className="pl-4">NuFIT-active: 64/145 (lower NO)</p>
-              <p className="pl-4 mt-1" style={{ color: '#FFD700', fontSize: 11 }}>[THM-arith] via Catalan octant (X.340b, S354)</p>
+              <p className="pl-4">structural: 81/145 (upper) [DER, X.130 + Schur]</p>
+              <p className="pl-4">NuFIT-active: 64/145 (lower NO) [EMP/STAT, cond. I.1]</p>
+              <p className="pl-4 mt-1" style={{ color: '#FFD700', fontSize: 11 }}>orbit existence: X.340b Catalan Octant [THM-arith]</p>
               <p className="mt-2 pt-2" style={{ borderTop: `1px solid ${border}`, color: text }}>
                 {t('4 cusps of X₀(6), no selection.', '4 каспа X₀(6), без выбора.', 'X₀(6)的4个尖点，无需选择。')}
               </p>
