@@ -1,17 +1,22 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Cell } from 'recharts';
 
+// θ₂₃ orbit pair (companion I.5):
+//   - structural representative: 81/145 (upper octant, selected by Channel Rule X.130 + Schur indicators)
+//   - empirical active branch (NuFIT 6.1 IC23 NO):  64/145 (lower octant)
+// Status promoted [DER]→[THM-arith] via Catalan octant (X.340b, S354).
+
 const PMNS_DATA = [
   { 
     label: 'sin²θ₁₂', angle: 'Solar', 
-    ld: 4/13, ldStr: '4/13', exp: 0.3088, sigma: 0.0067, source: 'NuFIT 6.1 IC23',
+    ld: 4/13, ldStr: '4/13', exp: 0.307, sigma: 0.012, source: 'NuFIT 6.1 IC23',
     tbm: 1/3, tbmStr: '1/3',
     channel: 'CR', formula: 'CR(−12,0;−9,−8) = d₁/d₂ = 2/3'
   },
   { 
     label: 'sin²θ₂₃', angle: 'Atmospheric',
-    ld: 81/145, ldStr: '81/145', exp: 0.470, sigma: 0.017, source: 'NuFIT 6.1 IC23 NO',
+    ld: 64/145, ldStr: '{81, 64}/145', exp: 0.470, sigma: 0.017, source: 'NuFIT 6.1 IC23 NO',
     tbm: 0.5, tbmStr: '1/2',
-    channel: 'CR', formula: 'CR(∞,0;−8,−9) = d₂²/d₁³ = 9/8'
+    channel: 'CR', formula: 'orbit pair: 81/145 (upper) / 64/145 (lower NO)'
   },
   { 
     label: 'sin²θ₁₃', angle: 'Reactor',
@@ -161,8 +166,10 @@ export default function PMNSPanel({ isDarkMode, lang }: Props) {
             <div className="space-y-2 text-xs font-mono" style={{ color: muted }}>
               <p><span style={{ color: text }}>θ₁₂:</span> CR(−12, 0; −9, −8) = d₁/d₂ = <span style={{ color: accent }}>2/3</span></p>
               <p className="pl-4">→ tan θ₁₂ = 2/3 → sin²θ₁₂ = 4/13</p>
-              <p className="mt-2"><span style={{ color: text }}>θ₂₃:</span> CR(∞, 0; −8, −9) = d₂²/d₁³ = <span style={{ color: accent }}>9/8</span></p>
-              <p className="pl-4">→ tan θ₂₃ = 9/8 → sin²θ₂₃ = 81/145</p>
+              <p className="mt-2"><span style={{ color: text }}>θ₂₃:</span> orbit pair <span style={{ color: accent }}>{'{81/145, 64/145}'}</span></p>
+              <p className="pl-4">structural: 81/145 (upper, X.130 + Schur)</p>
+              <p className="pl-4">NuFIT-active: 64/145 (lower NO)</p>
+              <p className="pl-4 mt-1" style={{ color: '#FFD700', fontSize: 11 }}>[THM-arith] via Catalan octant (X.340b, S354)</p>
               <p className="mt-2 pt-2" style={{ borderTop: `1px solid ${border}`, color: text }}>
                 {t('4 cusps of X₀(6), no selection.', '4 каспа X₀(6), без выбора.', 'X₀(6)的4个尖点，无需选择。')}
               </p>

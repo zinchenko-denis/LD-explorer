@@ -239,6 +239,9 @@ export function Summary3D({ selectedParticle: _sp, onSelectParticle: _osp }: Sum
       <Text position={[0, 10.8, 0]} fontSize={0.5} color="#8B949E" anchorX="center">
         18 Tier A · 0 free · 58+ observables · Cosmonautics Day 2026
       </Text>
+      <Text position={[0, 10.2, 0]} fontSize={0.36} color="#FFD700" anchorX="center">
+        Form A triply determined · X.247c [CONJ HEADLINE] preserved
+      </Text>
 
       {/* Central zero monument */}
       <ZeroCenter />
