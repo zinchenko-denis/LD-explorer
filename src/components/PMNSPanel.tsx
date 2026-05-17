@@ -235,7 +235,7 @@ export default function PMNSPanel({ isDarkMode, lang }: Props) {
         </div>
 
         <p className="text-xs text-center pb-4" style={{ color: muted }}>
-          Paper DOI: 10.5281/zenodo.19520240 · {t('Data', 'Данные', '数据')}: NuFIT 6.1 IC23 NO
+          Paper DOI: 10.5281/zenodo.20257066 · {t('Data', 'Данные', '数据')}: NuFIT 6.1 IC23 NO
         </p>
       </div>
     </div>
