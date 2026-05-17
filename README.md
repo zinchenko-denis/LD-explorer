@@ -11,9 +11,9 @@ All Standard Model masses and mixing parameters derived from the unique dessin d
 - **Title:** 1728: The Standard Model from X₀(6)
 - **Author:** Denis D. Zinchenko
 - **Pages:** 73
-- **DOI (v1728, published):** [10.5281/zenodo.19520240](https://doi.org/10.5281/zenodo.19520240)
-- **DOI (v9):** to be assigned on Zenodo deposit (May 2026)
-- **Published:** 12 April 2026 (Cosmonautics Day)
+- **DOI (v9, published 17 May 2026):** [10.5281/zenodo.20257066](https://doi.org/10.5281/zenodo.20257066)
+- **DOI (v1728, April 2026):** [10.5281/zenodo.19520240](https://doi.org/10.5281/zenodo.19520240)
+- **Published:** v1728 — 12 April 2026 (Cosmonautics Day); v9 — 17 May 2026
 
 ## Key Results
 
